@@ -42,6 +42,7 @@ class filter_videojs_object {
         'height'   => '', 
         'width'    => ''
     );
+    protected $html;
 
     /**
      * Create an object for each shortcode
@@ -50,6 +51,7 @@ class filter_videojs_object {
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
         $this->get_params($this->shortcode);
+        $this->build_html($this->params);
     }
 
     /**
@@ -65,5 +67,11 @@ class filter_videojs_object {
                 $this->params[$key] = $matches[1];
             }
         }
+    }
+
+    /**
+     * Build HTML
+     */
+    public function build_html($params) {
     }
 }
