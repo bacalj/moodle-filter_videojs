@@ -27,22 +27,21 @@
 defined('MOODLE_INTERNAL') || die();
 
 /**
- * Video JS shortcode class.
+ * Video JS object class.
  *
  * @package    filter_videojs
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_videojs_shortcode {
+class filter_videojs_object {
 
-    protected $raw;
+    protected $shortcode;
 
     /**
-     * Parse a videojs shortcode
+     * Create an object for each shortcode
      *
-     * @return object A shortcode object
      */
-    public function __construct($shortcodeparams) {
-        $this->raw = $shortcodeparams;
+    public function __construct($shortcode) {
+        $this->shortcode = $shortcode;
     }
 }
