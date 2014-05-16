@@ -53,10 +53,14 @@ class filter_videojs_object {
     }
 
     public function get_params($shortcode) {
+        $shortcode = str_replace("[videojs ", '', $shortcode);
+        $shortcode = str_replace("]", '', $shortcode);
         foreach ($this->params as $key => $value) {
-            $needle = "$key";
+            $needle = "${key}=[\"']?([^ \"']*)[\"']?";
             preg_match("/$needle/", $shortcode, $matches);
-            $this->params[$key] = $matches;
+            if (array_key_exists(1, $matches)) {
+                $this->params[$key] = $matches[1];
+            }
         }
     }
 }
