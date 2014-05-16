@@ -45,13 +45,15 @@ class filter_videojs extends moodle_text_filter {
         $regex = '\[videojs .*?\]';
         preg_match_all("/$regex/", $text, $shortcodes, PREG_SET_ORDER);
         foreach ($shortcodes as $key => $sc) {
-            $scobjects[$key] = new filter_videojs_object($sc[0],$key);
-            $text .= $scobjects[$key]->get_html();
+            $vo = new filter_videojs_object($sc[0],$key);
+            $patterns[$key] = $sc[0];
+            $replace[$key] = $vo->get_html();
         }
         echo "<pre>";
-        print_r($scobjects);
-        // print_r($shortcodes);
+        // print_r($scobjects);
+        print_r($shortcodes);
         echo "</pre>";
+        $text = preg_replace($patterns, $replace, $text);
         return $text;
     }
 }
