@@ -35,11 +35,14 @@ defined('MOODLE_INTERNAL') || die();
  */
 class filter_videojs_shortcode {
 
+    protected $raw;
+
     /**
      * Parse a videojs shortcode
      *
      * @return object A shortcode object
      */
-    public function __construct($shortcodestring) {
+    public function __construct($shortcodeparams) {
+        $this->raw = $shortcodeparams;
     }
 }
