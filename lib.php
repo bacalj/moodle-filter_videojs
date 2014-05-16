@@ -90,7 +90,7 @@ class filter_videojs_object {
             'type' => 'video/webm'
         );
         $sourcetag = html_writer::empty_tag('source', $sourceatts);
-        $videotag = html_writer::tag('video', $sourcetag, array('class' => 'videojs'));
+        $videotag = html_writer::tag('video', $sourcetag, array('class' => 'videojs', 'controls' => 'controls'));
         $this->html = "$videotag";
     }
 }
