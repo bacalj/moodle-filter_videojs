@@ -25,6 +25,7 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+require_once(dirname(__FILE__) . '/lib.php');
 
 /**
  * Video JS filter class.
@@ -41,8 +42,11 @@ class filter_videojs extends moodle_text_filter {
      * @return string The filtered content
      */
     public function filter($text, array $options = array()) {
-
-        $text = "The filter is working! " . $text;
+        $regex = '\[videojs.*?\]';
+        preg_match_all("/$regex/", $text, $shortcodes);
+        echo "<pre>";
+        print_r($shortcodes);
+        echo "</pre>";
         return $text;
     }
 }
