@@ -74,5 +74,12 @@ class filter_videojs_object {
      * Build HTML
      */
     public function build_html($params) {
+        $sourceatts = array(
+            'src'  => $params['src'],
+            'type' => 'video/mp4'
+        );
+        $sourcetag = html_writer::empty_tag('source', $sourceatts);
+        $videotag = html_writer::tag('video', $sourcetag, array('class' => 'videojs'));
+        $this->html = "$videotag";
     }
 }
