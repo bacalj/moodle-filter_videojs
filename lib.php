@@ -36,6 +36,12 @@ defined('MOODLE_INTERNAL') || die();
 class filter_videojs_object {
 
     protected $shortcode;
+    protected $params = array(
+        'src'      => '', 
+        'captions' => '', 
+        'height'   => '', 
+        'width'    => ''
+    );
 
     /**
      * Create an object for each shortcode
@@ -43,5 +49,14 @@ class filter_videojs_object {
      */
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
+        $this->get_params($shortcode);
+    }
+
+    public function get_params($shortcode) {
+        foreach ($this->params as $key => $value) {
+            $needle = "$key";
+            preg_match("/$needle/", $shortcode, $matches);
+            $this->params[$key] = $matches;
+        }
     }
 }
