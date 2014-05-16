@@ -70,6 +70,10 @@ class filter_videojs_object {
         }
     }
 
+    public function get_html() {
+        return $this->html;
+    }
+
     /**
      * Build HTML
      */
