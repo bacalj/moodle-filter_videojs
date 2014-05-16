@@ -49,9 +49,12 @@ class filter_videojs_object {
      */
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
-        $this->get_params($shortcode);
+        $this->get_params($this->shortcode);
     }
 
+    /**
+     * Parse the shortcode parameters
+     */
     public function get_params($shortcode) {
         $shortcode = str_replace("[videojs ", '', $shortcode);
         $shortcode = str_replace("]", '', $shortcode);
