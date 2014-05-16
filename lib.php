@@ -37,7 +37,6 @@ class filter_videojs_object {
 
     protected $shortcode;
     protected $params = array(
-        'src'      => '',
         'webm'     => '',
         'mp4'      => '',
         'ogv'      => '',
@@ -81,10 +80,6 @@ class filter_videojs_object {
      * Build HTML
      */
     public function build_html($params) {
-        $sourceatts = array(
-            'src'  => $params['src'],
-            'type' => 'video/mp4'
-        );
         $sourceatts = array(
             'src'  => $params['webm'],
             'type' => 'video/webm'
