@@ -38,6 +38,9 @@ class filter_videojs_object {
     protected $shortcode;
     protected $params = array(
         'src'      => '', 
+        'webm'     => '', 
+        'mp4'      => '', 
+        'ogv'      => '', 
         'captions' => '', 
         'height'   => '', 
         'width'    => ''
@@ -81,6 +84,10 @@ class filter_videojs_object {
         $sourceatts = array(
             'src'  => $params['src'],
             'type' => 'video/mp4'
+        );
+        $sourceatts = array(
+            'src'  => $params['webm'],
+            'type' => 'video/webm'
         );
         $sourcetag = html_writer::empty_tag('source', $sourceatts);
         $videotag = html_writer::tag('video', $sourcetag, array('class' => 'videojs'));
