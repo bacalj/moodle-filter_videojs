@@ -37,12 +37,12 @@ class filter_videojs_object {
 
     protected $shortcode;
     protected $params = array(
-        'src'      => '', 
-        'webm'     => '', 
-        'mp4'      => '', 
-        'ogv'      => '', 
-        'captions' => '', 
-        'height'   => '', 
+        'src'      => '',
+        'webm'     => '',
+        'mp4'      => '',
+        'ogv'      => '',
+        'captions' => '',
+        'height'   => '',
         'width'    => ''
     );
     protected $html;
