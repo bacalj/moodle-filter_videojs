@@ -42,8 +42,8 @@ class filter_videojs extends moodle_text_filter {
      * @return string The filtered content
      */
     public function filter($text, array $options = array()) {
-        $regex = '\[videojs.*?\]';
-        preg_match_all("/$regex/", $text, $shortcodes);
+        $regex = '\[videojs (.*?)\]';
+        preg_match_all("/$regex/", $text, $shortcodes, PREG_SET_ORDER);
         echo "<pre>";
         print_r($shortcodes);
         echo "</pre>";
