@@ -72,6 +72,9 @@ class filter_videojs_object {
         }
     }
 
+    /**
+     * Get HTML
+     */
     public function get_html() {
         return $this->html;
     }
@@ -80,12 +83,19 @@ class filter_videojs_object {
      * Build HTML
      */
     public function build_html($params) {
-        $sourceatts = array(
-            'src'  => $params['webm'],
-            'type' => 'video/webm'
-        );
-        $sourcetag = html_writer::empty_tag('source', $sourceatts);
-        $videotag = html_writer::tag('video', $sourcetag, array('class' => 'videojs', 'controls' => 'controls'));
+        $sourcetags = '';
+        $sources = array('mp4', 'webm', 'ogg');
+        foreach ($sources as $source) {
+            if ($params[$source] == '') {
+                continue;
+            }
+            $sourceatts = array(
+                'src'  => $params[$source],
+                'type' => "video/$source"
+            );
+            $sourcetags .= html_writer::empty_tag('source', $sourceatts);
+        }
+        $videotag = html_writer::tag('video', $sourcetags, array('class' => 'videojs', 'controls' => 'controls'));
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
