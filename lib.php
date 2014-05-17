@@ -37,12 +37,15 @@ class filter_videojs_object {
 
     protected $shortcode;
     protected $params = array(
-        'webm'     => '',
-        'mp4'      => '',
-        'ogg'      => '',
-        'captions' => '',
-        'height'   => '',
-        'width'    => ''
+        'webm'       => '',
+        'mp4'        => '',
+        'ogg'        => '',
+        'poster'     => '',
+        'captions'   => '',
+        'height'     => '',
+        'width'      => '',
+        'preload'    => 'auto',
+        'data-setup' => '{}'
     );
     protected $html;
 
@@ -68,7 +71,7 @@ class filter_videojs_object {
             if (array_key_exists(1, $matches)) {
                 $this->params[$key] = $matches[1];
             }
-            $this->params['id'] = $id;
+            $this->params['id'] = "filter_videojs_$id";
         }
     }
 
@@ -95,7 +98,17 @@ class filter_videojs_object {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        $videotag = html_writer::tag('video', $sourcetags, array('class' => 'videojs', 'controls' => 'controls'));
+        $atts = array(
+            'id'         => $this->params['id'],
+            'class'      => 'video-js vjs-default-skin',
+            'controls'   => 'controls',
+            'poster'     => $this->params['poster'],
+            'width'      => $this->params['width'],
+            'height'     => $this->params['height'],
+            'preload'    => $this->params['preload'],
+            'data-setup' => $this->params['data-setup']
+        );
+        $videotag = html_writer::tag('video', $sourcetags, $atts);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
