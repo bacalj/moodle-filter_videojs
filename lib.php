@@ -39,7 +39,7 @@ class filter_videojs_object {
     protected $params = array(
         'webm'     => '',
         'mp4'      => '',
-        'ogv'      => '',
+        'ogg'      => '',
         'captions' => '',
         'height'   => '',
         'width'    => ''
