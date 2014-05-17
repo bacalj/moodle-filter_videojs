@@ -47,13 +47,13 @@ class filter_videojs extends moodle_text_filter {
         foreach ($shortcodes as $key => $sc) {
             $vo = new filter_videojs_object($sc[0],$key);
             $patterns[$key] = $sc[0];
-            $replace[$key] = $vo->get_html();
+            $replacements[$key] = "\n" . $vo->get_html() . "\n";
         }
         echo "<pre>";
         // print_r($scobjects);
         print_r($shortcodes);
         echo "</pre>";
-        $text = preg_replace($patterns, $replace, $text);
+        $text = str_replace($patterns, $replacements, $text);
         return $text;
     }
 }
