@@ -36,14 +36,18 @@ defined('MOODLE_INTERNAL') || die();
 class filter_videojs_object {
 
     protected $shortcode;
-    protected $params = array(
-        'webm'       => '',
+    protected $mimes = array(
         'mp4'        => '',
+        'webm'       => '',
         'ogg'        => '',
+    );
+    protected $params = array(
         'poster'     => '',
         'captions'   => '',
         'height'     => '',
         'width'      => '',
+        'class'      => 'video-js vjs-default-skin',
+        'controls'   => 'controls',
         'preload'    => 'auto',
         'data-setup' => '{}'
     );
@@ -56,7 +60,7 @@ class filter_videojs_object {
     public function __construct($shortcode,$id) {
         $this->shortcode = $shortcode;
         $this->get_params($this->shortcode, $id);
-        $this->build_html($this->params);
+        $this->build_html();
     }
 
     /**
@@ -73,6 +77,13 @@ class filter_videojs_object {
             }
             $this->params['id'] = "filter_videojs_$id";
         }
+        foreach ($this->mimes as $key => $value) {
+            $needle = "${key}=[\"']?([^ \"']*)[\"']?";
+            preg_match("/$needle/", $shortcode, $matches);
+            if (array_key_exists(1, $matches)) {
+                $this->mimes[$key] = $matches[1];
+            }
+        }
     }
 
     /**
@@ -85,30 +96,19 @@ class filter_videojs_object {
     /**
      * Build HTML
      */
-    public function build_html($params) {
+    public function build_html() {
         $sourcetags = '';
-        $sources = array('mp4', 'webm', 'ogg');
-        foreach ($sources as $source) {
-            if ($params[$source] == '') {
+        foreach ($this->mimes as $mime => $source) {
+            if ($source == '') {
                 continue;
             }
             $sourceatts = array(
-                'src'  => $params[$source],
-                'type' => "video/$source"
+                'src'  => $source,
+                'type' => "video/$mime"
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        $atts = array(
-            'id'         => $this->params['id'],
-            'class'      => 'video-js vjs-default-skin',
-            'controls'   => 'controls',
-            'poster'     => $this->params['poster'],
-            'width'      => $this->params['width'],
-            'height'     => $this->params['height'],
-            'preload'    => $this->params['preload'],
-            'data-setup' => $this->params['data-setup']
-        );
-        $videotag = html_writer::tag('video', $sourcetags, $atts);
+        $videotag = html_writer::tag('video', $sourcetags, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
