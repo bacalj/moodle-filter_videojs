@@ -57,16 +57,16 @@ class filter_videojs_object {
      * Create an object for each shortcode
      *
      */
-    public function __construct($shortcode,$id) {
+    public function __construct($shortcode) {
         $this->shortcode = $shortcode;
-        $this->get_params($this->shortcode, $id);
+        $this->get_params($this->shortcode);
         $this->build_html();
     }
 
     /**
      * Parse the shortcode parameters
      */
-    public function get_params($shortcode, $id) {
+    public function get_params($shortcode) {
         $shortcode = str_replace("[videojs ", '', $shortcode);
         $shortcode = str_replace("]", '', $shortcode);
         foreach ($this->params as $key => $value) {
@@ -75,7 +75,6 @@ class filter_videojs_object {
             if (array_key_exists(1, $matches)) {
                 $this->params[$key] = $matches[1];
             }
-            $this->params['id'] = "filter_videojs_$id";
         }
         foreach ($this->mimes as $key => $value) {
             $needle = "${key}=[\"']?([^ \"']*)[\"']?";

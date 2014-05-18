@@ -45,7 +45,7 @@ class filter_videojs extends moodle_text_filter {
         $regex = '\[videojs .*?\]';
         preg_match_all("/$regex/", $text, $shortcodes, PREG_SET_ORDER);
         foreach ($shortcodes as $key => $sc) {
-            $vo = new filter_videojs_object($sc[0],$key);
+            $vo = new filter_videojs_object($sc[0]);
             $patterns[$key] = $sc[0];
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
             $vos[] = $vo;
