@@ -43,7 +43,6 @@ class filter_videojs_object {
     );
     protected $params = array(
         'poster'     => '',
-        'captions'   => '',
         'height'     => '',
         'width'      => '',
         'class'      => 'video-js vjs-default-skin',
@@ -107,7 +106,8 @@ class filter_videojs_object {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        $videotag = html_writer::tag('video', $sourcetags, $this->params);
+        $tracktag = '<track kind="captions" src="http://eik.local/captions.vtt" srclang="en" label="English" />';
+        $videotag = html_writer::tag('video', $sourcetags.$tracktag, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
