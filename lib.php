@@ -66,20 +66,35 @@ class filter_videojs_object {
      * Parse the shortcode parameters
      */
     public function get_params($shortcode) {
-        $shortcode = str_replace("[videojs ", '', $shortcode);
-        $shortcode = str_replace("]", '', $shortcode);
-        foreach ($this->params as $key => $value) {
-            $needle = "${key}=[\"']?([^ \"']*)[\"']?";
-            preg_match("/$needle/", $shortcode, $matches);
-            if (array_key_exists(1, $matches)) {
-                $this->params[$key] = $matches[1];
+        $paramlist = str_replace("[videojs ", '', $shortcode);
+        $paramlist = str_replace("]", '', $paramlist);
+        $this->get_values($this->params, $paramlist);
+        $this->get_values($this->mimes, $paramlist);
+    }
+
+    /**
+     * Get the values for a given parameter
+     */
+    public function get_values(&$keys, $paramlist) {
+        foreach ($keys as $key => $value) {
+            preg_match( "/${key}=(.)/", $paramlist, $quotes);
+            if (!array_key_exists(1, $quotes)) {
+                continue;
             }
-        }
-        foreach ($this->mimes as $key => $value) {
-            $needle = "${key}=[\"']?([^ \"']*)[\"']?";
-            preg_match("/$needle/", $shortcode, $matches);
+            switch ($quotes[1]) {
+                case '"';
+                    $needle = "${key}=\"([^\"]*)";
+                    break;
+                case "'";
+                    $needle = "${key}='([^']*)";
+                    break;
+                default;
+                    $needle = "${key}=([^ ]*)";
+                    break;
+            }
+            preg_match("/$needle/", $paramlist, $matches);
             if (array_key_exists(1, $matches)) {
-                $this->mimes[$key] = $matches[1];
+                $keys[$key] = $matches[1];
             }
         }
     }
