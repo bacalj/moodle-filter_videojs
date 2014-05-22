@@ -48,7 +48,7 @@ class filter_videojs_object {
         'class'      => 'video-js vjs-default-skin',
         'controls'   => 'controls',
         'preload'    => 'auto',
-        'data-setup' => '{}'
+        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
     protected $html;
 
