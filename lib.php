@@ -66,8 +66,8 @@ class filter_videojs_object {
      * Parse the shortcode parameters
      */
     public function get_params($shortcode) {
-        $paramlist = str_replace("[videojs ", '', $shortcode);
-        $paramlist = rtrim($paramlist, ']');
+        $paramlist = str_replace("[videojs]", '', $shortcode);
+        $paramlist = str_replace("[/videojs]", '', $paramlist);
         $this->get_values($this->params, $paramlist);
         $this->get_values($this->mimes, $paramlist);
     }
