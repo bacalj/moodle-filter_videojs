@@ -1,0 +1,10 @@
+{
+    "name": "moodle-filter_videojs-transcript",
+    "builds": {
+        "moodle-filter_videojs-transcript": {
+            "jsfiles": [
+                "transcript.js"
+            ]
+        }
+    } 
+}

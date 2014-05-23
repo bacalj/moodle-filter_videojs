@@ -57,6 +57,8 @@ class filter_videojs_object {
      *
      */
     public function __construct($shortcode) {
+        global $PAGE;
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
         $this->shortcode = $shortcode;
         $this->get_params($this->shortcode);
         $this->build_html();
