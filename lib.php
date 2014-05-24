@@ -50,6 +50,12 @@ class filter_videojs_object {
         'preload'    => 'auto',
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
+    protected $track = array(
+        'src'        => '',
+        'kind'       => 'captions',
+        'label'      => 'English',
+        'srclang'    => 'en'
+    );
     protected $html;
 
     /**
