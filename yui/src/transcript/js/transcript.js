@@ -10,5 +10,5 @@ VJS = M.filter_videojs.transcript = {};
 
 VJS.init = function () {
     // Y.one('#example').set('innerHTML', 'Example content');
-    alert("Whoo-hooo!");
+    // alert("Whoo-hooo!");
 }
