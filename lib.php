@@ -129,3 +129,13 @@ class filter_videojs_object {
         $this->html = "$videodiv";
     }
 }
+
+class filter_videojs_transcript {
+
+    private $src;
+
+    public function __construct($src) {
+        $this->src = $src;
+    }
+
+}
