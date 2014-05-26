@@ -50,7 +50,7 @@ class filter_videojs_object {
         'preload'    => 'auto',
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
-    protected $track = array(
+    protected $trackparams = array(
         'src'        => '',
         'kind'       => 'captions',
         'label'      => 'English',
@@ -78,6 +78,7 @@ class filter_videojs_object {
         $paramlist = str_replace("[/videojs]", '', $paramlist);
         $this->get_values($this->params, $paramlist);
         $this->get_values($this->mimes, $paramlist);
+        $this->get_values($this->trackparams, $paramlist);
     }
 
     /**
@@ -129,7 +130,7 @@ class filter_videojs_object {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        $tracktag = '<track kind="captions" src="http://eik.local/captions.vtt" srclang="en" label="English" />';
+        $tracktag = html_writer::empty_tag('track', $this->trackparams);
         $videotag = html_writer::tag('video', $sourcetags.$tracktag, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
