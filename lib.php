@@ -36,6 +36,8 @@ defined('MOODLE_INTERNAL') || die();
 class filter_videojs_object {
 
     protected $shortcode;
+    protected $transcript;
+    protected $html;
     protected $mimes = array(
         'mp4'        => '',
         'webm'       => '',
@@ -56,7 +58,6 @@ class filter_videojs_object {
         'label'      => 'English',
         'srclang'    => 'en'
     );
-    protected $html;
 
     /**
      * Create an object for each shortcode
@@ -67,6 +68,7 @@ class filter_videojs_object {
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
         $this->shortcode = $shortcode;
         $this->get_params($this->shortcode);
+        $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
         $this->build_html();
     }
 
@@ -143,6 +145,6 @@ class filter_videojs_transcript {
 
     public function __construct($src) {
         $this->src = $src;
+        return $this->src;
     }
-
 }
