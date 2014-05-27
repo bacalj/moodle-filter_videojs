@@ -60,6 +60,14 @@ class filter_videojs_object {
         'label'      => 'English',
         'srclang'    => 'en'
     );
+    protected $clipparams = array(
+        'mp4'        => '',
+        'webm'       => '',
+        'ogg'        => '',
+        'in'         => '',
+        'out'        => '',
+        'label'      => '',
+    );
 
     /**
      * Create an object for each shortcode
