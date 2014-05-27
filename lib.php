@@ -38,6 +38,8 @@ class filter_videojs_object {
     protected $shortcode;
     protected $transcript;
     protected $html;
+    protected $tracks = array();
+    protected $clips = array();
     protected $mimes = array(
         'mp4'        => '',
         'webm'       => '',
