@@ -82,7 +82,7 @@ class filter_videojs_object {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0]);
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes);
         }
         return $this->clips;
         echo "<pre>";
@@ -166,8 +166,13 @@ class filter_videojs_clip extends filter_videojs_object {
         'label'      => '',
     );
 
-    public function __construct($clip) {
+    public function __construct($clip, $mimes) {
         $this->shortcode = $clip;
+        $this->get_params('clip');
+        unset($this->clips);
+        if (array_count_values($this->mimes)[''] == 3) {
+            $this->mimes = $mimes;
+        }
     }
 }
 
