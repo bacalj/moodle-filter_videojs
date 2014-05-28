@@ -38,8 +38,8 @@ class filter_videojs_object {
     protected $shortcode;
     protected $transcript;
     protected $html;
-    protected $tracks = array();
     protected $clips = array();
+    protected $tracks = array();
     protected $mimes = array(
         'mp4'        => '',
         'webm'       => '',
@@ -54,12 +54,6 @@ class filter_videojs_object {
         'preload'    => 'auto',
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
-    protected $trackparams = array(
-        'src'        => '',
-        'kind'       => 'captions',
-        'label'      => 'English',
-        'srclang'    => 'en'
-    );
     protected $clipparams = array(
         'mp4'        => '',
         'webm'       => '',
@@ -68,6 +62,12 @@ class filter_videojs_object {
         'out'        => '',
         'label'      => '',
     );
+    protected $trackparams = array(
+        'src'        => '',
+        'kind'       => 'captions',
+        'label'      => 'English',
+        'srclang'    => 'en'
+    );
 
     /**
      * Create an object for each shortcode
@@ -75,11 +75,11 @@ class filter_videojs_object {
      */
     public function __construct($shortcode) {
         global $PAGE;
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
         $this->shortcode = $shortcode;
         $this->get_params($this->shortcode);
         $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
         $this->build_html();
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
     }
 
     /**
