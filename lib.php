@@ -54,14 +54,6 @@ class filter_videojs_object {
         'preload'    => 'auto',
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
-    protected $clipparams = array(
-        'mp4'        => '',
-        'webm'       => '',
-        'ogg'        => '',
-        'in'         => '',
-        'out'        => '',
-        'label'      => '',
-    );
     protected $trackparams = array(
         'src'        => '',
         'kind'       => 'captions',
@@ -90,7 +82,7 @@ class filter_videojs_object {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip);
+            $this->clips[$key] = new filter_videojs_clip($clip[0]);
         }
         return $this->clips;
         echo "<pre>";
@@ -166,6 +158,12 @@ class filter_videojs_object {
 }
 
 class filter_videojs_clip extends filter_videojs_object {
+
+    protected $params = array(
+        'in'         => '',
+        'out'        => '',
+        'label'      => '',
+    );
 
     public function __construct($clip) {
         $this->shortcode = $clip;
