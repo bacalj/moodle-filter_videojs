@@ -68,8 +68,8 @@ class filter_videojs_object {
     public function __construct($shortcode) {
         global $PAGE;
         $this->shortcode = $shortcode;
+        $this->get_params('videojs');
         $this->clips = $this->get_clips();
-        $this->get_params($this->shortcode);
         $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
         $this->build_html();
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
@@ -93,9 +93,10 @@ class filter_videojs_object {
     /**
      * Parse the shortcode parameters
      */
-    public function get_params($shortcode) {
-        $paramlist = str_replace("[videojs]", '', $shortcode);
-        $paramlist = str_replace("[/videojs]", '', $paramlist);
+    public function get_params($kind) {
+        $paramlist = str_replace("[$kind]", '', $this->shortcode);
+        $paramlist = str_replace("[/$kind]", '', $paramlist);
+        $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
         $this->get_values($this->params, $paramlist);
         $this->get_values($this->mimes, $paramlist);
         $this->get_values($this->trackparams, $paramlist);
