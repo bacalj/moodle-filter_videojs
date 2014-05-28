@@ -76,10 +76,26 @@ class filter_videojs_object {
     public function __construct($shortcode) {
         global $PAGE;
         $this->shortcode = $shortcode;
+        $this->clips = $this->get_clips();
         $this->get_params($this->shortcode);
         $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
         $this->build_html();
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
+    }
+
+    /**
+     * Get the clips
+     */
+    public function get_clips() {
+        $regex = '\[clip\].*?\[\/clip\]';
+        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
+        foreach ($clips as $key => $clip) {
+            $this->clips[$key] = new filter_videojs_clip($clip);
+        }
+        return $this->clips;
+        echo "<pre>";
+        print_r($this->clips);
+        echo "</pre>";
     }
 
     /**
@@ -146,6 +162,13 @@ class filter_videojs_object {
         $videotag = html_writer::tag('video', $sourcetags.$tracktag, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
+    }
+}
+
+class filter_videojs_clip extends filter_videojs_object {
+
+    public function __construct($clip) {
+        $this->shortcode = $clip;
     }
 }
 
