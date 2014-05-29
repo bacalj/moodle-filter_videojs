@@ -188,6 +188,7 @@ class filter_videojs_clip extends filter_videojs_object {
         $this->shortcode = $clip;
         $this->toplevel = $this->get_toplevel('clip');
         $this->get_params();
+        $this->tracks = $this->get_tracks();
         unset($this->clips);
         if (array_count_values($this->mimes)[''] == count($this->mimes)) {
             $this->mimes = $mimes;
