@@ -37,6 +37,7 @@ class filter_videojs_object {
 
     protected $shortcode;
     protected $toplevel;
+    protected $noclips;
     protected $transcript;
     protected $html;
     protected $clips = array();
@@ -64,6 +65,7 @@ class filter_videojs_object {
         global $PAGE;
         $this->shortcode = $shortcode;
         $this->toplevel = $this->get_toplevel('videojs');
+        $this->noclips = $this->get_noclips('videojs');
         $this->get_params();
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
@@ -80,6 +82,16 @@ class filter_videojs_object {
         $paramlist = str_replace("[/$kind]", '', $paramlist);
         $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
         return $paramlist;
+    }
+
+    /**
+     * Get noclips
+     */
+    public function get_noclips($kind) {
+        $paramlist = str_replace("[$kind]", '', $this->shortcode);
+        $paramlist = str_replace("[/$kind]", '', $paramlist);
+        $noclips = preg_replace("/\[clip\].*?\[\/clip\]/sm", '', $paramlist);
+        return $noclips;
     }
 
     /**
@@ -102,7 +114,7 @@ class filter_videojs_object {
      */
     public function get_tracks() {
         $regex = '\[track\].*?\[\/track\]';
-        preg_match_all("/$regex/sm", $this->shortcode, $tracks, PREG_SET_ORDER);
+        preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
         foreach ($tracks as $key => $track) {
             $this->tracks[$key] = new filter_videojs_track($track[0]);
         }
@@ -190,6 +202,7 @@ class filter_videojs_clip extends filter_videojs_object {
     public function __construct($clip, $mimes) {
         $this->shortcode = $clip;
         $this->toplevel = $this->get_toplevel('clip');
+        $this->noclips = $this->get_noclips('clip');
         $this->get_params();
         $this->tracks = $this->get_tracks();
         unset($this->clips);
