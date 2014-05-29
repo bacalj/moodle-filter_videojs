@@ -64,6 +64,7 @@ class filter_videojs_object {
         $this->shortcode = $shortcode;
         $this->get_params('videojs');
         $this->clips = $this->get_clips();
+        $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
         $this->build_html();
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
@@ -85,6 +86,21 @@ class filter_videojs_object {
     }
 
     /**
+     * Get the tracks
+     */
+    public function get_tracks() {
+        $regex = '\[track\].*?\[\/track\]';
+        preg_match_all("/$regex/sm", $this->shortcode, $tracks, PREG_SET_ORDER);
+        foreach ($tracks as $key => $track) {
+            $this->clips[$key] = new filter_videojs_clip($track[0]);
+        }
+        return $this->tracks;
+        echo "<pre>";
+        print_r($this->tracks);
+        echo "</pre>";
+    }
+
+    /**
      * Parse the shortcode parameters
      */
     public function get_params($kind) {
@@ -93,7 +109,6 @@ class filter_videojs_object {
         $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
         $this->get_values($this->params, $paramlist);
         $this->get_values($this->mimes, $paramlist);
-        $this->get_values($this->trackparams, $paramlist);
     }
 
     /**
