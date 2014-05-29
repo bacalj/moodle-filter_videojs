@@ -54,12 +54,6 @@ class filter_videojs_object {
         'preload'    => 'auto',
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
     );
-    protected $trackparams = array(
-        'src'        => '',
-        'kind'       => 'captions',
-        'label'      => 'English',
-        'srclang'    => 'en'
-    );
 
     /**
      * Create an object for each shortcode
@@ -174,6 +168,16 @@ class filter_videojs_clip extends filter_videojs_object {
             $this->mimes = $mimes;
         }
     }
+}
+
+class filter_videojs_track extends filter_videojs_object {
+
+    protected $params = array(
+        'src'        => '',
+        'kind'       => 'captions',
+        'label'      => 'English',
+        'srclang'    => 'en'
+    );
 }
 
 class filter_videojs_transcript {
