@@ -92,7 +92,7 @@ class filter_videojs_object {
         $regex = '\[track\].*?\[\/track\]';
         preg_match_all("/$regex/sm", $this->shortcode, $tracks, PREG_SET_ORDER);
         foreach ($tracks as $key => $track) {
-            $this->clips[$key] = new filter_videojs_clip($track[0]);
+            $this->clips[$key] = new filter_videojs_track($track[0]);
         }
         return $this->tracks;
         echo "<pre>";
