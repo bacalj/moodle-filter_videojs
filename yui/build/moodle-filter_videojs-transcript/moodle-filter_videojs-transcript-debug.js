@@ -11,7 +11,7 @@ M.filter_videojs = M.filter_videojs || {};
 VJS = M.filter_videojs.transcript = {};
 
 VJS.init = function (params) {
-console.log(params);
+console.log(JSON.parse(params));
     // Y.one('#example').set('innerHTML', 'Example content');
     // alert("Whoo-hooo!");
 }

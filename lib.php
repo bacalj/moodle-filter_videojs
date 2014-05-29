@@ -71,7 +71,11 @@ class filter_videojs_object {
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         $this->build_html();
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $this->shortcode));
+        $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
+        echo "<pre>";
+        print_r(json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES));
+        echo "</pre>";
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $test));
     }
 
     /**
