@@ -65,7 +65,7 @@ class filter_videojs_object {
         $this->get_params('videojs');
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
-        $this->transcript = new filter_videojs_transcript($this->trackparams['src']);
+        $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         $this->build_html();
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
     }
