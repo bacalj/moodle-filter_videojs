@@ -164,7 +164,7 @@ class filter_videojs_clip extends filter_videojs_object {
         $this->shortcode = $clip;
         $this->get_params('clip');
         unset($this->clips);
-        if (array_count_values($this->mimes)[''] == 3) {
+        if (array_count_values($this->mimes)[''] == count($this->mimes)) {
             $this->mimes = $mimes;
         }
     }
@@ -178,6 +178,11 @@ class filter_videojs_track extends filter_videojs_object {
         'label'      => 'English',
         'srclang'    => 'en'
     );
+
+    public function __construct($track) {
+        $this->shortcode = $track;
+        $this->get_params('track');
+    }
 }
 
 class filter_videojs_transcript {
