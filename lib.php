@@ -159,6 +159,7 @@ class filter_videojs_object {
      */
     public function build_html() {
         $sourcetags = '';
+        $tracktags = '';
         foreach ($this->mimes as $mime => $source) {
             if ($source == '') {
                 continue;
@@ -169,8 +170,10 @@ class filter_videojs_object {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        // $tracktag = html_writer::empty_tag('track', $this->tracks[0]);
-        $videotag = html_writer::tag('video', $sourcetags.$tracktag, $this->params);
+        foreach ($this->tracks as $track) {
+            $tracktags .= html_writer::empty_tag('track', $track->params);
+        }
+        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
