@@ -71,7 +71,7 @@ class filter_videojs_object {
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         $this->build_html();
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $this->shortcode));
     }
 
     /**
@@ -104,9 +104,6 @@ class filter_videojs_object {
             $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes);
         }
         return $this->clips;
-        echo "<pre>";
-        print_r($this->clips);
-        echo "</pre>";
     }
 
     /**
@@ -119,9 +116,6 @@ class filter_videojs_object {
             $this->tracks[$key] = new filter_videojs_track($track[0]);
         }
         return $this->tracks;
-        echo "<pre>";
-        print_r($this->tracks);
-        echo "</pre>";
     }
 
     /**

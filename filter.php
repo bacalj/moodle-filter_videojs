@@ -53,9 +53,9 @@ class filter_videojs extends moodle_text_filter {
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
             $vos[] = $vo;
         }
-        echo "<pre>";
-        print_r($vos);
-        echo "</pre>";
+        // echo "<pre>";
+        // print_r(json_encode($vos, JSON_UNESCAPED_SLASHES));
+        // echo "</pre>";
         $text = str_replace($patterns, $replacements, $text);
         return $text;
     }

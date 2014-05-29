@@ -1,1 +1,1 @@
-YUI.add("moodle-filter_videojs-transcript",function(e,t){"use_strict";var n;M.filter_videojs=M.filter_videojs||{},n=M.filter_videojs.transcript={},n.init=function(){}},"@VERSION@",{requires:["base","node"]});
+YUI.add("moodle-filter_videojs-transcript",function(e,t){"use_strict";var n;M.filter_videojs=M.filter_videojs||{},n=M.filter_videojs.transcript={},n.init=function(e){console.log(e)}},"@VERSION@",{requires:["base","node"]});
