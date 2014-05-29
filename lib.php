@@ -36,6 +36,7 @@ defined('MOODLE_INTERNAL') || die();
 class filter_videojs_object {
 
     protected $shortcode;
+    protected $toplevel;
     protected $transcript;
     protected $html;
     protected $clips = array();
@@ -62,12 +63,23 @@ class filter_videojs_object {
     public function __construct($shortcode) {
         global $PAGE;
         $this->shortcode = $shortcode;
-        $this->get_params('videojs');
+        $this->toplevel = $this->get_toplevel('videojs');
+        $this->get_params();
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         $this->build_html();
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array());
+    }
+
+    /**
+     * Get toplevel code
+     */
+    public function get_toplevel($kind) {
+        $paramlist = str_replace("[$kind]", '', $this->shortcode);
+        $paramlist = str_replace("[/$kind]", '', $paramlist);
+        $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
+        return $paramlist;
     }
 
     /**
@@ -92,7 +104,7 @@ class filter_videojs_object {
         $regex = '\[track\].*?\[\/track\]';
         preg_match_all("/$regex/sm", $this->shortcode, $tracks, PREG_SET_ORDER);
         foreach ($tracks as $key => $track) {
-            $this->clips[$key] = new filter_videojs_track($track[0]);
+            $this->tracks[$key] = new filter_videojs_track($track[0]);
         }
         return $this->tracks;
         echo "<pre>";
@@ -103,12 +115,9 @@ class filter_videojs_object {
     /**
      * Parse the shortcode parameters
      */
-    public function get_params($kind) {
-        $paramlist = str_replace("[$kind]", '', $this->shortcode);
-        $paramlist = str_replace("[/$kind]", '', $paramlist);
-        $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
-        $this->get_values($this->params, $paramlist);
-        $this->get_values($this->mimes, $paramlist);
+    public function get_params() {
+        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->mimes, $this->toplevel);
     }
 
     /**
@@ -160,7 +169,7 @@ class filter_videojs_object {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        $tracktag = html_writer::empty_tag('track', $this->trackparams);
+        // $tracktag = html_writer::empty_tag('track', $this->tracks[0]);
         $videotag = html_writer::tag('video', $sourcetags.$tracktag, $this->params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
@@ -177,7 +186,8 @@ class filter_videojs_clip extends filter_videojs_object {
 
     public function __construct($clip, $mimes) {
         $this->shortcode = $clip;
-        $this->get_params('clip');
+        $this->toplevel = $this->get_toplevel('clip');
+        $this->get_params();
         unset($this->clips);
         if (array_count_values($this->mimes)[''] == count($this->mimes)) {
             $this->mimes = $mimes;
@@ -196,7 +206,8 @@ class filter_videojs_track extends filter_videojs_object {
 
     public function __construct($track) {
         $this->shortcode = $track;
-        $this->get_params('track');
+        $this->toplevel = $this->get_toplevel('track');
+        $this->get_params();
     }
 }
 
