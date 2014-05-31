@@ -26,6 +26,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+class filter_videojs_base {
+}
+
 /**
  * Video JS object class.
  *
@@ -33,7 +36,7 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_videojs_object {
+class filter_videojs_video extends filter_videojs_base {
 
     protected $shortcode;
     protected $toplevel;
@@ -190,7 +193,7 @@ class filter_videojs_object {
     }
 }
 
-class filter_videojs_clip extends filter_videojs_object {
+class filter_videojs_clip extends filter_videojs_video {
 
     protected $params = array(
         'in'         => '',
@@ -211,7 +214,7 @@ class filter_videojs_clip extends filter_videojs_object {
     }
 }
 
-class filter_videojs_track extends filter_videojs_object {
+class filter_videojs_track extends filter_videojs_video {
 
     protected $params = array(
         'src'        => '',
