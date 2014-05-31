@@ -11,10 +11,17 @@ M.filter_videojs = M.filter_videojs || {};
 VJS = M.filter_videojs.transcript = {};
 
 VJS.init = function (params) {
-console.log(JSON.parse(params));
+
+Y.Get.css('http://eik.local/videojs/dist/video-js/video-js.css', function (err) {
+    if (err) {
+        return;
+    }
+
+});
+// console.log(JSON.parse(params));
     // Y.one('#example').set('innerHTML', 'Example content');
     // alert("Whoo-hooo!");
 }
 
 
-}, '@VERSION@', {"requires": ["base", "node"]});
+}, '@VERSION@', {"requires": ["base", "node", "get"]});

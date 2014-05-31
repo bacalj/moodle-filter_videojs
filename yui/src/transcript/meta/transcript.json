@@ -2,7 +2,8 @@
     "moodle-filter_videojs-transcript": {
         "requires": [
             "base",
-            "node"
+            "node",
+            "get"
         ]
     }
 }

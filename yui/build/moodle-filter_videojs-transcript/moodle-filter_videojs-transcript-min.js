@@ -1,1 +1,1 @@
-YUI.add("moodle-filter_videojs-transcript",function(e,t){"use_strict";var n;M.filter_videojs=M.filter_videojs||{},n=M.filter_videojs.transcript={},n.init=function(e){console.log(JSON.parse(e))}},"@VERSION@",{requires:["base","node"]});
+YUI.add("moodle-filter_videojs-transcript",function(e,t){"use_strict";var n;M.filter_videojs=M.filter_videojs||{},n=M.filter_videojs.transcript={},n.init=function(t){e.Get.css("http://eik.local/videojs/dist/video-js/video-js.css",function(e){if(e)return})}},"@VERSION@",{requires:["base","node","get"]});
