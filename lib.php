@@ -47,7 +47,7 @@ class filter_videojs_base {
         'webm'       => '',
         'ogg'        => '',
     );
-    protected $params = array();
+    public $params = array();
 
     /**
      * Get toplevel code
@@ -141,7 +141,7 @@ class filter_videojs_base {
  */
 class filter_videojs_video extends filter_videojs_base {
 
-    protected $params = array(
+    public $params = array(
         'poster'     => '',
         'height'     => '',
         'width'      => '',
@@ -167,9 +167,10 @@ class filter_videojs_video extends filter_videojs_base {
         $this->build_html();
         $test = '';
         // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
-        // echo "<pre>";
+        echo "<pre>";
+        print_r($this->tracks);
         // print_r(json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES));
-        // echo "</pre>";
+        echo "</pre>";
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $test));
     }
 
@@ -205,9 +206,9 @@ class filter_videojs_video extends filter_videojs_base {
     }
 }
 
-class filter_videojs_clip extends filter_videojs_video {
+class filter_videojs_clip extends filter_videojs_base {
 
-    protected $params = array(
+    public $params = array(
         'in'         => '',
         'out'        => '',
         'label'      => '',
@@ -219,16 +220,15 @@ class filter_videojs_clip extends filter_videojs_video {
         $this->noclips = $this->get_noclips('clip');
         $this->get_params();
         $this->tracks = $this->get_tracks();
-        unset($this->clips);
         if (array_count_values($this->mimes)[''] == count($this->mimes)) {
             $this->mimes = $mimes;
         }
     }
 }
 
-class filter_videojs_track extends filter_videojs_video {
+class filter_videojs_track extends filter_videojs_base {
 
-    protected $params = array(
+    public $params = array(
         'src'        => '',
         'kind'       => 'captions',
         'label'      => 'English',
