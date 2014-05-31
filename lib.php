@@ -156,7 +156,6 @@ class filter_videojs_video extends filter_videojs_base {
      *
      */
     public function __construct($shortcode) {
-        global $PAGE;
         $this->shortcode = $shortcode;
         $this->toplevel = $this->get_toplevel('videojs');
         $this->noclips = $this->get_noclips('videojs');
@@ -165,13 +164,7 @@ class filter_videojs_video extends filter_videojs_base {
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         $this->build_html();
-        $test = '';
-        // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
-        echo "<pre>";
-        print_r($this->tracks);
-        // print_r(json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES));
-        echo "</pre>";
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $test));
+        $this->pass_to_js();
     }
 
     /**
@@ -204,6 +197,21 @@ class filter_videojs_video extends filter_videojs_base {
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
+
+    /**
+     * Pass along to JS
+     */
+    public function pass_to_js() {
+        global $PAGE;
+        $json = '';
+        $json = json_encode($this->clips);
+        // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
+        echo "<pre>";
+        print_r($json);
+         echo "</pre>";
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $json));
+    }
+
 }
 
 class filter_videojs_clip extends filter_videojs_base {
