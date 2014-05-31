@@ -26,17 +26,14 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-class filter_videojs_base {
-}
-
 /**
- * Video JS object class.
+ * Video JS base class.
  *
  * @package    filter_videojs
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_videojs_video extends filter_videojs_base {
+class filter_videojs_base {
 
     protected $shortcode;
     protected $toplevel;
@@ -50,40 +47,11 @@ class filter_videojs_video extends filter_videojs_base {
         'webm'       => '',
         'ogg'        => '',
     );
-    protected $params = array(
-        'poster'     => '',
-        'height'     => '',
-        'width'      => '',
-        'class'      => 'video-js vjs-default-skin',
-        'controls'   => 'controls',
-        'preload'    => 'auto',
-        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
-    );
-
-    /**
-     * Create an object for each shortcode
-     *
-     */
-    public function __construct($shortcode) {
-        global $PAGE;
-        $this->shortcode = $shortcode;
-        $this->toplevel = $this->get_toplevel('videojs');
-        $this->noclips = $this->get_noclips('videojs');
-        $this->get_params();
-        $this->clips = $this->get_clips();
-        $this->tracks = $this->get_tracks();
-        $this->transcript = new filter_videojs_transcript($this->tracks[0]);
-        $this->build_html();
-        $test = '';
-        // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
-        // echo "<pre>";
-        // print_r(json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES));
-        // echo "</pre>";
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $test));
-    }
+    protected $params = array();
 
     /**
      * Get toplevel code
+     * Gets the shortcode with no sub-tags
      */
     public function get_toplevel($kind) {
         $paramlist = str_replace("[$kind]", '', $this->shortcode);
@@ -94,36 +62,13 @@ class filter_videojs_video extends filter_videojs_base {
 
     /**
      * Get noclips
+     * Gets the shortcode with no clip sub-tags, but leaves any toplevel tracks intact
      */
     public function get_noclips($kind) {
         $paramlist = str_replace("[$kind]", '', $this->shortcode);
         $paramlist = str_replace("[/$kind]", '', $paramlist);
         $noclips = preg_replace("/\[clip\].*?\[\/clip\]/sm", '', $paramlist);
         return $noclips;
-    }
-
-    /**
-     * Get the clips
-     */
-    public function get_clips() {
-        $regex = '\[clip\].*?\[\/clip\]';
-        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
-        foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes);
-        }
-        return $this->clips;
-    }
-
-    /**
-     * Get the tracks
-     */
-    public function get_tracks() {
-        $regex = '\[track\].*?\[\/track\]';
-        preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
-        foreach ($tracks as $key => $track) {
-            $this->tracks[$key] = new filter_videojs_track($track[0]);
-        }
-        return $this->tracks;
     }
 
     /**
@@ -159,6 +104,73 @@ class filter_videojs_video extends filter_videojs_base {
                 $keys[$key] = $matches[1];
             }
         }
+    }
+
+    /**
+     * Get the clips
+     */
+    public function get_clips() {
+        $regex = '\[clip\].*?\[\/clip\]';
+        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
+        foreach ($clips as $key => $clip) {
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes);
+        }
+        return $this->clips;
+    }
+
+    /**
+     * Get the tracks
+     */
+    public function get_tracks() {
+        $regex = '\[track\].*?\[\/track\]';
+        preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
+        foreach ($tracks as $key => $track) {
+            $this->tracks[$key] = new filter_videojs_track($track[0]);
+        }
+        return $this->tracks;
+    }
+
+}
+
+/**
+ * Video JS object class.
+ *
+ * @package    filter_videojs
+ * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class filter_videojs_video extends filter_videojs_base {
+
+    protected $params = array(
+        'poster'     => '',
+        'height'     => '',
+        'width'      => '',
+        'class'      => 'video-js vjs-default-skin',
+        'controls'   => 'controls',
+        'preload'    => 'auto',
+        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
+    );
+
+    /**
+     * Create an object for each shortcode
+     *
+     */
+    public function __construct($shortcode) {
+        global $PAGE;
+        $this->shortcode = $shortcode;
+        $this->toplevel = $this->get_toplevel('videojs');
+        $this->noclips = $this->get_noclips('videojs');
+        $this->get_params();
+        $this->clips = $this->get_clips();
+        $this->tracks = $this->get_tracks();
+        $this->transcript = new filter_videojs_transcript($this->tracks[0]);
+        $this->build_html();
+        $test = '';
+        // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
+        // echo "<pre>";
+        // print_r(json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES));
+        // echo "</pre>";
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $test));
     }
 
     /**
