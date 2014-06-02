@@ -206,7 +206,7 @@ class filter_videojs_video extends filter_videojs_base {
     public function pass_to_js() {
         global $PAGE;
         $json = '';
-        $json = json_encode($this->clips);
+        $json = json_encode(array($this->params['id']=>$this->clips), JSON_FORCE_OBJECT);
         // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
         echo "<pre>";
         print_r($json);
