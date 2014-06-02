@@ -156,12 +156,12 @@ class filter_videojs_video extends filter_videojs_base {
      * Create an object for each shortcode
      *
      */
-    public function __construct($shortcode) {
+    public function __construct($shortcode, $id) {
         $this->shortcode = $shortcode;
         $this->toplevel = $this->get_toplevel('videojs');
         $this->noclips = $this->get_noclips('videojs');
         $this->get_params();
-        $this->params['id'] = "videojs-"; // md5($this->shortcode);
+        $this->params['id'] = "videojs-$id";
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);

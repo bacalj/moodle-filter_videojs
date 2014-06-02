@@ -42,20 +42,23 @@ class filter_videojs extends moodle_text_filter {
      * @return string The filtered content
      */
     public function filter($text, array $options = array()) {
+        $contextid = $this->context->id;
         $regex = '\[videojs\].*?\[\/videojs\]';
         preg_match_all("/$regex/sm", $text, $shortcodes, PREG_SET_ORDER);
         $vos = array();
         $patterns = array();
         $replacements = array();
         foreach ($shortcodes as $key => $sc) {
-            $vo = new filter_videojs_video($sc[0]);
+            $vo = new filter_videojs_video($sc[0], "$contextid-$key");
             $patterns[$key] = $sc[0];
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
             $vos[] = $vo;
         }
-        echo "<pre>";
-        print_r($vos);
-        echo "</pre>";
+        global $COURSE;
+        // echo "<pre>";
+        // print_r($this->context);
+        // print_r($vos);
+        // echo "</pre>";
         $text = str_replace($patterns, $replacements, $text);
         return $text;
     }
