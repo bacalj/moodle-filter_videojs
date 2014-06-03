@@ -20,8 +20,10 @@ VJS.init = function (clips) {
         });
         // VJS.setInitialized();
         VJS.initialized = 'initialized';
+        VJS.clips = [];
     }
-    console.log(JSON.parse(clips));
+    VJS.clips.push(JSON.parse(clips));
+    console.log(VJS);
 }
 
 
