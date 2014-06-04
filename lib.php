@@ -161,7 +161,7 @@ class filter_videojs_video extends filter_videojs_base {
         $this->toplevel = $this->get_toplevel('videojs');
         $this->noclips = $this->get_noclips('videojs');
         $this->get_params();
-        $this->params['id'] = "videojs-$id";
+        $this->params['id'] = "videojs_$id";
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
         $this->transcript = new filter_videojs_transcript($this->tracks[0]);
