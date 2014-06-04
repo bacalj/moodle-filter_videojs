@@ -49,7 +49,7 @@ class filter_videojs extends moodle_text_filter {
         $patterns = array();
         $replacements = array();
         foreach ($shortcodes as $key => $sc) {
-            $vo = new filter_videojs_video($sc[0], "$contextid_$key");
+            $vo = new filter_videojs_video($sc[0], $contextid . "_" . $key);
             $patterns[$key] = $sc[0];
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
             $vos[] = $vo;
