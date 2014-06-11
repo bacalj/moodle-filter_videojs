@@ -17,11 +17,15 @@ VJS.init = function (clips) {
             }
             Y.log('CSS loaded successfully');
             videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
+            VJS.buildClips();
         });
         // VJS.setInitialized();
         VJS.initialized = 'initialized';
-        VJS.clips = [];
+        VJS.videos = [];
     }
-    VJS.clips.push(JSON.parse(clips));
+    VJS.videos.push(JSON.parse(clips));
+}
+
+VJS.buildClips = function () {
     console.log(VJS);
 }
