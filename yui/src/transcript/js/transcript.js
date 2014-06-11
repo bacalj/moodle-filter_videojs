@@ -28,4 +28,7 @@ VJS.init = function (clips) {
 
 VJS.buildClips = function () {
     console.log(VJS);
+    for (video in VJS.videos) {
+        console.log(video);
+    }
 }
