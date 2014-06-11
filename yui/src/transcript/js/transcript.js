@@ -17,6 +17,7 @@ VJS.init = function (clips) {
             }
             Y.log('CSS loaded successfully');
             videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
+            console.log(VJS);
             VJS.buildClips();
         });
         // VJS.setInitialized();
@@ -33,6 +34,9 @@ VJS.buildClips = function () {
         }
         //VJS.videos[video].player = videojs(VJS.videos[video].id);
         //console.debug(VJS.videos[video].player);
+        console.log(videojs(VJS.videos[video].id));
+        console.log("hello");
     }
     console.log(VJS);
+    console.log(Video);
 }
