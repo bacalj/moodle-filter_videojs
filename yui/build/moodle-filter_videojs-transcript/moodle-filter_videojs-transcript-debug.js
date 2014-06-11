@@ -33,8 +33,8 @@ VJS.buildClips = function () {
         if (!VJS.videos.hasOwnProperty(video)) {
             continue;
         }
-        // VJS.videos[video].player = videojs(VJS.videos[video].id);
-        // console.debug(VJS.videos[video].player);
+        VJS.videos[video].player = videojs(VJS.videos[video].id);
+        console.debug(VJS.videos[video].player);
     }
     console.log(VJS);
 }
