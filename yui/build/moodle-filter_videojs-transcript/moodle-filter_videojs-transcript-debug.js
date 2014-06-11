@@ -29,10 +29,14 @@ VJS.init = function (clips) {
 }
 
 VJS.buildClips = function () {
-    console.log(VJS);
     for (video in VJS.videos) {
-        console.log(video);
+        if (!VJS.videos.hasOwnProperty(video)) {
+            continue;
+        }
+        VJS.videos[video].player = videojs(VJS.videos[video].id);
+        console.debug(VJS.videos[video].player);
     }
+    console.log(VJS);
 }
 
 
