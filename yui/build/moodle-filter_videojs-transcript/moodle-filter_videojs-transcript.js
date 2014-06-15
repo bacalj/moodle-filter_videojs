@@ -20,7 +20,6 @@ VJS.init = function (clips) {
             console.log(VJS);
             VJS.buildClips();
         });
-        // VJS.setInitialized();
         VJS.initialized = 'initialized';
         VJS.videos = [];
     }
@@ -28,17 +27,23 @@ VJS.init = function (clips) {
 }
 
 VJS.buildClips = function () {
-    for (video in VJS.videos) {
-        if (!VJS.videos.hasOwnProperty(video)) {
-            continue;
-        }
-        //VJS.videos[video].player = videojs(VJS.videos[video].id);
-        //console.debug(VJS.videos[video].player);
-        console.log(videojs(VJS.videos[video].id));
-        console.log("hello");
-    }
+    // for (video in VJS.videos) {
+    //     if (!VJS.videos.hasOwnProperty(video)) {
+    //         continue;
+    //     }
+    //     //VJS.videos[video].player = videojs(VJS.videos[video].id);
+    //     //console.debug(VJS.videos[video].player);
+    //     console.log(videojs(VJS.videos[video].id));
+    //     console.log("hello");
+    // }
     console.log(VJS);
-    console.log(Video);
+    VJS.players = Y.all('.video-js');
+    console.log(VJS.players);
+    VJS.players.each(function (p) {
+        console.log(p);
+        console.log(p._node.id);
+        console.log(VJS.videos);
+    });
 }
 
 
