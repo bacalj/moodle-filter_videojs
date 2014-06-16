@@ -17,7 +17,7 @@ VJS.init = function (clips) {
             }
             Y.log('CSS loaded successfully');
             videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
-            VJS.buildClips();
+            VJS.buildClipMenu();
         });
         VJS.initialized = 'initialized';
         VJS.videos = [];
@@ -26,11 +26,18 @@ VJS.init = function (clips) {
     VJS.videos[jsonClips.id]=jsonClips;
 }
 
-VJS.buildClips = function () {
+VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
     VJS.players.each(function (p) {
         console.log(p);
         console.log(p._node.id);
-        console.log(VJS.videos[p._node.id].clips);
+        var clips = VJS.videos[p._node.id].clips;
+        console.log(clips);
+        for (var i=0; i < clips.length; i++) {
+            console.log(clips[i]);
+            var clip = clips[i];
+            var n = i+1;
+            p.insert(Y.Node.create("<p>Clip " + n + ": " + clip.params.label + "</p>"), 'before');
+        }
     });
 }
