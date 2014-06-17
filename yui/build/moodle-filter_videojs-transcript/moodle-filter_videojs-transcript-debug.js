@@ -10,21 +10,25 @@ var VJS;
 M.filter_videojs = M.filter_videojs || {};
 VJS = M.filter_videojs.transcript = {};
 
-VJS.init = function (clips) {
+VJS.init = function (params) {
     if (typeof VJS.initialized === 'undefined') {
         Y.Get.load(['http://eik.local/videojs/dist/video-js/video-js.css', 'http://eik.local/videojs/dist/video-js/video.js'], function (err) {
             if (err) {
                 Y.log('Error loading CSS: ' + err[0].error, 'error');
                 return;
             }
+
             Y.log('CSS loaded successfully');
             videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
-            VJS.buildClipMenu();
+
+            Y.on('domready', function () {
+                VJS.buildClipMenu();
+            });
         });
         VJS.initialized = 'initialized';
         VJS.videos = [];
     }
-    var jsonClips = JSON.parse(clips);
+    var jsonClips = JSON.parse(params.clips);
     VJS.videos[jsonClips.id]=jsonClips;
 }
 

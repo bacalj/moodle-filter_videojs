@@ -211,7 +211,7 @@ class filter_videojs_video extends filter_videojs_base {
         echo "<pre>";
         print_r($json);
          echo "</pre>";
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array('shortcode' => $json, 'other' => 'other'));
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
     }
 
 }
