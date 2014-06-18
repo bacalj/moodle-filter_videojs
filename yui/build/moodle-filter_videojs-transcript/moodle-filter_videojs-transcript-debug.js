@@ -35,15 +35,25 @@ VJS.init = function (params) {
 VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
     VJS.players.each(function (p) {
-        console.log(p);
-        console.log(p._node.id);
+//        console.log(p);
+//        console.log(p._node.id);
         var clips = VJS.videos[p._node.id].clips;
-        console.log(clips);
-        for (var i=0; i < clips.length; i++) {
-            console.log(clips[i]);
-            var clip = clips[i];
-            var n = i+1;
-            p.insert(Y.Node.create("<p>Clip " + n + ": " + clip.params.label + "</p>"), 'before');
+        if (clips.length > 0) {
+            var clipUL = Y.Node.create("<ul></ul>");
+            p.insert(clipUL, 'before');
+            for (var i=0; i < clips.length; i++) {
+                var clip = clips[i];
+                var n = i+1;
+                var clipLabel = clip.params.label;
+                var clipConnector = ': ';
+                if (clipLabel == '') {
+                    clipConnector = '';
+                }
+                var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
+                console.log(clipLink);
+                var clipLI = Y.Node.create("<li>" + clipLink._node.outerHTML + "</li>");
+                clipUL.append(clipLI);
+            }
         }
     });
 }
