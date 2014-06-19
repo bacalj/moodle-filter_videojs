@@ -56,8 +56,10 @@ VJS.buildClipMenu = function () {
                 clipLink.on("click", function (e) {
                     e.preventDefault();
                   //  VJS.playClip(p, clip);
+                    var vjsp = _V_(p._node.id);
                     console.log(p);
-                    p.currentTime(5);
+                    vjsp.play();
+                    vjsp.currentTime(5);
                 });
             }
         }
