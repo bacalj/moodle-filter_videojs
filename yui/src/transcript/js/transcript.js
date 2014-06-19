@@ -36,6 +36,7 @@ VJS.buildClipMenu = function () {
 //        console.log(p);
 //        console.log(p._node.id);
         var clips = VJS.videos[p._node.id].clips;
+        console.log(clips);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             p.insert(clipUL, 'before');
@@ -43,6 +44,7 @@ VJS.buildClipMenu = function () {
                 var clip = clips[i];
                 var n = i+1;
                 var clipLabel = clip.params.label;
+                var clipParams = clip.params
                 var clipConnector = ': ';
                 if (clipLabel == '') {
                     clipConnector = '';
@@ -51,13 +53,13 @@ VJS.buildClipMenu = function () {
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
-                clipLink.on("click", function (e) {
+                clipLink.on("click", function (e,clipParams) {
                     e.preventDefault();
                   //  VJS.playClip(p, clip);
-                    var vjsp = _V_(p._node.id);
-                    console.log(p);
+                    var vjsp = videojs(p._node.id);
+                    console.log(this);
                     vjsp.play();
-                    vjsp.currentTime(5);
+                    vjsp.currentTime(clipParams.in);
                 });
             }
         }
