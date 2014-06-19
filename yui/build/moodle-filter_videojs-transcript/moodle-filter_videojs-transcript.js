@@ -48,14 +48,15 @@ VJS.buildClipMenu = function () {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
+                var clipLI = Y.Node.create("<li></li>");
+                clipLI.append(clipLink);
+                clipUL.append(clipLI);
                 clipLink.on("click", function (e) {
                     e.preventDefault();
                   //  VJS.playClip(p, clip);
+                    console.log(p);
                     p.currentTime(5);
                 });
-                console.log(clipLink);
-                var clipLI = Y.Node.create("<li>" + clipLink._node.outerHTML + "</li>");
-                clipUL.append(clipLI);
             }
         }
     });
@@ -68,4 +69,4 @@ VJS.playClip = function (player, clip) {
 }
 
 
-}, '@VERSION@', {"requires": ["base", "node", "get"]});
+}, '@VERSION@', {"requires": ["base", "node", "event", "get"]});

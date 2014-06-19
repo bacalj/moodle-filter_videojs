@@ -3,6 +3,7 @@
         "requires": [
             "base",
             "node",
+            "event",
             "get"
         ]
     }
