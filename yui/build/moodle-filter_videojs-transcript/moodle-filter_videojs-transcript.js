@@ -53,48 +53,40 @@ VJS.init = function (params) {
 VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
     VJS.players.each(function (p) {
-        var clipParams = [];
 
         var clips = VJS.videos[p._node.id].clips;
-        // console.log(VJS.videos);
-        // console.log(clips[0]);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             p.insert(clipUL, 'before');
             for (var i=0; i < clips.length; i++) {
-                var clip = clips[i];
-                console.log(clip);
                 var n = i+1;
-                clipParams[i] = clips[i].params
-                var clipLabel = clipParams[i].label;
+                var clipParams = clips[i].params
+                var clipLabel = clipParams.label;
                 var clipConnector = ': ';
                 if (clipLabel == '') {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
-                clipLink.set('rel', i);
-                clipLink.setData('params', clipParams[i])
+                clipLink.setData('params', clipParams);
+                clipLink.setData('playerID', p._node.id);
                 clipLink.on("click", function (e) {
                     e.preventDefault();
-                    var vjsp = videojs(p._node.id);
-                    var iterator = this.get('rel');
                     var params = this.getData('params');
+                    var playerID = this.getData('playerID');
+                    var vjsp = videojs(playerID);
                     vjsp.play();
                     vjsp.currentTime(params.in);
+                    // vjsp.on('timeupdate', VJS.stopper(playerID,params.out));
+                    vjsp.on('timeupdate', function () {
+                        this.pause();
+                    });
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
             }
-            console.log(clipParams);
         }
     });
-}
-
-VJS.playClip = function (player, clip) {
-    console.log(player);
-    console.log(clip);
-    player.currentTime(5);
 }
 
 
