@@ -74,15 +74,15 @@ VJS.buildClipMenu = function () {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
-                clipLink.set('data-clipiterator', i);
                 clipLink.set('rel', i);
+                clipLink.setData('params', clipParams[i])
                 clipLink.on("click", function (e) {
                     e.preventDefault();
                     var vjsp = videojs(p._node.id);
                     var iterator = this.get('rel');
-                    var clipSettings = VJS.videos[p._node.id].clips[iterator].params;
+                    var params = this.getData('params');
                     vjsp.play();
-                    vjsp.currentTime(clipSettings.in);
+                    vjsp.currentTime(params.in);
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
