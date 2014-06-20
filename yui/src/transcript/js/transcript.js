@@ -8,25 +8,45 @@ var VJS;
 M.filter_videojs = M.filter_videojs || {};
 VJS = M.filter_videojs.transcript = {};
 
+// This is the function that will be called by the PHP part of the filter.
 VJS.init = function (params) {
+
+    // Test to see whether this function needs to run.
     if (typeof VJS.initialized === 'undefined') {
+
+        // These are things that should run only once per page.
+
+        // Load the VideoJS .js and .css.
         Y.Get.load(['http://eik.local/videojs/dist/video-js/video-js.css', 'http://eik.local/videojs/dist/video-js/video.js'], function (err) {
+            // Log any error loading the VideoJS files
             if (err) {
                 Y.log('Error loading CSS: ' + err[0].error, 'error');
                 return;
             }
 
+            // Log success.
             Y.log('CSS loaded successfully');
+
+            // Load the VideoJS Flash player after the main .js has loaded.
             videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
 
+            // When the DOM is ready, process the clip menus.
             Y.on('domready', function () {
                 VJS.buildClipMenu();
             });
         });
+
+        // Prevent additional executions.
         VJS.initialized = 'initialized';
+
+        // Create the array to contain all the video objects.
         VJS.videos = [];
     }
+
+    // Parse the information passed in from the PHP.
     var jsonClips = JSON.parse(params.clips);
+
+    // Create the array, keyed to each video id.
     VJS.videos[jsonClips.id]=jsonClips;
 }
 
@@ -37,6 +57,7 @@ VJS.buildClipMenu = function () {
 //        console.log(p._node.id);
         // var clips = VJS.videos[p._node.id].clips;
         var clipParams = [];
+
         var clips = VJS.videos[p._node.id].clips;
         console.log(VJS.videos);
         console.log(clips);
