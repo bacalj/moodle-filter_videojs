@@ -35,33 +35,38 @@ VJS.buildClipMenu = function () {
     VJS.players.each(function (p) {
 //        console.log(p);
 //        console.log(p._node.id);
+        // var clips = VJS.videos[p._node.id].clips;
+        var clipParams = [];
         var clips = VJS.videos[p._node.id].clips;
+        console.log(VJS.videos);
         console.log(clips);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             p.insert(clipUL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var clip = clips[i];
+                console.log(clip);
                 var n = i+1;
-                var clipLabel = clip.params.label;
-                var clipParams = clip.params
+                clipParams[i] = clips[i].params
+                var clipLabel = clipParams[i].label;
                 var clipConnector = ': ';
                 if (clipLabel == '') {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
                 var clipLI = Y.Node.create("<li></li>");
-                clipLI.append(clipLink);
-                clipUL.append(clipLI);
-                clipLink.on("click", function (e,clipParams) {
+                clipLink.on("click", function (e) {
                     e.preventDefault();
                   //  VJS.playClip(p, clip);
                     var vjsp = videojs(p._node.id);
-                    console.log(this);
+                    console.log(clipParams[i]);
                     vjsp.play();
-                    vjsp.currentTime(clipParams.in);
+                    vjsp.currentTime(clipParams[i].in);
                 });
+                clipLI.append(clipLink);
+                clipUL.append(clipLI);
             }
+            console.log(clipParams);
         }
     });
 }

@@ -207,6 +207,9 @@ class filter_videojs_video extends filter_videojs_base {
         global $PAGE;
         $json = '';
         $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips));
+        echo "<pre>";
+        print_r($this->clips);
+        echo "</pre>";
         // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
         echo "<pre>";
         print_r($json);
