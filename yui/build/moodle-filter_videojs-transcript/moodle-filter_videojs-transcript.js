@@ -53,14 +53,11 @@ VJS.init = function (params) {
 VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
     VJS.players.each(function (p) {
-//        console.log(p);
-//        console.log(p._node.id);
-        // var clips = VJS.videos[p._node.id].clips;
         var clipParams = [];
 
         var clips = VJS.videos[p._node.id].clips;
-        console.log(VJS.videos);
-        console.log(clips);
+        // console.log(VJS.videos);
+        // console.log(clips[0]);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             p.insert(clipUL, 'before');
@@ -75,15 +72,17 @@ VJS.buildClipMenu = function () {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
-                var clipLI = Y.Node.create("<li></li>");
+                clipLink.set('data-clipiterator', i);
+                clipLink.set('rel', i);
                 clipLink.on("click", function (e) {
                     e.preventDefault();
-                  //  VJS.playClip(p, clip);
                     var vjsp = videojs(p._node.id);
-                    console.log(clipParams[i]);
+                    var iterator = this.get('rel');
+                    var clipSettings = VJS.videos[p._node.id].clips[iterator].params;
                     vjsp.play();
-                    vjsp.currentTime(clipParams[i].in);
+                    vjsp.currentTime(clipSettings.in);
                 });
+                var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
             }
