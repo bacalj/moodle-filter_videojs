@@ -56,13 +56,28 @@ VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
     VJS.players.each(function (p) {
 
+        p.setData('out', '');
+        p.setData('in', 0);
+        p.setData('playerID', p._node.id);
+        var vjsp = videojs(p.getData('playerID'));
+        vjsp.on('timeupdate', function() {
+            console.log(p.getData('out'));
+            if (p.getData('out') === '') {
+                return;
+            }
+            if (this.currentTime() > p.getData('out')) {
+                this.currentTime(p.getData('out'));
+                this.pause();
+            }
+        });
+
         var clips = VJS.videos[p._node.id].clips;
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             p.insert(clipUL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var n = i+1;
-                var clipParams = clips[i].params
+                var clipParams = clips[i].params;
                 var clipLabel = clipParams.label;
                 var clipConnector = ': ';
                 if (clipLabel == '') {
@@ -75,15 +90,16 @@ VJS.buildClipMenu = function () {
                     e.preventDefault();
                     var params = this.getData('params');
                     var playerID = this.getData('playerID');
-                    var vjsp = videojs(playerID);
+                    p.setData('out', params.out);
+                    vjsp = videojs(playerID);
                     vjsp.play();
                     vjsp.currentTime(params.in);
                     // vjsp.on('timeupdate', VJS.stopper(playerID,params.out));
-                    vjsp.on('timeupdate', function () {
-                        if (this.currentTime() > params.out) {
-                            this.pause();
-                        }
-                    });
+                    // vjsp.on('timeupdate', function () {
+                    //     if (this.currentTime() > params.out) {
+                    //         this.pause();
+                    //     }
+                    // });
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
