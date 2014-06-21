@@ -78,7 +78,9 @@ VJS.buildClipMenu = function () {
                     vjsp.currentTime(params.in);
                     // vjsp.on('timeupdate', VJS.stopper(playerID,params.out));
                     vjsp.on('timeupdate', function () {
-                        this.pause();
+                        if (this.currentTime() > params.out) {
+                            this.pause();
+                        }
                     });
                 });
                 var clipLI = Y.Node.create("<li></li>");
