@@ -206,14 +206,10 @@ class filter_videojs_video extends filter_videojs_base {
     public function pass_to_js() {
         global $PAGE;
         $json = '';
-        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips));
         echo "<pre>";
         print_r($this->clips);
         echo "</pre>";
-        // $test = json_encode(get_object_vars($this), JSON_UNESCAPED_SLASHES, JSON_FORCE_OBJECT);
-        echo "<pre>";
-        print_r($json);
-         echo "</pre>";
+        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips));
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
     }
 
@@ -236,6 +232,7 @@ class filter_videojs_clip extends filter_videojs_base {
         if (array_count_values($this->mimes)[''] == count($this->mimes)) {
             $this->mimes = $mimes;
         }
+        $this->params['mimes'] = $this->mimes;
     }
 }
 

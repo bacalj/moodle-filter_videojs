@@ -47,6 +47,7 @@ VJS.init = function (params) {
 
     // Parse the information passed in from the PHP.
     var jsonClips = JSON.parse(params.clips);
+    console.log(jsonClips);
 
     // Create the array, keyed to each video id.
     VJS.videos[jsonClips.id]=jsonClips;
@@ -61,8 +62,6 @@ VJS.buildClipMenu = function () {
         p.setData('playerID', p._node.id);
         var vjsp = videojs(p.getData('playerID'));
         vjsp.on('timeupdate', function() {
-            console.log(p.getData('out'));
-            console.log(this.currentTime());
             if (this.currentTime() < p.getData('in')) {
                 this.currentTime(p.getData('in'));
             }
