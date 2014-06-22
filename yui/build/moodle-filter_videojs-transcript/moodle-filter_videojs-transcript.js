@@ -60,6 +60,9 @@ VJS.buildClipMenu = function () {
         var vjsp = videojs(p.getData('playerID'));
         vjsp.on('timeupdate', function() {
             console.log(p.getData('out'));
+            if (this.currentTime() < p.getData('in')) {
+                this.currentTime(p.getData('in'));
+            }
             if (p.getData('out') === '') {
                 return;
             }
@@ -89,15 +92,10 @@ VJS.buildClipMenu = function () {
                     var params = this.getData('params');
                     var playerID = this.getData('playerID');
                     p.setData('out', params.out);
+                    p.setData('in', params.in);
                     vjsp = videojs(playerID);
                     vjsp.play();
                     vjsp.currentTime(params.in);
-                    // vjsp.on('timeupdate', VJS.stopper(playerID,params.out));
-                    // vjsp.on('timeupdate', function () {
-                    //     if (this.currentTime() > params.out) {
-                    //         this.pause();
-                    //     }
-                    // });
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
