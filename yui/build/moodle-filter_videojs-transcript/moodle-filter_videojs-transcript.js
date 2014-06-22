@@ -60,6 +60,7 @@ VJS.buildClipMenu = function () {
         var vjsp = videojs(p.getData('playerID'));
         vjsp.on('timeupdate', function() {
             console.log(p.getData('out'));
+            console.log(this.currentTime());
             if (this.currentTime() < p.getData('in')) {
                 this.currentTime(p.getData('in'));
             }
