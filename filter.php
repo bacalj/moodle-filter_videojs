@@ -55,10 +55,6 @@ class filter_videojs extends moodle_text_filter {
             $vos[] = $vo;
         }
         global $COURSE;
-        // echo "<pre>";
-        // print_r($this->context);
-        // print_r($vos);
-        // echo "</pre>";
         $text = str_replace($patterns, $replacements, $text);
         return $text;
     }
