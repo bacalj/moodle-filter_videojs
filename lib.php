@@ -84,11 +84,6 @@ class filter_videojs_base {
     );
 
     /*
-     * The source types process in the way that VideoJS wants them
-     */
-    protected $jsonmimes = array();
-
-    /*
      * The params must be defined by the child classes
      */
     public $params = array();
