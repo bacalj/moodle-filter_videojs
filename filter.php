@@ -42,19 +42,31 @@ class filter_videojs extends moodle_text_filter {
      * @return string The filtered content
      */
     public function filter($text, array $options = array()) {
+
+        // We'll use the context id to guarantee unique id's for the videos. 
+        // Filtering happens at the mod level, and there may be several per page.
         $contextid = $this->context->id;
+
+        // Define the string to pluck out.
         $regex = '\[videojs\].*?\[\/videojs\]';
+
+        // Find all the matches and store them in a $shortcodes array.
         preg_match_all("/$regex/sm", $text, $shortcodes, PREG_SET_ORDER);
+
+        // Replace the shortcodes with HTML5 video markup.
         $vos = array();
         $patterns = array();
         $replacements = array();
         foreach ($shortcodes as $key => $sc) {
+            // Build the markup using the $contextid and the $shortcodes array index for uniqueness.
             $vo = new filter_videojs_video($sc[0], $contextid . "_" . $key);
             $patterns[$key] = $sc[0];
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
+            // This array may be unneccessary. Consider removing it.
             $vos[] = $vo;
         }
         global $COURSE;
+        // Do the swap.
         $text = str_replace($patterns, $replacements, $text);
         return $text;
     }
