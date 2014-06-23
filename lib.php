@@ -29,33 +29,79 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Video JS base class.
  *
+ * Core properties and methods to be available to various component objects.
+ * To a considerable extent, this class is about parsing the shortcodes.
+ * The child classes contain more information about how to render.
+ *
  * @package    filter_videojs
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 class filter_videojs_base {
 
+    /*
+     * The full shortcode passed from the filter
+     */
     protected $shortcode;
+
+    /* 
+     * The shortcode with all internal tags removed
+     */
     protected $toplevel;
+
+    /*
+     * The shortcode with all internal clip tags removed and other internal tags intact
+     */
     protected $noclips;
+
+    /*
+     * This will be a variable to hold transcript lines
+     */
     protected $transcript;
+
+    /*
+     * The property to be returned to the filter
+     */
     protected $html;
+
+    /*
+     * An array of raw shortcodes for all the clips
+     */
     protected $clips = array();
+
+    /*
+     * An array of all the tracks
+     */
     protected $tracks = array();
+
+    /*
+     * An array of the various source types we need to look for
+     */
     protected $mimes = array(
         'mp4'        => '',
         'webm'       => '',
         'ogg'        => '',
     );
+
+    /*
+     * The source types process in the way that VideoJS wants them
+     */
+    protected $jsonmimes = array();
+
+    /*
+     * The params must be defined by the child classes
+     */
     public $params = array();
 
     /**
      * Get toplevel code
-     * Gets the shortcode with no sub-tags
+     * Gets the relevant shortcode with no sub-tags
      */
     public function get_toplevel($kind) {
+        // Remove the top-level tag.
         $paramlist = str_replace("[$kind]", '', $this->shortcode);
         $paramlist = str_replace("[/$kind]", '', $paramlist);
+        // Remove all internal tags and their contents.
         $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
         return $paramlist;
     }
@@ -65,14 +111,17 @@ class filter_videojs_base {
      * Gets the shortcode with no clip sub-tags, but leaves any toplevel tracks intact
      */
     public function get_noclips($kind) {
+        // Remove the top-level tag.
         $paramlist = str_replace("[$kind]", '', $this->shortcode);
         $paramlist = str_replace("[/$kind]", '', $paramlist);
+        // Remove any internal clips.
         $noclips = preg_replace("/\[clip\].*?\[\/clip\]/sm", '', $paramlist);
         return $noclips;
     }
 
     /**
      * Parse the shortcode parameters
+     * Get values for all the mime types as well as for object-specific params
      */
     public function get_params() {
         $this->get_values($this->params, $this->toplevel);
@@ -81,6 +130,7 @@ class filter_videojs_base {
 
     /**
      * Get the values for a given parameter
+     * Values may be wrapped in single or double quotes or they may be bare
      */
     public function get_values(&$keys, $paramlist) {
         foreach ($keys as $key => $value) {
@@ -130,7 +180,7 @@ class filter_videojs_base {
         return $this->tracks;
     }
 
-}
+} /* End of filter_videojs_base class */
 
 /**
  * Video JS object class.
@@ -141,6 +191,9 @@ class filter_videojs_base {
  */
 class filter_videojs_video extends filter_videojs_base {
 
+    /*
+     * The params that will be part of building the HTML
+     */
     public $params = array(
         'id'         => '',
         'poster'     => '',
