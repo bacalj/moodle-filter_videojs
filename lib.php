@@ -29,9 +29,9 @@ defined('MOODLE_INTERNAL') || die();
 /**
  * Video JS base class.
  *
- * Core properties and methods to be available to various component objects.
+ * Core properties and methods to be available to various component objects built from the shortcodes.
  * To a considerable extent, this class is about parsing the shortcodes.
- * The child classes contain more information about how to render.
+ * The child classes contain more information about how to render them into objects.
  *
  * @package    filter_videojs
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
@@ -202,7 +202,6 @@ class filter_videojs_video extends filter_videojs_base {
 
     /**
      * Create an object for each shortcode
-     *
      */
     public function __construct($shortcode, $id) {
         $this->shortcode = $shortcode;
@@ -261,8 +260,13 @@ class filter_videojs_video extends filter_videojs_base {
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
     }
 
-}
+} /* end of class filter_videojs_video */
 
+/*
+ * filter_videojs_clip
+ *
+ * Get all of the relevant information for each clip
+ */
 class filter_videojs_clip extends filter_videojs_base {
 
     public $params = array(
@@ -281,6 +285,13 @@ class filter_videojs_clip extends filter_videojs_base {
             $this->mimes = $mimes;
         }
         $this->params['mimes'] = $this->mimes;
+        $sources = $this->params['mimes'];
+        foreach ($sources as $type => $source) {
+            $this->params['srctypes'] = array(
+                'type' => $type,
+                'src'  => $source
+            );
+        }
     }
 }
 
