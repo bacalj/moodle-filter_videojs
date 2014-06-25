@@ -96,8 +96,15 @@ VJS.buildClipMenu = function () {
                     p.setData('out', params.out);
                     p.setData('in', params.in);
                     vjsp = videojs(playerID);
-                    vjsp.play();
+                    // var srctypes = [];
+                    // for(var i in params.srctypes) {
+                    //     srctypes.push(params.srctypes[i]);
+                    // }
+                    // console.log(vjsp.src());
                     vjsp.currentTime(params.in);
+                    // vjsp.src({type: 'video/ogg', src: 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv'});
+                    vjsp.play();
+                    vjsp.src(params.srctypes);
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);

@@ -256,7 +256,7 @@ class filter_videojs_video extends filter_videojs_base {
         echo "<pre>";
         print_r($this->clips);
         echo "</pre>";
-        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips));
+        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips), JSON_UNESCAPED_SLASHES);
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
     }
 
@@ -287,8 +287,11 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params['mimes'] = $this->mimes;
         $sources = $this->params['mimes'];
         foreach ($sources as $type => $source) {
+            if ($source == '') {
+                continue;
+            }
             $this->params['srctypes'][] = array(
-                'type' => $type,
+                'type' => "video/$type",
                 'src'  => $source
             );
         }
