@@ -287,7 +287,7 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params['mimes'] = $this->mimes;
         $sources = $this->params['mimes'];
         foreach ($sources as $type => $source) {
-            $this->params['srctypes'] = array(
+            $this->params['srctypes'][] = array(
                 'type' => $type,
                 'src'  => $source
             );
