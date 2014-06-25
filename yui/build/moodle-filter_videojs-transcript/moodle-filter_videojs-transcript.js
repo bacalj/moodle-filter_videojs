@@ -101,8 +101,12 @@ VJS.buildClipMenu = function () {
                     // console.log(vjsp.src());
                     vjsp.currentTime(params.in);
                     // vjsp.src({type: 'video/ogg', src: 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv'});
+                    // vjsp.src(params.srctypes);
+                    var source = params.mimes.ogg
+                    vjsp.src([
+                        {type: "video/ogg", src: source},
+                    ]);
                     vjsp.play();
-                    vjsp.src(params.srctypes);
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
