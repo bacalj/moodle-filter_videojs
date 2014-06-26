@@ -84,9 +84,31 @@ VJS.buildClipMenu = function () {
                 if (clipLabel == '') {
                     clipConnector = '';
                 }
-                var clipLink = Y.Node.create("<a href='#'>Clip " + n + clipConnector + clipLabel + "</a>");
+                var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink'>Clip " + n + clipConnector + clipLabel + "</a>");
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
+                var clipLI = Y.Node.create("<li></li>");
+                clipLI.append(clipLink);
+                clipUL.append(clipLI);
+            }
+        }
+    });
+
+    Y.on('domready', function () {
+        alert('ready');
+        console.log(Y.all('.filter-vjs-cliplink'));
+        Y.all('.filter-vjs-cliplink').on('click', function (e) {
+            console.log(e);
+            e.preventDefault();
+            VJS.playClip(this);
+        });
+    });
+}
+
+VJS.playClip = function (link) {
+    console.log(link);
+    alert('working');
+    return;
                 clipLink.on("click", function (e) {
                     e.preventDefault();
                     var params = this.getData('params');
@@ -119,10 +141,4 @@ VJS.buildClipMenu = function () {
                         this.play();
                     });
                 });
-                var clipLI = Y.Node.create("<li></li>");
-                clipLI.append(clipLink);
-                clipUL.append(clipLI);
-            }
-        }
-    });
 }
