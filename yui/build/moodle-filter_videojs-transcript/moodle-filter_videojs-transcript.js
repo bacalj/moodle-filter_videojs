@@ -99,14 +99,25 @@ VJS.buildClipMenu = function () {
                     //     srctypes.push(params.srctypes[i]);
                     // }
                     // console.log(vjsp.src());
-                    vjsp.currentTime(params.in);
+                    // vjsp.one('play', function () {
+                    //     var source = params.mimes.ogg
+                    //     vjsp.src([
+                    //         {type: "video/ogg", src: "http://kevinwiliarty.com/openvideo/remote-conbowling.ogv"},
+                    //     ]);
+                    //     vjsp.currentTime(params.in);
+                    // });
                     // vjsp.src({type: 'video/ogg', src: 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv'});
                     // vjsp.src(params.srctypes);
-                    var source = params.mimes.ogg
-                    vjsp.src([
-                        {type: "video/ogg", src: source},
-                    ]);
-                    vjsp.play();
+                    // var source = params.mimes.ogg
+                    // vjsp.src([
+                    //     {type: "video/ogg", src: source},
+                    // ]);
+                    vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
+                    vjsp.load();
+                    vjsp.ready(function(){
+                        this.currentTime(params.in);
+                        this.play();
+                    });
                 });
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
