@@ -60,6 +60,8 @@ VJS.buildClipMenu = function () {
         p.setData('playerID', p._node.id);
         var vjsp = videojs(p.getData('playerID'));
         vjsp.on('timeupdate', function() {
+            // console.log(p.getData('clipSrc'));
+            // this.src(p.getData('clipSrc'));
             if (this.currentTime() < p.getData('in')) {
                 this.currentTime(p.getData('in'));
             }
@@ -87,6 +89,7 @@ VJS.buildClipMenu = function () {
                 var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink'>Clip " + n + clipConnector + clipLabel + "</a>");
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
+                clipLink.setData('clipSrc', 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
@@ -96,18 +99,26 @@ VJS.buildClipMenu = function () {
 
     Y.on('domready', function () {
         alert('ready');
-        console.log(Y.all('.filter-vjs-cliplink'));
-        Y.all('.filter-vjs-cliplink').on('click', function (e) {
-            console.log(e);
-            e.preventDefault();
-            VJS.playClip(this);
+        linkList = Y.all('.filter-vjs-cliplink');
+        console.log(linkList);
+        linkList.each(function (clip) {
+            console.log(clip);
+            clip.on('click', function (e) {
+                e.preventDefault();
+                VJS.playClip(this);
+            });
+            // VJS.playClip(this);
         });
     });
 }
 
 VJS.playClip = function (link) {
-    console.log(link);
-    alert('working');
+    var params = link.getData('params');
+    var playerID = link.getData('playerID');
+    var vjsp = videojs(playerID);
+    vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
+    vjsp.play();
+    console.log(params.in);
     return;
                 clipLink.on("click", function (e) {
                     e.preventDefault();
@@ -116,6 +127,7 @@ VJS.playClip = function (link) {
                     p.setData('out', params.out);
                     p.setData('in', params.in);
                     vjsp = videojs(playerID);
+                    vjsp.currentTime(0);
                     // var srctypes = [];
                     // for(var i in params.srctypes) {
                     //     srctypes.push(params.srctypes[i]);
@@ -134,11 +146,11 @@ VJS.playClip = function (link) {
                     // vjsp.src([
                     //     {type: "video/ogg", src: source},
                     // ]);
-                    vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
-                    vjsp.load();
-                    vjsp.ready(function(){
-                        this.currentTime(params.in);
-                        this.play();
-                    });
+                    // vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
+                    // vjsp.load();
+                    // vjsp.ready(function(){
+                    //     this.currentTime(params.in);
+                    //     this.play();
+                    // });
                 });
 }
