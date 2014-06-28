@@ -116,7 +116,12 @@ VJS.playClip = function (link) {
     var params = link.getData('params');
     var playerID = link.getData('playerID');
     var vjsp = videojs(playerID);
+    var vjspNode = Y.one('#'+playerID);
+    vjspNode.setData('in', params.in);
+    vjspNode.setData('out', params.out);
     vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
+    vjsp.bigPlayButton.hide();
+    vjsp.controlBar.show();
     vjsp.play();
     console.log(params.in);
     return;
