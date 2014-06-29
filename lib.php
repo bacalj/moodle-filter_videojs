@@ -253,9 +253,6 @@ class filter_videojs_video extends filter_videojs_base {
     public function pass_to_js() {
         global $PAGE;
         $json = '';
-        echo "<pre>";
-        print_r($this->clips);
-        echo "</pre>";
         $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips), JSON_UNESCAPED_SLASHES);
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
     }
