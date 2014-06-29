@@ -136,6 +136,7 @@ VJS.playClip = function (link) {
                     p.setData('out', params.out);
                     p.setData('in', params.in);
                     vjsp = videojs(playerID);
+                    vjsp.load();
                     vjsp.currentTime(0);
                     // var srctypes = [];
                     // for(var i in params.srctypes) {
