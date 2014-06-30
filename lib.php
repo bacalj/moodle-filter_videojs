@@ -254,7 +254,9 @@ class filter_videojs_video extends filter_videojs_base {
         global $PAGE;
         global $CFG;
         $sources = array(
-            'js_source' => $CFG->filter_videojs_js_source,
+            'js_source'  => $CFG->filter_videojs_js_source,
+            'css_source' => $CFG->filter_videojs_css_source,
+            'swf_source' => $CFG->filter_videojs_swf_source,
         );
         $json = '';
         $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips, 'sources' => $sources), JSON_UNESCAPED_SLASHES);

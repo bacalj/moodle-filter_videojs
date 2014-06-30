@@ -20,7 +20,7 @@ VJS.init = function (params) {
         // These are things that should run only once per page.
 
         // Load the VideoJS .js and .css.
-        Y.Get.load(['http://eik.local/videojs/dist/video-js/video-js.css', params.sources.js_source], function (err) {
+        Y.Get.load([params.sources.css_source, params.sources.js_source], function (err) {
             // Log any error loading the VideoJS files
             if (err) {
                 Y.log('Error loading CSS: ' + err[0].error, 'error');
@@ -31,7 +31,7 @@ VJS.init = function (params) {
             Y.log('CSS loaded successfully');
 
             // Load the VideoJS Flash player after the main .js has loaded.
-            videojs.options.flash.swf = "http://eik.local/videojs/dist/video-js/video-js.swf";
+            videojs.options.flash.swf = params.sources.swf_source;
 
             // When the DOM is ready, process the clip menus.
             Y.on('domready', function () {
