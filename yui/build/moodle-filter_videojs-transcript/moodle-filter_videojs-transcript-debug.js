@@ -116,49 +116,18 @@ VJS.playClip = function (link) {
     var params = link.getData('params');
     var playerID = link.getData('playerID');
     var vjsp = videojs(playerID);
+    vjsp.load();
     var vjspNode = Y.one('#'+playerID);
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
-    vjsp.src([
-        {type: 'video/ogg', src: params.mimes.ogg},
-    ]);
-    vjsp.bigPlayButton.hide();
-    vjsp.controlBar.show();
-    vjsp.play();
-    return;
-                clipLink.on("click", function (e) {
-                    e.preventDefault();
-                    var params = this.getData('params');
-                    var playerID = this.getData('playerID');
-                    p.setData('out', params.out);
-                    p.setData('in', params.in);
-                    vjsp = videojs(playerID);
-                    vjsp.load();
-                    vjsp.currentTime(0);
-                    // var srctypes = [];
-                    // for(var i in params.srctypes) {
-                    //     srctypes.push(params.srctypes[i]);
-                    // }
-                    // vjsp.one('play', function () {
-                    //     var source = params.mimes.ogg
-                    //     vjsp.src([
-                    //         {type: "video/ogg", src: "http://kevinwiliarty.com/openvideo/remote-conbowling.ogv"},
-                    //     ]);
-                    //     vjsp.currentTime(params.in);
-                    // });
-                    // vjsp.src({type: 'video/ogg', src: 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv'});
-                    // vjsp.src(params.srctypes);
-                    // var source = params.mimes.ogg
-                    // vjsp.src([
-                    //     {type: "video/ogg", src: source},
-                    // ]);
-                    // vjsp.src('http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
-                    // vjsp.load();
-                    // vjsp.ready(function(){
-                    //     this.currentTime(params.in);
-                    //     this.play();
-                    // });
-                });
+    vjsp.ready(function () {
+        vjsp.src([
+            {type: 'video/ogg', src: params.mimes.ogg},
+        ]);
+        vjsp.bigPlayButton.hide();
+        vjsp.controlBar.show();
+        vjsp.play();
+    });
 }
 
 
