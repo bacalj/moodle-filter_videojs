@@ -60,6 +60,10 @@ VJS.buildClipMenu = function () {
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         var vjsp = videojs(p.getData('playerID'));
+        if (vjsp.techName === 'Flash') {
+            alert('The Video.js Flash player does not support all of the Video.js Filter functionality. Please try a different browser.');
+            return;
+        }
         vjsp.ready(function () {
             this.load();
         });
@@ -115,11 +119,11 @@ VJS.playClip = function (link) {
     var playerID = link.getData('playerID');
     var vjsp = videojs(playerID);
     vjsp.load();
-    console.debug(params);
     var vjspNode = Y.one('#'+playerID);
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
     vjsp.ready(function () {
+        console.log(vjsp.techName);
         vjsp.src(params.srctypes);
         vjsp.bigPlayButton.hide();
         vjsp.controlBar.show();
