@@ -23,4 +23,10 @@ if ($ADMIN->fulltree) {
     $settings->add(new admin_setting_configtext('filter_videojs_js_source', get_string('jssource', 'filter_videojs'),
         get_string('configjssource', 'filter_videojs'), $defaultvjsdir . '/video.js', PARAM_URL, 80));
 
+    $settings->add(new admin_setting_configtext('filter_videojs_css_source', get_string('csssource', 'filter_videojs'),
+        get_string('configcsssource', 'filter_videojs'), $defaultvjsdir . '/video-js.css', PARAM_URL, 80));
+
+    $settings->add(new admin_setting_configtext('filter_videojs_swf_source', get_string('swfsource', 'filter_videojs'),
+        get_string('configswfsource', 'filter_videojs'), $defaultvjsdir . '/video-js.swf', PARAM_URL, 80));
+
 }
