@@ -197,7 +197,7 @@ class filter_videojs_video extends filter_videojs_base {
         'class'      => 'video-js vjs-default-skin',
         'controls'   => 'controls',
         'preload'    => 'auto',
-        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] }'
+        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] , "techOrder" : ["html5","flash"]}'
     );
 
     /**
