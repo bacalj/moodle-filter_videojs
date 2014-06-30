@@ -100,14 +100,12 @@ VJS.buildClipMenu = function () {
     });
 
     Y.on('domready', function () {
-        alert('ready');
         linkList = Y.all('.filter-vjs-cliplink');
         linkList.each(function (clip) {
             clip.on('click', function (e) {
                 e.preventDefault();
                 VJS.playClip(this);
             });
-            // VJS.playClip(this);
         });
     });
 }
@@ -117,13 +115,12 @@ VJS.playClip = function (link) {
     var playerID = link.getData('playerID');
     var vjsp = videojs(playerID);
     vjsp.load();
+    console.debug(params);
     var vjspNode = Y.one('#'+playerID);
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
     vjsp.ready(function () {
-        vjsp.src([
-            {type: 'video/ogg', src: params.mimes.ogg},
-        ]);
+        vjsp.src(params.srctypes);
         vjsp.bigPlayButton.hide();
         vjsp.controlBar.show();
         vjsp.play();
