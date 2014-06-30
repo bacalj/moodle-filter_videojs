@@ -15,11 +15,12 @@ VJS.init = function (params) {
 
     // Test to see whether this function needs to run.
     if (typeof VJS.initialized === 'undefined') {
+    console.log(params);
 
         // These are things that should run only once per page.
 
         // Load the VideoJS .js and .css.
-        Y.Get.load(['http://eik.local/videojs/dist/video-js/video-js.css', 'http://eik.local/videojs/dist/video-js/video.js'], function (err) {
+        Y.Get.load(['http://eik.local/videojs/dist/video-js/video-js.css', params.sources.js_source], function (err) {
             // Log any error loading the VideoJS files
             if (err) {
                 return;

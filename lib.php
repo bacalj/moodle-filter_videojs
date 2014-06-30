@@ -252,9 +252,13 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function pass_to_js() {
         global $PAGE;
+        global $CFG;
+        $sources = array(
+            'js_source' => $CFG->filter_videojs_js_source,
+        );
         $json = '';
-        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips), JSON_UNESCAPED_SLASHES);
-        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'other' => 'other')));
+        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips, 'sources' => $sources), JSON_UNESCAPED_SLASHES);
+        $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'sources' => $sources)));
     }
 
 } /* end of class filter_videojs_video */
