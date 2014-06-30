@@ -15,7 +15,6 @@ VJS.init = function (params) {
 
     // Test to see whether this function needs to run.
     if (typeof VJS.initialized === 'undefined') {
-    console.log(params);
 
         // These are things that should run only once per page.
 
@@ -46,7 +45,6 @@ VJS.init = function (params) {
 
     // Parse the information passed in from the PHP.
     var jsonClips = JSON.parse(params.clips);
-    console.log(jsonClips);
 
     // Create the array, keyed to each video id.
     VJS.videos[jsonClips.id]=jsonClips;
@@ -60,9 +58,10 @@ VJS.buildClipMenu = function () {
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         var vjsp = videojs(p.getData('playerID'));
+        vjsp.ready(function () {
+            this.load();
+        });
         vjsp.on('timeupdate', function() {
-            // console.log(p.getData('clipSrc'));
-            // this.src(p.getData('clipSrc'));
             if (this.currentTime() < p.getData('in')) {
                 this.currentTime(p.getData('in'));
             }
@@ -101,9 +100,7 @@ VJS.buildClipMenu = function () {
     Y.on('domready', function () {
         alert('ready');
         linkList = Y.all('.filter-vjs-cliplink');
-        console.log(linkList);
         linkList.each(function (clip) {
-            console.log(clip);
             clip.on('click', function (e) {
                 e.preventDefault();
                 VJS.playClip(this);
@@ -126,7 +123,6 @@ VJS.playClip = function (link) {
     vjsp.bigPlayButton.hide();
     vjsp.controlBar.show();
     vjsp.play();
-    console.log(params.in);
     return;
                 clipLink.on("click", function (e) {
                     e.preventDefault();
@@ -141,7 +137,6 @@ VJS.playClip = function (link) {
                     // for(var i in params.srctypes) {
                     //     srctypes.push(params.srctypes[i]);
                     // }
-                    // console.log(vjsp.src());
                     // vjsp.one('play', function () {
                     //     var source = params.mimes.ogg
                     //     vjsp.src([
