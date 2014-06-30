@@ -14,16 +14,13 @@
 // You should have received a copy of the GNU General Public License
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
-/**
- * Video.js filter
- *
- * @package    filter_videojs
- * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
+defined('MOODLE_INTERNAL') || die;
 
-defined('MOODLE_INTERNAL') || die();
+$defaultvjsdir = $CFG->wwwroot . '/filter/videojs/vjslib';
 
-$string['configjssource'] = 'Enter the URL to the video.js file you want to use.';
-$string['jssource']       = 'URL to video.js';
-$string['filtername']     = 'Video.js';
+if ($ADMIN->fulltree) {
+
+    $settings->add(new admin_setting_configtext('filter_videojs_js_source', get_string('jssource', 'filter_videojs'),
+        get_string('configjssource', 'filter_videojs'), $defaultvjsdir . '/video.js', PARAM_URL, 80));
+
+}
