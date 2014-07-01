@@ -50,8 +50,13 @@ VJS.init = function (params) {
     VJS.videos[jsonClips.id]=jsonClips;
 }
 
+// Build the clip menu.
 VJS.buildClipMenu = function () {
+
+    // First, get an array of all the players.
     VJS.players = Y.all('.video-js');
+
+    // Then do for each of the players.
     VJS.players.each(function (p) {
 
         p.setData('out', '');
@@ -94,6 +99,7 @@ VJS.buildClipMenu = function () {
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
                 clipLink.setData('clipSrc', 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
+                clipLink.setData('clipNumber', i);
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
