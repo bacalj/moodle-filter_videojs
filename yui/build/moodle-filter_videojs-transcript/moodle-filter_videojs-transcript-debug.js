@@ -71,7 +71,6 @@ VJS.buildClipMenu = function () {
             return;
         }
         vjsp.ready(function () {
-            console.log(p.getData('srctypes'));
             this.load();
         });
         vjsp.on('timeupdate', function() {
@@ -108,11 +107,9 @@ VJS.buildClipMenu = function () {
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
                 if (i === 0) {
-                    console.log(clipParams);
                     p.setData('in', clipParams.in);
                     p.setData('out', clipParams.out);
                     p.setData('srctypes', clipParams.srctypes);
-                    console.log(p);
                 }
             }
         }
