@@ -64,12 +64,14 @@ VJS.buildClipMenu = function () {
         p.setData('out', '');
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
+        p.setData('srctypes', '');
         var vjsp = videojs(p.getData('playerID'));
         if (vjsp.techName === 'Flash') {
             alert('The Video.js Flash player does not support all of the Video.js Filter functionality. Please try a different browser.');
             return;
         }
         vjsp.ready(function () {
+            console.log(p.getData('srctypes'));
             this.load();
         });
         vjsp.on('timeupdate', function() {
@@ -97,18 +99,28 @@ VJS.buildClipMenu = function () {
                 if (clipLabel == '') {
                     clipConnector = '';
                 }
-                var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink'>Clip " + n + clipConnector + clipLabel + "</a>");
+                var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink clip" + n + "'>Clip " + n + clipConnector + clipLabel + "</a>");
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
                 clipLink.setData('clipSrc', 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
-          //      clipLink.setData('clipNumber', i);
+                clipLink.setData('clipNumber', i);
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipUL.append(clipLI);
+                if (i === 0) {
+                    console.log(clipParams);
+                    p.setData('in', clipParams.in);
+                    p.setData('out', clipParams.out);
+                    p.setData('srctypes', clipParams.srctypes);
+                    console.log(p);
+                }
             }
-        // var firstClip = p.one('.filter-vjs-cliplink');
-        // console.log(firstClip);
         }
+        // var firstClip = clipUL.one('.clip1');
+        // VJS.playClip(firstClip);
+        var vjsp = videojs(p.getData('playerID'));
+        vjsp.load();
+        vjsp.src(p.getData('srctypes'));
     });
 
     Y.on('domready', function () {
@@ -131,7 +143,6 @@ VJS.playClip = function (link) {
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
     vjsp.ready(function () {
-        console.log(vjsp.techName);
         vjsp.src(params.srctypes);
         vjsp.bigPlayButton.hide();
         vjsp.controlBar.show();
