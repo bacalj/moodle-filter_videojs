@@ -86,10 +86,19 @@ VJS.buildClipMenu = function () {
             }
         });
 
-        var clips = VJS.videos[p._node.id].clips;
+        // console.log(VJS.videos);
+        // console.log(VJS.players);
+        // console.log(p._node.id);
+        // console.log(p.getData('playerID'));
+        // console.log(p.getData('id'));
+        // var clips = VJS.videos[p._node.id].clips;
+        console.log(p);
+        var clips = VJS.videos[p.getData('playerID')].clips;
+        console.log(p);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
-            p.insert(clipUL, 'before');
+            // p.insert(clipUL, 'before');
+            Y.one('#' + p.getData('playerID')).insert(clipUL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var n = i+1;
                 var clipParams = clips[i].params;
