@@ -63,7 +63,8 @@ VJS.buildClipMenu = function () {
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         p.setData('srctypes', '');
-        var vjsp = videojs(p.getData('playerID'));
+        // var vjsp = videojs(p.getData('playerID'));
+        var vjsp = videojs(p.get('id'));
         if (vjsp.techName === 'Flash') {
             alert('The Video.js Flash player does not support all of the Video.js Filter functionality. Please try a different browser.');
             return;
@@ -84,9 +85,7 @@ VJS.buildClipMenu = function () {
             }
         });
 
-        console.log(p);
         var clips = VJS.videos[p.getData('playerID')].clips;
-        console.log(p);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
             Y.one('#' + p.getData('playerID')).insert(clipUL, 'before');
@@ -115,7 +114,9 @@ VJS.buildClipMenu = function () {
         }
         vjsp = videojs(p.getData('playerID'));
         vjsp.load();
-        vjsp.src(p.getData('srctypes'));
+        if (p.getData('srctypes') != '') {
+            vjsp.src(p.getData('srctypes'));
+        }
     });
 
     Y.on('domready', function () {
