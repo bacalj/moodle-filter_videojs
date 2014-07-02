@@ -48,7 +48,7 @@ VJS.init = function (params) {
 
     // Create the array, keyed to each video id.
     VJS.videos[jsonClips.id]=jsonClips;
-}
+};
 
 // Build the clip menu.
 VJS.buildClipMenu = function () {
@@ -84,25 +84,18 @@ VJS.buildClipMenu = function () {
             }
         });
 
-        // console.log(VJS.videos);
-        // console.log(VJS.players);
-        // console.log(p._node.id);
-        // console.log(p.getData('playerID'));
-        // console.log(p.getData('id'));
-        // var clips = VJS.videos[p._node.id].clips;
         console.log(p);
         var clips = VJS.videos[p.getData('playerID')].clips;
         console.log(p);
         if (clips.length > 0) {
             var clipUL = Y.Node.create("<ul></ul>");
-            // p.insert(clipUL, 'before');
             Y.one('#' + p.getData('playerID')).insert(clipUL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var n = i+1;
                 var clipParams = clips[i].params;
                 var clipLabel = clipParams.label;
                 var clipConnector = ': ';
-                if (clipLabel == '') {
+                if (clipLabel === '') {
                     clipConnector = '';
                 }
                 var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink clip" + n + "'>Clip " + n + clipConnector + clipLabel + "</a>");
@@ -120,9 +113,7 @@ VJS.buildClipMenu = function () {
                 }
             }
         }
-        // var firstClip = clipUL.one('.clip1');
-        // VJS.playClip(firstClip);
-        var vjsp = videojs(p.getData('playerID'));
+        vjsp = videojs(p.getData('playerID'));
         vjsp.load();
         vjsp.src(p.getData('srctypes'));
     });
@@ -136,7 +127,7 @@ VJS.buildClipMenu = function () {
             });
         });
     });
-}
+};
 
 VJS.playClip = function (link) {
     var params = link.getData('params');
@@ -152,7 +143,7 @@ VJS.playClip = function (link) {
         vjsp.controlBar.show();
         vjsp.play();
     });
-}
+};
 
 
 }, '@VERSION@', {"requires": ["base", "node", "event", "get"]});
