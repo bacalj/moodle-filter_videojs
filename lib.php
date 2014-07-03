@@ -261,7 +261,7 @@ class filter_videojs_video extends filter_videojs_base {
             'swf_source' => $CFG->filter_videojs_swf_source,
         );
         $json = '';
-        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips, 'sources' => $sources), JSON_UNESCAPED_SLASHES);
+        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips, 'sources' => $sources));
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'sources' => $sources)));
     }
 
