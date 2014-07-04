@@ -89,24 +89,23 @@ VJS.buildClipMenu = function () {
 
         var clips = VJS.videos[p.getData('playerID')].clips;
         if (clips.length > 0) {
-            var clipUL = Y.Node.create("<ul></ul>");
-            Y.one('#' + p.getData('playerID')).insert(clipUL, 'before');
+            var clipOL = Y.Node.create("<ol></ol>");
+            Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var n = i+1;
                 var clipParams = clips[i].params;
                 var clipLabel = clipParams.label;
-                var clipConnector = ': ';
                 if (clipLabel === '') {
-                    clipConnector = '';
+                    clipLabel = 'Clip';
                 }
-                var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink clip" + n + "'>Clip " + n + clipConnector + clipLabel + "</a>");
+                var clipLink = Y.Node.create("<a href='#' class='filter-vjs-cliplink clip" + n + "'>" + clipLabel + "</a>");
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
                 clipLink.setData('clipSrc', 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
                 clipLink.setData('clipNumber', i);
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
-                clipUL.append(clipLI);
+                clipOL.append(clipLI);
                 if (i === 0) {
                     p.setData('in', clipParams.in);
                     p.setData('out', clipParams.out);
