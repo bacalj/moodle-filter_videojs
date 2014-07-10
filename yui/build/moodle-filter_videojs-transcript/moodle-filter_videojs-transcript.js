@@ -88,6 +88,7 @@ VJS.buildClipMenu = function () {
         var clips = VJS.videos[p.getData('playerID')].clips;
         if (clips.length > 0) {
             var clipOL = Y.Node.create("<ol></ol>");
+            clipOL.addClass('video-js-cliplist');
             Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
             for (var i=0; i < clips.length; i++) {
                 var n = i+1;
