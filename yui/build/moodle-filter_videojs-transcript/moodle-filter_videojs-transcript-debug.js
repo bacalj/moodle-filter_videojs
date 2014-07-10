@@ -103,7 +103,7 @@ VJS.buildClipMenu = function () {
                 clipLink.setData('params', clipParams);
                 clipLink.setData('playerID', p._node.id);
                 clipLink.setData('clipSrc', 'http://kevinwiliarty.com/openvideo/remote-conbowling.ogv');
-                clipLink.setData('clipNumber', i);
+                clipLink.setData('clipNumber', n);
                 var clipLI = Y.Node.create("<li></li>");
                 clipLI.append(clipLink);
                 clipOL.append(clipLI);
@@ -135,9 +135,14 @@ VJS.buildClipMenu = function () {
 VJS.playClip = function (link) {
     var params = link.getData('params');
     var playerID = link.getData('playerID');
+    var clipNumber = link.getData('clipNumber');
+    var activeClipClass = '.clip' + clipNumber;
+    var clipMenu = link.ancestor('li').ancestor('ol');
     var vjsp = videojs(playerID);
     vjsp.load();
     var vjspNode = Y.one('#'+playerID);
+    clipMenu.all('.filter-vjs-cliplink').setStyle('fontWeight', 'normal');
+    clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
     vjsp.ready(function () {
