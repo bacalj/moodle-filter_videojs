@@ -137,7 +137,7 @@ VJS.playClip = function (link) {
     var playerID = link.getData('playerID');
     var clipNumber = link.getData('clipNumber');
     var activeClipClass = '.clip' + clipNumber;
-    var clipMenu = link.ancestor('li').ancestor('ol');
+    var clipMenu = link.ancestor('ol');
     var vjsp = videojs(playerID);
     vjsp.load();
     var vjspNode = Y.one('#'+playerID);
