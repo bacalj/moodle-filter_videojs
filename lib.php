@@ -231,6 +231,11 @@ class filter_videojs_video extends filter_videojs_base {
     public function build_html() {
         $sourcetags = '';
         $tracktags = '';
+        $params = $this->params;
+        if ($params['poster'] == '') {
+            // We need to leave the poster attribute out if it is null to avoid error in FF.
+            unset($params['poster']);
+        }
         foreach ($this->mimes as $mime => $source) {
             if ($source == '') {
                 continue;
@@ -244,7 +249,7 @@ class filter_videojs_video extends filter_videojs_base {
         foreach ($this->tracks as $track) {
             $tracktags .= html_writer::empty_tag('track', $track->params);
         }
-        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $this->params);
+        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
