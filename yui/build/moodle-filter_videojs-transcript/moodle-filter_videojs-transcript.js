@@ -141,6 +141,7 @@ VJS.playClip = function (link) {
     var vjspNode = Y.one('#'+playerID);
     clipMenu.all('.filter-vjs-cliplink').setStyle('fontWeight', 'normal');
     clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
+    clipMenu.one(activeClipClass).blur();
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
     vjsp.ready(function () {
