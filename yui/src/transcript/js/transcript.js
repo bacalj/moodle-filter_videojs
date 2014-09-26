@@ -149,6 +149,13 @@ VJS.playClip = function (link) {
     var track = Y.Node.create("<track src='http://eik.local/captions.vtt' srclang='en' label='test' kind='captions' type='text/vtt' default></track>");
     videoElement.append(track);
     var vjsp = videojs(playerID);
+    var test = vjsp.textTracks_;
+    var tTrack = vjs.TextTrack;
+    vjsp.addTextTrack('captions', 'English', 'en');
+    console.log(vjsp.textTracks_);
+    console.log(tTrack);
+    console.log(vjsp);
+    console.log(vjsp.addTextTrack('captions', 'captions', 'en'));
     vjsp.load();
     vjsp.ready(function () {
         vjsp.src(params.srctypes);
