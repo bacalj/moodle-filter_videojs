@@ -291,6 +291,7 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->noclips = $this->get_noclips('clip');
         $this->get_params();
         $this->tracks = $this->get_tracks();
+        $this->params['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
