@@ -63,6 +63,7 @@ VJS.buildClipMenu = function () {
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         p.setData('srctypes', '');
+        p.setData('tracks', [])
         // var vjsp = videojs(p.getData('playerID'));
         var vjsp = videojs(p.get('id'));
         if (vjsp.techName === 'Flash') {
@@ -136,14 +137,19 @@ VJS.playClip = function (link) {
     var clipNumber = link.getData('clipNumber');
     var activeClipClass = '.clip' + clipNumber;
     var clipMenu = link.ancestor('ol');
-    var vjsp = videojs(playerID);
-    vjsp.load();
+    console.log(link.getData('params'))
     var vjspNode = Y.one('#'+playerID);
+    var videoElement = vjspNode.one('video');
+        console.log(vjspNode);
     clipMenu.all('.filter-vjs-cliplink').setStyle('fontWeight', 'normal');
     clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
     clipMenu.one(activeClipClass).blur();
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
+    var track = Y.Node.create("<track src='http://eik.local/captions.vtt' srclang='en' label='test' kind='captions' type='text/vtt' default></track>");
+    videoElement.append(track);
+    var vjsp = videojs(playerID);
+    vjsp.load();
     vjsp.ready(function () {
         vjsp.src(params.srctypes);
         vjsp.bigPlayButton.hide();
