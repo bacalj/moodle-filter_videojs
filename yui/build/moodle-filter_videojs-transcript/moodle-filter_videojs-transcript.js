@@ -65,7 +65,6 @@ VJS.buildClipMenu = function () {
         p.setData('srctypes', '');
         // var vjsp = videojs(p.getData('playerID'));
         var vjsp = videojs(p.get('id'));
-        console.log(vjsp);
         if (vjsp.techName === 'Flash') {
             alert('The Video.js Flash player does not support all of the Video.js Filter functionality. Please try a different browser.');
             return;
