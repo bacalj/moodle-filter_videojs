@@ -160,12 +160,16 @@ VJS.playClip = function (link) {
       // vjsp.textTracks_[0].activate();
       // vjsp.textTracks_[0].show();
       // vjsp.controlBar.captionsButton.createItems();
-      console.log(vjsp.controlBar.captionsButton.menu.children_[1]);
-      if (vjsp.controlBar.captionsButton.menu.children_[1]) {
+      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') != undefined) {
+        console.log(vjsp.controlBar.captionsButton.menu.getChild('vjsTrack').el());
+        var vjsTrackEl = vjsp.controlBar.captionsButton.menu.getChild('vjsTrack').el();
+        vjsTrackEl.remove();
+        // Y.one('#'+vjsTrackID).remove();
+        // vjsp.controlBar.captionsButton.menu.children_[1].dispose();
         // vjsp.controlBar.captionsButton.menu.children_[1].hide();
         // vjsp.controlBar.captionsButton.menu.children_.pop();
       }
-      newTrack = new vjs.TextTrackMenuItem(vjsp, {'track': vjsp.textTracks_[0]});
+      newTrack = new vjs.TextTrackMenuItem(vjsp, {'track': vjsp.textTracks_[0], 'name': 'vjsTrack'});
       vjsp.controlBar.captionsButton.menu.addItem(newTrack);
       vjsp.controlBar.captionsButton.show();
     }
