@@ -63,7 +63,7 @@ VJS.buildClipMenu = function () {
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         p.setData('srctypes', '');
-        p.setData('tracks', [])
+        p.setData('tracks', []);
         // var vjsp = videojs(p.getData('playerID'));
         var vjsp = videojs(p.get('id'));
         if (vjsp.techName === 'Flash') {
@@ -137,25 +137,39 @@ VJS.playClip = function (link) {
     var clipNumber = link.getData('clipNumber');
     var activeClipClass = '.clip' + clipNumber;
     var clipMenu = link.ancestor('ol');
-    console.log(link.getData('params'))
     var vjspNode = Y.one('#'+playerID);
     var videoElement = vjspNode.one('video');
-        console.log(vjspNode);
     clipMenu.all('.filter-vjs-cliplink').setStyle('fontWeight', 'normal');
     clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
     clipMenu.one(activeClipClass).blur();
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
-    var track = Y.Node.create("<track src='http://eik.local/captions.vtt' srclang='en' label='test' kind='captions' type='text/vtt' default></track>");
-    videoElement.append(track);
     var vjsp = videojs(playerID);
-    var test = vjsp.textTracks_;
-    var tTrack = vjs.TextTrack;
-    vjsp.addTextTrack('captions', 'English', 'en');
-    console.log(vjsp.textTracks_);
-    console.log(tTrack);
-    console.log(vjsp);
-    console.log(vjsp.addTextTrack('captions', 'captions', 'en'));
+    vjsp.controlBar.captionsButton.hide();
+    if (vjsp.textTracks_[0]) {
+      vjsp.textTracks_[0].disable();
+    }
+    vjsp.textTracks_ = [];
+    if (params.tracks.length > 0) {
+      var kind = params.tracks[0].params.kind;
+      var label = params.tracks[0].params.label;
+      var srclang = params.tracks[0].params.srclang;
+      var src = params.tracks[0].params.src;
+      vjsp.addTextTrack(kind, label, srclang);
+      vjsp.textTracks_[0].src_ = src;
+      // vjsp.textTracks_[0].activate();
+      // vjsp.textTracks_[0].show();
+      // vjsp.controlBar.captionsButton.createItems();
+      console.log(vjsp.controlBar.captionsButton.menu.children_[1]);
+      if (vjsp.controlBar.captionsButton.menu.children_[1]) {
+        vjsp.controlBar.captionsButton.menu.children_[1].deactivate();
+        // vjsp.controlBar.captionsButton.menu.children_.pop();
+        // vjsp.controlBar.captionsButton.menu.children_[1] === undefined;
+      }
+      newTrack = new vjs.TextTrackMenuItem(vjsp, {'track': vjsp.textTracks_[0]});
+      vjsp.controlBar.captionsButton.menu.addItem(newTrack);
+      vjsp.controlBar.captionsButton.show();
+    }
     vjsp.load();
     vjsp.ready(function () {
         vjsp.src(params.srctypes);
