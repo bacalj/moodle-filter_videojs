@@ -122,7 +122,7 @@ VJS.buildClipMenu = function () {
 
                 // We'll want to know the number of the clip
                 var n = i+1;
-                // And we'll want to know the in and out times, etc. 
+                // And we'll want to know the in and out times, etc.
                 var clipParams = clips[i].params;
                 var clipLabel = clipParams.label;
                 if (clipLabel === '') {
@@ -211,6 +211,7 @@ VJS.playClip = function (link) {
     if (params.tracks.length > 0) {
 
       //Get the data (for the first track) out of the node
+      // TODO: allow multiple tracks
       var kind = params.tracks[0].params.kind;
       var label = params.tracks[0].params.label;
       var srclang = params.tracks[0].params.srclang;
@@ -232,6 +233,7 @@ VJS.playClip = function (link) {
       vjsp.controlBar.captionsButton.menu.addItem(newTrack);
 
       // Show the captions button
+      // TODO: select the new track automatically if the previous one had been selected
       vjsp.controlBar.captionsButton.show();
     }
 
