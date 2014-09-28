@@ -146,6 +146,9 @@ class filter_videojs_base {
             }
             preg_match("/$needle/", $paramlist, $matches);
             if (array_key_exists(1, $matches)) {
+                if (($key == 'in') || ($key == 'out')) {
+                    $matches[1] = $this->hms2sec($matches[1]);
+                }
                 $keys[$key] = $matches[1];
             }
         }
@@ -173,6 +176,24 @@ class filter_videojs_base {
             $this->tracks[$key] = new filter_videojs_track($track[0]);
         }
         return $this->tracks;
+    }
+
+    /**
+     * Convert hh:mm:ss to seconds
+     */
+    public function hms2sec($hms) {
+        $sec = 0;
+        $multiplier = 1;
+        $units = explode(':', $hms);
+        $units = array_reverse($units);
+        foreach ($units as $unit) {
+            if ($multiplier > 3600) {
+                return $sec;
+            }
+            $sec += $unit*$multiplier;
+            $multiplier = $multiplier*60;
+        }
+        return $sec;
     }
 
 } /* End of filter_videojs_base class */
