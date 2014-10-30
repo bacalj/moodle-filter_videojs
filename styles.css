@@ -1,3 +1,7 @@
+div.video-js {
+    max-width: 100%;
+}
+
 .video-js-cliplist {
     padding-bottom: 1em;
 }
