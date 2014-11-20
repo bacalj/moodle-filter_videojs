@@ -44,6 +44,7 @@ class filter_videojs extends moodle_text_filter {
     public function filter($text, array $options = array()) {
 
         // We'll use the context id to guarantee unique id's for the videos. 
+        // This is necessary because...
         // Filtering happens at the mod level, and there may be several per page.
         $contextid = $this->context->id;
 
