@@ -115,15 +115,6 @@ class filter_videojs_base {
     }
 
     /**
-     * Parse the shortcode parameters
-     * Get values for all the mime types as well as for object-specific params
-     */
-    public function get_params() {
-        $this->get_values($this->params, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
-    }
-
-    /**
      * Get the values for a given parameter
      * Values may be wrapped in single or double quotes or they may be bare
      */
@@ -269,7 +260,8 @@ class filter_videojs_video extends filter_videojs_base {
         $this->shortcode = $shortcode;
         $this->toplevel = $this->get_toplevel('videojs');
         $this->noclips = $this->get_noclips('videojs');
-        $this->get_params();
+        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->mimes, $this->toplevel);
         $this->params['id'] = "videojs_$id";
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
@@ -285,13 +277,19 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function build_html() {
         parent::build_html();
+        $this->html .= $this->build_noscript();
     }
 
     /**
      * Build noscript for clips
      */
     public function build_noscript() {
-        $noscript = html_writer::tag('', $this->clipsHTML, null);
+        $clipshtml = '';
+        foreach ( $this->clips as $clip ) {
+            // $clipshtml .= $clip->build_html();
+        }
+        $noscript = html_writer::tag('noscript', $clipshtml, null);
+        return $noscript;
     }
 
     /**
@@ -329,7 +327,8 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->shortcode = $clip;
         $this->toplevel = $this->get_toplevel('clip');
         $this->noclips = $this->get_noclips('clip');
-        $this->get_params();
+        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->mimes, $this->toplevel);
         $this->tracks = $this->get_tracks();
         $this->params['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
@@ -362,7 +361,8 @@ class filter_videojs_track extends filter_videojs_base {
     public function __construct($track) {
         $this->shortcode = $track;
         $this->toplevel = $this->get_toplevel('track');
-        $this->get_params();
+        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->mimes, $this->toplevel);
     }
 }
 
