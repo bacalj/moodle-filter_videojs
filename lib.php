@@ -281,6 +281,13 @@ class filter_videojs_video extends filter_videojs_base {
     }
 
     /**
+     * Build HTML
+     */
+    public function build_html() {
+        parent::build_html();
+    }
+
+    /**
      * Build noscript for clips
      */
     public function build_noscript() {
