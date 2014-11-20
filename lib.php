@@ -287,8 +287,8 @@ class filter_videojs_video extends filter_videojs_base {
         $clipshtml = '';
         foreach ( $this->clips as $key => $clip ) {
             $clipnum = $key + 1;
-            $in = $clip->clipparams['in'];
-            $out = $clip->clipparams['out'];
+            $in = ( $clip->clipparams['in'] != '' ) ? $clip->clipparams['in'] : "beginning";
+            $out = ( $clip->clipparams['out'] != '') ? $clip->clipparams['out'] : "end";
             $clipshtml .= "<p>Clip $clipnum: from $in to $out</p>";
             $clipshtml .= $clip->get_html();
         }
