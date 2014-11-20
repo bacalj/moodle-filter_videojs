@@ -123,7 +123,7 @@ VJS.buildClipMenu = function () {
                 // We'll want to know the number of the clip
                 var n = i+1;
                 // And we'll want to know the in and out times, etc.
-                var clipParams = clips[i].params;
+                var clipParams = clips[i].clipparams;
                 var clipLabel = clipParams.label;
                 if (clipLabel === '') {
                     clipLabel = 'Clip';

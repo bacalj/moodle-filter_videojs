@@ -152,7 +152,7 @@ class filter_videojs_base {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes);
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params );
         }
         return $this->clips;
     }
@@ -317,31 +317,31 @@ class filter_videojs_video extends filter_videojs_base {
  */
 class filter_videojs_clip extends filter_videojs_base {
 
-    public $params = array(
+    public $clipparams = array(
         'in'         => '',
         'out'        => '',
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes) {
+    public function __construct($clip, $mimes, $params = array() ) {
         $this->shortcode = $clip;
         $this->toplevel = $this->get_toplevel('clip');
         $this->noclips = $this->get_noclips('clip');
-        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->clipparams, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
         $this->tracks = $this->get_tracks();
-        $this->params['tracks'] = $this->tracks;
+        $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
         }
-        $this->params['mimes'] = $this->mimes;
-        $sources = $this->params['mimes'];
+        $this->clipparams['mimes'] = $this->mimes;
+        $sources = $this->clipparams['mimes'];
         foreach ($sources as $type => $source) {
             if ($source == '') {
                 continue;
             }
-            $this->params['srctypes'][] = array(
+            $this->clipparams['srctypes'][] = array(
                 'type' => "video/$type",
                 'src'  => $source
             );
