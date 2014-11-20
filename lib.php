@@ -285,9 +285,12 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function build_noscript() {
         $clipshtml = '';
-        foreach ( $this->clips as $clip ) {
+        foreach ( $this->clips as $key => $clip ) {
+            $clipnum = $key + 1;
+            $in = $clip->clipparams['in'];
+            $out = $clip->clipparams['out'];
+            $clipshtml .= "<p>Clip $clipnum: from $in to $out</p>";
             $clipshtml .= $clip->get_html();
-            $clipshtml .= "yadda";
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
         return $noscript;
