@@ -196,49 +196,6 @@ class filter_videojs_base {
         return $sec;
     }
 
-} /* End of filter_videojs_base class */
-
-/**
- * Video JS object class.
- *
- * @package    filter_videojs
- * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
- * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
- */
-class filter_videojs_video extends filter_videojs_base {
-
-    /*
-     * The params that will be part of building the HTML
-     */
-    public $params = array(
-        'id'         => '',
-        'poster'     => '',
-        'height'     => '',
-        'width'      => '',
-        'class'      => 'video-js vjs-default-skin',
-        'controls'   => 'controls',
-        'preload'    => 'auto',
-        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] , "techOrder" : ["html5","flash"]}'
-    );
-
-    /**
-     * Create an object for each shortcode
-     */
-    public function __construct($shortcode, $id) {
-        $this->shortcode = $shortcode;
-        $this->toplevel = $this->get_toplevel('videojs');
-        $this->noclips = $this->get_noclips('videojs');
-        $this->get_params();
-        $this->params['id'] = "videojs_$id";
-        $this->clips = $this->get_clips();
-        $this->tracks = $this->get_tracks();
-        if (array_key_exists(0, $this->tracks)) {
-            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
-        }
-        $this->build_html();
-        $this->pass_to_js();
-    }
-
     /**
      * Get HTML
      */
@@ -273,6 +230,61 @@ class filter_videojs_video extends filter_videojs_base {
         $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
+    }
+
+} /* End of filter_videojs_base class */
+
+/**
+ * Video JS object class.
+ *
+ * @package    filter_videojs
+ * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
+ * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
+ */
+class filter_videojs_video extends filter_videojs_base {
+
+    /*
+     * HTML for noscript clips
+     */
+    protected $clipsHTML;
+
+    /*
+     * The params that will be part of building the HTML
+     */
+    public $params = array(
+        'id'         => '',
+        'poster'     => '',
+        'height'     => '',
+        'width'      => '',
+        'class'      => 'video-js vjs-default-skin',
+        'controls'   => 'controls',
+        'preload'    => 'auto',
+        'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] , "techOrder" : ["html5","flash"]}'
+    );
+
+    /**
+     * Create an object for each shortcode
+     */
+    public function __construct($shortcode, $id) {
+        $this->shortcode = $shortcode;
+        $this->toplevel = $this->get_toplevel('videojs');
+        $this->noclips = $this->get_noclips('videojs');
+        $this->get_params();
+        $this->params['id'] = "videojs_$id";
+        $this->clips = $this->get_clips();
+        $this->tracks = $this->get_tracks();
+        if (array_key_exists(0, $this->tracks)) {
+            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
+        }
+        $this->build_html();
+        $this->pass_to_js();
+    }
+
+    /**
+     * Build noscript for clips
+     */
+    public function build_noscript() {
+        $noscript = html_writer::tag('', $this->clipsHTML, null);
     }
 
     /**
