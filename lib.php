@@ -286,7 +286,8 @@ class filter_videojs_video extends filter_videojs_base {
     public function build_noscript() {
         $clipshtml = '';
         foreach ( $this->clips as $clip ) {
-            // $clipshtml .= $clip->build_html();
+            $clipshtml .= $clip->get_html();
+            $clipshtml .= "yadda";
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
         return $noscript;
@@ -327,10 +328,14 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->shortcode = $clip;
         $this->toplevel = $this->get_toplevel('clip');
         $this->noclips = $this->get_noclips('clip');
+        $this->params = $params;
+        $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->clipparams, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
         $this->tracks = $this->get_tracks();
+        $this->clips = array();
         $this->clipparams['tracks'] = $this->tracks;
+        $this->build_html();
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
