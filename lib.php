@@ -351,11 +351,11 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->tracks = $this->get_tracks();
         $this->clips = array();
         $this->clipparams['tracks'] = $this->tracks;
-        $this->build_html();
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
         }
+        $this->build_html();
         $this->clipparams['mimes'] = $this->mimes;
         $sources = $this->clipparams['mimes'];
         foreach ($sources as $type => $source) {
