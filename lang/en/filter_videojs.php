@@ -24,10 +24,13 @@
 
 defined('MOODLE_INTERNAL') || die();
 
+$string['beginning']       = 'beginning';
+$string['clipupper']       = 'Clip';
 $string['configcsssource'] = 'Enter the URL to the video-js.css file you want to use.';
 $string['configjssource']  = 'Enter the URL to the video.js file you want to use.';
 $string['configswfsource'] = 'Enter the URL to the video-js.swf file you want to use.';
 $string['csssource']       = 'URL to video-js.css';
+$string['end']             = 'end';
 $string['fromtime']        = 'from {$a} ';
 $string['jssource']        = 'URL to video.js';
 $string['filtername']      = 'Video.js';

@@ -188,6 +188,19 @@ class filter_videojs_base {
     }
 
     /**
+     * Convert seconds to hh:mm:ss
+     */
+    public function sec2hms($sec) {
+        $h = str_pad(intval($sec/3600), 2, "0", STR_PAD_LEFT);
+        $sec = $sec % 3600;
+        $m = str_pad(intval($sec/60), 2, "0", STR_PAD_LEFT);
+        $s = str_pad($sec % 60, 2, "0", STR_PAD_LEFT);
+        $hms = "$h:$m:$s";
+        $hms = preg_replace( '/^00?:?0?/', '', $hms );
+        return $hms;
+    }
+
+    /**
      * Get HTML
      */
     public function get_html() {
@@ -235,11 +248,6 @@ class filter_videojs_base {
 class filter_videojs_video extends filter_videojs_base {
 
     /*
-     * HTML for noscript clips
-     */
-    protected $clipsHTML;
-
-    /*
      * The params that will be part of building the HTML
      */
     public $params = array(
@@ -285,13 +293,16 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function build_noscript() {
         $clipshtml = '';
+        $beginning = get_string('beginning', 'filter_videojs');
+        $end = get_string('end', 'filter_videojs');
+        $clipstr = get_string('clipupper', 'filter_videojs');
         foreach ( $this->clips as $key => $clip ) {
             $clipnum = $key + 1;
-            $in = ( $clip->clipparams['in'] != '' ) ? $clip->clipparams['in'] : "beginning";
-            $out = ( $clip->clipparams['out'] != '') ? $clip->clipparams['out'] : "end";
+            $in = ( $clip->clipparams['in'] != '' ) ? $this->sec2hms( $clip->clipparams['in'] ) : $beginning;
+            $out = ( $clip->clipparams['out'] != '') ? $this->sec2hms( $clip->clipparams['out'] ) : $end;
             $from = get_string('fromtime', 'filter_videojs', $in);
             $to = get_string('totime', 'filter_videojs', $out);
-            $clipshtml .= "<p>Clip $clipnum: $from $to</p>";
+            $clipshtml .= "<p>$clipstr $clipnum: $from $to</p>";
             $clipshtml .= $clip->get_html();
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
