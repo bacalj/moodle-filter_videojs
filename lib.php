@@ -191,12 +191,12 @@ class filter_videojs_base {
      * Convert seconds to hh:mm:ss
      */
     public function sec2hms($sec) {
-        $h = str_pad(intval($sec/3600), 2, "0", STR_PAD_LEFT);
+        $h = intval($sec/3600);
         $sec = $sec % 3600;
         $m = str_pad(intval($sec/60), 2, "0", STR_PAD_LEFT);
         $s = str_pad($sec % 60, 2, "0", STR_PAD_LEFT);
         $hms = "$h:$m:$s";
-        $hms = preg_replace( '/^00?:?0?/', '', $hms );
+        $hms = preg_replace( '/^0:?0?/', '', $hms );
         return $hms;
     }
 
