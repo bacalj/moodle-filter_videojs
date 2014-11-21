@@ -289,7 +289,9 @@ class filter_videojs_video extends filter_videojs_base {
             $clipnum = $key + 1;
             $in = ( $clip->clipparams['in'] != '' ) ? $clip->clipparams['in'] : "beginning";
             $out = ( $clip->clipparams['out'] != '') ? $clip->clipparams['out'] : "end";
-            $clipshtml .= "<p>Clip $clipnum: from $in to $out</p>";
+            $from = get_string('fromtime', 'filter_videojs', $in);
+            $to = get_string('totime', 'filter_videojs', $out);
+            $clipshtml .= "<p>Clip $clipnum: $from $to</p>";
             $clipshtml .= $clip->get_html();
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
