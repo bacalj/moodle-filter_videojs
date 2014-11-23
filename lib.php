@@ -37,12 +37,17 @@ defined('MOODLE_INTERNAL') || die();
  * @copyright  2014 onwards Kevin Wiliarty {@link http://kevinwiliarty.com}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-class filter_videojs_base {
+abstract class filter_videojs_base {
 
     /*
      * The full shortcode passed from the filter
      */
     protected $shortcode;
+
+    /*
+     * The tag
+     */
+    protected $tag;
 
     /* 
      * The shortcode with all internal tags removed
@@ -60,17 +65,17 @@ class filter_videojs_base {
     protected $transcript;
 
     /*
-     * The property to be returned to the filter
+     * The HTML markup for the shortcode
      */
     protected $html;
 
     /*
-     * An array of raw shortcodes for all the clips
+     * An array of raw shortcodes for all the child clips
      */
     protected $clips = array();
 
     /*
-     * An array of all the tracks
+     * An array of all the top-level tracks
      */
     protected $tracks = array();
 
@@ -88,17 +93,32 @@ class filter_videojs_base {
      */
     public $params = array();
 
+    public function __construct($shortcode) {
+        $this->shortcode = $shortcode;
+        $this->extract_the_tag();
+        $this->get_toplevel();
+    }
+
+    /**
+     * Extract the tag from the shortcode
+     */
+    public function extract_the_tag() {
+        preg_match( '/^\[([^ ]*)\]/' , $this->shortcode , $matches );
+        $this->tag = $matches[1];
+    }
+
     /**
      * Get toplevel code
      * Gets the relevant shortcode with no sub-tags
      */
-    public function get_toplevel($kind) {
+    public function get_toplevel() {
         // Remove the top-level tag.
-        $paramlist = str_replace("[$kind]", '', $this->shortcode);
-        $paramlist = str_replace("[/$kind]", '', $paramlist);
+        $tag = $this->tag;
+        $paramlist = str_replace("[$tag]", '', $this->shortcode);
+        $paramlist = str_replace("[/$tag]", '', $paramlist);
         // Remove all internal tags and their contents.
         $paramlist = preg_replace("/\[(\w*)\].*?\[\/\\1\]/sm", '', $paramlist);
-        return $paramlist;
+        $this->toplevel = $paramlist;
     }
 
     /**
@@ -265,8 +285,7 @@ class filter_videojs_video extends filter_videojs_base {
      * Create an object for each shortcode
      */
     public function __construct($shortcode, $id) {
-        $this->shortcode = $shortcode;
-        $this->toplevel = $this->get_toplevel('videojs');
+        parent::__construct($shortcode);
         $this->noclips = $this->get_noclips('videojs');
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
@@ -341,8 +360,7 @@ class filter_videojs_clip extends filter_videojs_base {
     );
 
     public function __construct($clip, $mimes, $params = array() ) {
-        $this->shortcode = $clip;
-        $this->toplevel = $this->get_toplevel('clip');
+        parent::__construct($clip);
         $this->noclips = $this->get_noclips('clip');
         $this->params = $params;
         $this->get_values($this->params, $this->toplevel);
@@ -380,6 +398,7 @@ class filter_videojs_track extends filter_videojs_base {
     );
 
     public function __construct($track) {
+        //parent::__construct($track);
         $this->shortcode = $track;
         $this->toplevel = $this->get_toplevel('track');
         $this->get_values($this->params, $this->toplevel);
