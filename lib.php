@@ -103,7 +103,7 @@ abstract class filter_videojs_base {
      * Extract the tag from the shortcode
      */
     public function extract_the_tag() {
-        preg_match( '/^\[([^ ]*)\]/' , $this->shortcode , $matches );
+        preg_match( '/^\[([a-z]*)\]/' , $this->shortcode , $matches );
         $this->tag = $matches[1];
     }
 
@@ -398,9 +398,7 @@ class filter_videojs_track extends filter_videojs_base {
     );
 
     public function __construct($track) {
-        //parent::__construct($track);
-        $this->shortcode = $track;
-        $this->toplevel = $this->get_toplevel('track');
+        parent::__construct($track);
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
     }
