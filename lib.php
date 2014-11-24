@@ -97,6 +97,7 @@ abstract class filter_videojs_base {
         $this->shortcode = $shortcode;
         $this->extract_the_tag();
         $this->get_toplevel();
+        $this->get_noclips();
     }
 
     /**
@@ -125,13 +126,14 @@ abstract class filter_videojs_base {
      * Get noclips
      * Gets the shortcode with no clip sub-tags, but leaves any toplevel tracks intact
      */
-    public function get_noclips($kind) {
+    public function get_noclips() {
         // Remove the top-level tag.
-        $paramlist = str_replace("[$kind]", '', $this->shortcode);
-        $paramlist = str_replace("[/$kind]", '', $paramlist);
+        $tag = $this->tag;
+        $paramlist = str_replace("[$tag]", '', $this->shortcode);
+        $paramlist = str_replace("[/$tag]", '', $paramlist);
         // Remove any internal clips.
         $noclips = preg_replace("/\[clip\].*?\[\/clip\]/sm", '', $paramlist);
-        return $noclips;
+        $this->noclips = $noclips;
     }
 
     /**
@@ -286,7 +288,6 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function __construct($shortcode, $id) {
         parent::__construct($shortcode);
-        $this->noclips = $this->get_noclips('videojs');
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
         $this->params['id'] = "videojs_$id";
@@ -361,7 +362,6 @@ class filter_videojs_clip extends filter_videojs_base {
 
     public function __construct($clip, $mimes, $params = array() ) {
         parent::__construct($clip);
-        $this->noclips = $this->get_noclips('clip');
         $this->params = $params;
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->clipparams, $this->toplevel);
