@@ -100,6 +100,7 @@ abstract class filter_videojs_base {
         $this->get_noclips();
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
+        $this->get_tracks();
     }
 
     /**
@@ -189,7 +190,6 @@ abstract class filter_videojs_base {
         foreach ($tracks as $key => $track) {
             $this->tracks[$key] = new filter_videojs_track($track[0]);
         }
-        return $this->tracks;
     }
 
     /**
@@ -291,7 +291,6 @@ class filter_videojs_video extends filter_videojs_base {
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
         $this->get_clips();
-        $this->tracks = $this->get_tracks();
         if (array_key_exists(0, $this->tracks)) {
             $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         }
@@ -364,7 +363,6 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params['id'] .= "_$key";
         parent::__construct($clip);
         $this->get_values($this->clipparams, $this->toplevel);
-        $this->tracks = $this->get_tracks();
         $this->clips = array();
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
