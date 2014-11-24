@@ -98,6 +98,8 @@ abstract class filter_videojs_base {
         $this->extract_the_tag();
         $this->get_toplevel();
         $this->get_noclips();
+        $this->get_values($this->params, $this->toplevel);
+        $this->get_values($this->mimes, $this->toplevel);
     }
 
     /**
@@ -288,8 +290,6 @@ class filter_videojs_video extends filter_videojs_base {
      */
     public function __construct($shortcode, $id) {
         parent::__construct($shortcode);
-        $this->get_values($this->params, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
         $this->params['id'] = "videojs_$id";
         $this->clips = $this->get_clips();
         $this->tracks = $this->get_tracks();
@@ -363,9 +363,7 @@ class filter_videojs_clip extends filter_videojs_base {
     public function __construct($clip, $mimes, $params = array() ) {
         parent::__construct($clip);
         $this->params = $params;
-        $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->clipparams, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
         $this->tracks = $this->get_tracks();
         $this->clips = array();
         $this->clipparams['tracks'] = $this->tracks;
@@ -399,8 +397,6 @@ class filter_videojs_track extends filter_videojs_base {
 
     public function __construct($track) {
         parent::__construct($track);
-        $this->get_values($this->params, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
     }
 }
 
