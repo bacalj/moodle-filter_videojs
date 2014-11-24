@@ -361,8 +361,8 @@ class filter_videojs_clip extends filter_videojs_base {
     );
 
     public function __construct($clip, $mimes, $params = array() ) {
-        parent::__construct($clip);
         $this->params = $params;
+        parent::__construct($clip);
         $this->get_values($this->clipparams, $this->toplevel);
         $this->tracks = $this->get_tracks();
         $this->clips = array();
