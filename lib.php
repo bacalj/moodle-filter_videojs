@@ -176,7 +176,7 @@ abstract class filter_videojs_base {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params );
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
         }
         return $this->clips;
     }
@@ -360,8 +360,9 @@ class filter_videojs_clip extends filter_videojs_base {
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes, $params = array() ) {
+    public function __construct($clip, $mimes, $params, $key ) {
         $this->params = $params;
+        $this->params['id'] .= "_$key";
         parent::__construct($clip);
         $this->get_values($this->clipparams, $this->toplevel);
         $this->tracks = $this->get_tracks();
