@@ -111,6 +111,7 @@ abstract class filter_videojs_base {
             $this->get_clips();
         }
         $this->get_tracks();
+        $this->get_transcript();
     }
 
     /**
@@ -199,6 +200,15 @@ abstract class filter_videojs_base {
         preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
         foreach ($tracks as $key => $track) {
             $this->tracks[$key] = new filter_videojs_track($track[0]);
+        }
+    }
+
+    /**
+     * Get the transcript
+     */
+    public function get_transcript() {
+        if (array_key_exists(0, $this->tracks)) {
+            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
         }
     }
 
@@ -301,9 +311,6 @@ class filter_videojs_video extends filter_videojs_base {
         $this->options['get_clips'] = VIDEOJS_GET_CLIPS;
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
-        if (array_key_exists(0, $this->tracks)) {
-            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
-        }
         $this->build_html();
         $this->pass_to_js();
     }
@@ -411,8 +418,8 @@ class filter_videojs_transcript {
 
     private $src;
 
-    public function __construct($src) {
-        $this->src = $src;
+    public function __construct($track) {
+        $this->src = $track->params['src'];;
         return $this->src;
     }
 }
