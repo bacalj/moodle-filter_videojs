@@ -178,7 +178,6 @@ abstract class filter_videojs_base {
         foreach ($clips as $key => $clip) {
             $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
         }
-        return $this->clips;
     }
 
     /**
@@ -291,7 +290,7 @@ class filter_videojs_video extends filter_videojs_base {
     public function __construct($shortcode, $id) {
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
-        $this->clips = $this->get_clips();
+        $this->get_clips();
         $this->tracks = $this->get_tracks();
         if (array_key_exists(0, $this->tracks)) {
             $this->transcript = new filter_videojs_transcript($this->tracks[0]);
