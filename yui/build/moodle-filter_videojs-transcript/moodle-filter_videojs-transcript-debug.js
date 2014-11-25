@@ -202,6 +202,7 @@ VJS.playClip = function (link) {
     // Disable any text track from a previously played clip.
     if (vjsp.textTracks_[0]) {
       vjsp.textTracks_[0].disable();
+      vjsp.controlBar.captionsButton.menu.children_[1].el().remove();
     }
 
     // Then get rid of the text tracks
