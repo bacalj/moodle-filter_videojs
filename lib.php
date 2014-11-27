@@ -431,10 +431,22 @@ class filter_videojs_transcript {
 
     public $src;
 
+    public $fulltext;
+
     public function __construct($src) {
         $this->src = $src;
+        $this->fulltext = $this->fetch_transcript();
         echo "<pre>";
-        print_r($src);
+        print_r($this->fulltext);
         echo "</pre>";
+    }
+
+    public function fetch_transcript() {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->src);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
     }
 }
