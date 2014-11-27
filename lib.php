@@ -208,7 +208,7 @@ abstract class filter_videojs_base {
      */
     public function get_transcript() {
         if (array_key_exists(0, $this->tracks)) {
-            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
+            $this->transcript = $this->tracks[0]->transcript;
         }
     }
 
@@ -413,21 +413,28 @@ class filter_videojs_track extends filter_videojs_base {
         'transcript' => false,
     );
 
+    public $transcript;
+
     public function __construct($track) {
         parent::__construct($track);
         $this->get_values( $this->transatts, $this->toplevel );
         if ($this->transatts['transcript'] != 'true') {
             $this->transatts['transcript'] = 'false';
         }
+        if ( $this->transatts['transcript'] == 'true' ) {
+            $this->transcript = new filter_videojs_transcript( $this->params['src'] );
+        }
     }
 }
 
 class filter_videojs_transcript {
 
-    private $src;
+    public $src;
 
-    public function __construct($track) {
-        $this->src = $track->params['src'];;
-        return $this->src;
+    public function __construct($src) {
+        $this->src = $src;
+        echo "<pre>";
+        print_r($src);
+        echo "</pre>";
     }
 }
