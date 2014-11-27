@@ -409,8 +409,16 @@ class filter_videojs_track extends filter_videojs_base {
         'srclang'    => 'en'
     );
 
+    public $transatts = array(
+        'transcript' => false,
+    );
+
     public function __construct($track) {
         parent::__construct($track);
+        $this->get_values( $this->transatts, $this->toplevel );
+        if ($this->transatts['transcript'] != 'true') {
+            $this->transatts['transcript'] = 'false';
+        }
     }
 }
 
