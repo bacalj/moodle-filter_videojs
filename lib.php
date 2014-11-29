@@ -433,11 +433,15 @@ class filter_videojs_transcript {
 
     public $fulltext;
 
+    public $cues;
+
     public function __construct($src) {
         $this->src = $src;
         $this->fulltext = $this->fetch_transcript();
+        $this->cues = $this->parse_cues();
         echo "<pre>";
         print_r($this->fulltext);
+        print_r($this->cues);
         echo "</pre>";
     }
 
@@ -448,5 +452,10 @@ class filter_videojs_transcript {
         $result = curl_exec($ch);
         curl_close($ch);
         return $result;
+    }
+
+    public function parse_cues() {
+        preg_match_all('|\n0|', $this->fulltext, $matches);
+        return $matches;
     }
 }
