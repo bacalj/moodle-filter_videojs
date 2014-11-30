@@ -455,7 +455,8 @@ class filter_videojs_transcript {
     }
 
     public function parse_cues() {
-        preg_match_all('|\n0|', $this->fulltext, $matches);
+        // preg_match_all('|^(\d{1,2}:[^ ]*) --> (\d[^ ]*)$.*?^.*?$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
+        preg_match_all('|^(\d{1,2}:.*?) --> (\d[^ ]*)$.{1,2}^(.+?)$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
         return $matches;
     }
 }
