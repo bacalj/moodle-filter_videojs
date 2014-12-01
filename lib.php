@@ -339,6 +339,10 @@ class filter_videojs_video extends filter_videojs_base {
             $to = get_string('totime', 'filter_videojs', $out);
             $clipshtml .= "<p>$clipstr $clipnum: $from $to</p>";
             $clipshtml .= $clip->get_html();
+            var_dump($clip->transcript);
+            echo "<pre>";
+            //print_r($clip->tracks[0]->transcript->build_html());
+            echo "</pre>";
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
         return $noscript;
@@ -456,6 +460,15 @@ class filter_videojs_transcript {
         foreach ( $cues as $key => $cue ) {
             $this->cues[$key] = new filter_videojs_cue($cue);
         }
+    }
+
+    public function build_html( $in=0, $out='') {
+        $cuehtml = '';
+        foreach ( $this->cues as $cue ) {
+            $cuehtml .= html_writer::tag('p', $cue->caption );
+        }
+        $transcripthtml = html_writer::tag('div', $cuehtml);
+        return $transcripthtml;
     }
 }
 
