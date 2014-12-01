@@ -233,7 +233,7 @@ abstract class filter_videojs_base {
     /**
      * Convert seconds to hh:mm:ss
      */
-    public function sec2hms($sec) {
+    public static function sec2hms($sec) {
         $h = intval($sec/3600);
         $sec = $sec % 3600;
         $m = str_pad(intval($sec/60), 2, "0", STR_PAD_LEFT);
@@ -333,8 +333,8 @@ class filter_videojs_video extends filter_videojs_base {
         $clipstr = get_string('clipupper', 'filter_videojs');
         foreach ( $this->clips as $key => $clip ) {
             $clipnum = $key + 1;
-            $in = ( $clip->clipparams['in'] != '' ) ? $this->sec2hms( $clip->clipparams['in'] ) : $beginning;
-            $out = ( $clip->clipparams['out'] != '') ? $this->sec2hms( $clip->clipparams['out'] ) : $end;
+            $in = ( $clip->clipparams['in'] != '' ) ? self::sec2hms( $clip->clipparams['in'] ) : $beginning;
+            $out = ( $clip->clipparams['out'] != '') ? self::sec2hms( $clip->clipparams['out'] ) : $end;
             $from = get_string('fromtime', 'filter_videojs', $in);
             $to = get_string('totime', 'filter_videojs', $out);
             $clipshtml .= "<p>$clipstr $clipnum: $from $to</p>";
