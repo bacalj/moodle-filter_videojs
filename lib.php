@@ -174,7 +174,7 @@ abstract class filter_videojs_base {
             preg_match("/$needle/", $paramlist, $matches);
             if (array_key_exists(1, $matches)) {
                 if (($key == 'in') || ($key == 'out')) {
-                    $matches[1] = $this->hms2sec($matches[1]);
+                    $matches[1] = self::hms2sec($matches[1]);
                 }
                 $keys[$key] = $matches[1];
             }
@@ -215,7 +215,7 @@ abstract class filter_videojs_base {
     /**
      * Convert hh:mm:ss to seconds
      */
-    public function hms2sec($hms) {
+    public static function hms2sec($hms) {
         $sec = 0;
         $multiplier = 1;
         $units = explode(':', $hms);
@@ -439,10 +439,6 @@ class filter_videojs_transcript {
         $this->src = $src;
         $this->fulltext = $this->fetch_transcript();
         $this->parse_cues();
-        echo "<pre>";
-        print_r($this->fulltext);
-        print_r($this->cues);
-        echo "</pre>";
     }
 
     public function fetch_transcript() {
@@ -457,8 +453,6 @@ class filter_videojs_transcript {
     public function parse_cues() {
         $cues = preg_split('/^$/m', $this->fulltext);
         unset($cues[0]);
-        // preg_match_all('|^(\d{1,2}:[^ ]*) --> (\d[^ ]*)$.*?^.*?$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
-        // preg_match_all('|^(\d{1,2}:.*?) --> (\d[^ ]*)$.{1,2}^(.+?)$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
         foreach ( $cues as $key => $cue ) {
             $this->cues[$key] = new filter_videojs_cue($cue);
         }
@@ -466,8 +460,6 @@ class filter_videojs_transcript {
 }
 
 class filter_videojs_cue {
-
-    public $str;
 
     public $hmsin;
 
@@ -480,10 +472,11 @@ class filter_videojs_cue {
     public $caption;
 
     public function __construct($str) {
-        $this->str = $str;
-        preg_match('|^([0-9:.]+) --> ([0-9:.]+).*?\n(.*)|sm', $this->str, $matches);
+        preg_match('|^([0-9:.]+) --> ([0-9:.]+).*?\n(.*)|sm', $str, $matches);
         $this->hmsin = $matches[1];
+        $this->secin = filter_videojs_base::hms2sec($this->hmsin);
         $this->hmsout = $matches[2];
+        $this->secout = filter_videojs_base::hms2sec($this->hmsout);
         $this->caption = trim($matches[3]);
     }
 }
