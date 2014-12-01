@@ -469,7 +469,21 @@ class filter_videojs_cue {
 
     public $str;
 
+    public $hmsin;
+
+    public $hmsout;
+
+    public $secin;
+
+    public $secout;
+
+    public $caption;
+
     public function __construct($str) {
         $this->str = $str;
+        preg_match('|^([0-9:.]+) --> ([0-9:.]+).*?\n(.*)|sm', $this->str, $matches);
+        $this->hmsin = $matches[1];
+        $this->hmsout = $matches[2];
+        $this->caption = trim($matches[3]);
     }
 }
