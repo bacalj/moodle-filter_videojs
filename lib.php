@@ -433,12 +433,12 @@ class filter_videojs_transcript {
 
     public $fulltext;
 
-    public $cues;
+    public $cues = array();
 
     public function __construct($src) {
         $this->src = $src;
         $this->fulltext = $this->fetch_transcript();
-        $this->cues = $this->parse_cues();
+        $this->parse_cues();
         echo "<pre>";
         print_r($this->fulltext);
         print_r($this->cues);
@@ -455,8 +455,21 @@ class filter_videojs_transcript {
     }
 
     public function parse_cues() {
+        $cues = preg_split('/^$/m', $this->fulltext);
+        unset($cues[0]);
         // preg_match_all('|^(\d{1,2}:[^ ]*) --> (\d[^ ]*)$.*?^.*?$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
-        preg_match_all('|^(\d{1,2}:.*?) --> (\d[^ ]*)$.{1,2}^(.+?)$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
-        return $matches;
+        // preg_match_all('|^(\d{1,2}:.*?) --> (\d[^ ]*)$.{1,2}^(.+?)$|sm', $this->fulltext, $matches, PREG_SET_ORDER);
+        foreach ( $cues as $key => $cue ) {
+            $this->cues[$key] = new filter_videojs_cue($cue);
+        }
+    }
+}
+
+class filter_videojs_cue {
+
+    public $str;
+
+    public function __construct($str) {
+        $this->str = $str;
     }
 }
