@@ -337,12 +337,14 @@ class filter_videojs_video extends filter_videojs_base {
             $out = ( $clip->clipparams['out'] != '') ? self::sec2hms( $clip->clipparams['out'] ) : $end;
             $from = get_string('fromtime', 'filter_videojs', $in);
             $to = get_string('totime', 'filter_videojs', $out);
-            $clipshtml .= "<p>$clipstr $clipnum: $from $to</p>";
-            $clipshtml .= $clip->get_html();
-            var_dump($clip->transcript);
-            echo "<pre>";
-            //print_r($clip->tracks[0]->transcript->build_html());
-            echo "</pre>";
+            $cliptitle = html_writer::tag('p', "$clipstr $clipnum: $from $to", array('class' => 'videojs_cliptitle'));
+            $clipvideo = $clip->get_html();
+            $cliptranscript = '';
+            if (isset($clip->transcript)) {
+                $cliptranscript = $clip->tracks[0]->transcript->build_html($in, $out);
+            }
+            $clipdiv = html_writer::tag('div', $cliptitle.$clipvideo.$cliptranscript, array('class' => 'videojs_noscript_clip'));
+            $clipshtml .= $clipdiv;
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
         return $noscript;
