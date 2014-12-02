@@ -465,12 +465,18 @@ class filter_videojs_transcript {
     }
 
     public function build_html( $in=0, $out='') {
-        $cuehtml = '';
+        $tablerows = array();
         foreach ( $this->cues as $cue ) {
-            $cuehtml .= html_writer::tag('p', $cue->caption );
+            $timecell = new html_table_cell($cue->hmsin);
+            $timecell->style = 'text-align: right; font-weight: bold;';
+            $captioncell = new html_table_cell($cue->caption);
+            $row = new html_table_row(array($timecell, $captioncell));
+            array_push($tablerows, $row);
         }
-        $transcripthtml = html_writer::tag('div', $cuehtml);
-        return $transcripthtml;
+        $table = new html_table();
+        $table->data = $tablerows;
+        
+        return html_writer::table($table);
     }
 }
 
