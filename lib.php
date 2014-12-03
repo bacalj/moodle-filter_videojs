@@ -341,7 +341,7 @@ class filter_videojs_video extends filter_videojs_base {
             $clipvideo = $clip->get_html();
             $cliptranscript = '';
             if (isset($clip->transcript)) {
-                $cliptranscript = $clip->tracks[0]->transcript->build_html($in, $out);
+                $cliptranscript = $clip->tracks[0]->transcript->build_html($clip->clipparams['in'], $clip->clipparams['out']);
             }
             $clipdiv = html_writer::tag('div', $cliptitle.$clipvideo.$cliptranscript, array('class' => 'videojs_noscript_clip'));
             $clipshtml .= $clipdiv;
@@ -467,6 +467,12 @@ class filter_videojs_transcript {
     public function build_html( $in=0, $out='') {
         $tablerows = array();
         foreach ( $this->cues as $cue ) {
+            if ( $cue->secout < $in ) {
+                continue;
+            }
+            if ( $cue->secin > $out ) {
+                break;
+            }
             $timecell = new html_table_cell($cue->hmsin);
             $timecell->style = 'text-align: right; font-weight: bold;';
             $captioncell = new html_table_cell($cue->caption);
