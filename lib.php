@@ -411,7 +411,7 @@ class filter_videojs_track extends filter_videojs_base {
     public $params = array(
         'src'        => '',
         'kind'       => 'captions',
-        'label'      => 'English',
+        'label'      => 'captions',
         'srclang'    => 'en'
     );
 
