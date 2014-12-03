@@ -198,12 +198,11 @@ abstract class filter_videojs_base {
     public function get_tracks() {
         $regex = '\[track\].*?\[\/track\]';
         preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
-        echo "<pre>";
-        print_r($tracks);
-        echo "</pre>";
+        $in = (isset($this->clipparams)) ? $this->clipparams['in'] : '0';
+        $out = (isset($this->clipparams)) ? $this->clipparams['out'] : '';
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
-            $this->tracks[0] = new filter_videojs_track($tracks[0][0]);
+            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out);
         }
     }
 
@@ -425,7 +424,7 @@ class filter_videojs_track extends filter_videojs_base {
 
     public $transcript;
 
-    public function __construct($track) {
+    public function __construct($track, $in='0', $out='') {
         parent::__construct($track);
         $this->get_values( $this->transatts, $this->toplevel );
         if ($this->transatts['transcript'] != 'true') {
