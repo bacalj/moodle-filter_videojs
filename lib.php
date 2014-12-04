@@ -207,11 +207,6 @@ abstract class filter_videojs_base {
         if (isset($tracks[0][0])) {
             $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out);
         }
-        if (isset($this->clipparams)) {
-            echo "<pre>";
-            print_r($this->clipparams);
-            echo "</pre>";
-        }
     }
 
     /**
@@ -352,11 +347,7 @@ class filter_videojs_video extends filter_videojs_base {
             $clipvideo = $clip->get_html();
             $cliptranscript = '';
             if (isset($clip->transcript)) {
-                //$cliptranscript = $clip->tracks[0]->transcript->build_html($clip->clipparams['in'], $clip->clipparams['out']);
                 $cliptranscript = $clip->tracks[0]->transcript->html;
-                echo "<pre>";
-                print_r($clip->transcript);
-                echo "</pre>";
             }
             $clipdiv = html_writer::tag('div', $cliptitle.$clipvideo.$cliptranscript, array('class' => 'videojs_noscript_clip'));
             $clipshtml .= $clipdiv;
@@ -446,9 +437,7 @@ class filter_videojs_track extends filter_videojs_base {
         if ($this->transatts['transcript'] != 'true') {
             $this->transatts['transcript'] = 'false';
         }
-        if ( $this->transatts['transcript'] == 'true' ) {
-            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
-        }
+        $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
     }
 }
 
