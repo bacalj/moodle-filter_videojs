@@ -110,6 +110,9 @@ abstract class filter_videojs_base {
         if ( $this->options['get_clips'] ) {
             $this->get_clips();
         }
+        if ( $this->tag == 'clip' ) {
+            $this->get_values($this->clipparams, $this->toplevel);
+        }
         $this->get_tracks();
         $this->get_transcript();
     }
@@ -203,8 +206,10 @@ abstract class filter_videojs_base {
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
             $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out);
+        }
+        if (isset($this->clipparams)) {
             echo "<pre>";
-            print_r($this->clips);
+            print_r($this->clipparams);
             echo "</pre>";
         }
     }
@@ -395,7 +400,6 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params = $params;
         $this->params['id'] .= "_$key";
         parent::__construct($clip);
-        $this->get_values($this->clipparams, $this->toplevel);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
@@ -431,8 +435,13 @@ class filter_videojs_track extends filter_videojs_base {
 
     public $transcript;
 
+    public $in;
+    public $out;
+
     public function __construct($track, $in='0', $out='') {
         parent::__construct($track);
+        $this->in = $in;
+        $this->out = $out;
         $this->get_values( $this->transatts, $this->toplevel );
         if ($this->transatts['transcript'] != 'true') {
             $this->transatts['transcript'] = 'false';
