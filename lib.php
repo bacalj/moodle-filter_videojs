@@ -487,7 +487,7 @@ class filter_videojs_transcript {
             if ( $cue->secout < $in ) {
                 continue;
             }
-            if ( $cue->secin > $out ) {
+            if (($out != '') && ($cue->secin > $out)) {
                 break;
             }
             $timecell = new html_table_cell($cue->hmsin);
