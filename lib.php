@@ -26,9 +26,6 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-define('VIDEOJS_GET_CLIPS', true);
-define('VIDEOJS_NO_CLIPS', false);
-
 /**
  * Video JS base class.
  *
@@ -96,10 +93,6 @@ abstract class filter_videojs_base {
      */
     public $params = array();
 
-    public $options = array(
-        'get_clips' => VIDEOJS_NO_CLIPS,
-    );
-
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
         $this->extract_the_tag();
@@ -107,7 +100,7 @@ abstract class filter_videojs_base {
         $this->get_noclips();
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
-        if ( $this->options['get_clips'] ) {
+        if ( $this->tag == 'videojs' ) {
             $this->get_clips();
         }
         if ( $this->tag == 'clip' ) {
@@ -314,7 +307,6 @@ class filter_videojs_video extends filter_videojs_base {
      * Create an object for each shortcode
      */
     public function __construct($shortcode, $id) {
-        $this->options['get_clips'] = VIDEOJS_GET_CLIPS;
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
         $this->build_html();
