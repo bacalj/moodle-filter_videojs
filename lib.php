@@ -97,7 +97,7 @@ abstract class filter_videojs_base {
         $this->shortcode = $shortcode;
         $this->extract_tag();
         $this->extract_toplevel();
-        $this->get_noclips();
+        $this->extract_noclips();
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
         if ( $this->tag == 'videojs' ) {
@@ -136,7 +136,7 @@ abstract class filter_videojs_base {
      * Get noclips
      * Gets the shortcode with no clip sub-tags, but leaves any toplevel tracks intact
      */
-    public function get_noclips() {
+    public function extract_noclips() {
         // Remove the top-level tag.
         $tag = $this->tag;
         $paramlist = str_replace("[$tag]", '', $this->shortcode);
