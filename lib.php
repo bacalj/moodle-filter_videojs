@@ -95,8 +95,8 @@ abstract class filter_videojs_base {
 
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
-        $this->extract_the_tag();
-        $this->get_toplevel();
+        $this->extract_tag();
+        $this->extract_toplevel();
         $this->get_noclips();
         $this->get_values($this->params, $this->toplevel);
         $this->get_values($this->mimes, $this->toplevel);
@@ -113,7 +113,7 @@ abstract class filter_videojs_base {
     /**
      * Extract the tag from the shortcode
      */
-    public function extract_the_tag() {
+    public function extract_tag() {
         preg_match( '/^\[([a-z]*)\]/' , $this->shortcode , $matches );
         $this->tag = $matches[1];
     }
@@ -122,7 +122,7 @@ abstract class filter_videojs_base {
      * Get toplevel code
      * Gets the relevant shortcode with no sub-tags
      */
-    public function get_toplevel() {
+    public function extract_toplevel() {
         // Remove the top-level tag.
         $tag = $this->tag;
         $paramlist = str_replace("[$tag]", '', $this->shortcode);
