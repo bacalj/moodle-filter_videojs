@@ -70,6 +70,11 @@ abstract class filter_videojs_base {
     protected $html;
 
     /*
+     * An array of raw shortcodes for all the child clips
+     */
+    protected $clips = array();
+
+    /*
      * An array of all the top-level tracks
      */
     protected $tracks = array();
@@ -88,7 +93,15 @@ abstract class filter_videojs_base {
      */
     public $params = array();
 
+    /**
+     * The attribute types to parse for this shortcode element
+     */
     public $atttypes = array( 'params' , 'mimes' );
+
+    /**
+     * The child elements to load for this shortcode element
+     */
+    public $childloaders = array( 'load_tracks' , 'load_transcript' );
 
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
@@ -98,8 +111,9 @@ abstract class filter_videojs_base {
         foreach ($this->atttypes as $atttype) {
             $this->load_values($this->$atttype, $this->toplevel);
         }
-        $this->get_tracks();
-        $this->get_transcript();
+        foreach ($this->childloaders as $childloader) {
+            $this->$childloader();
+        }
     }
 
     /**
@@ -170,9 +184,20 @@ abstract class filter_videojs_base {
     }
 
     /**
+     * Get the clips
+     */
+    public function load_clips() {
+        $regex = '\[clip\].*?\[\/clip\]';
+        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
+        foreach ($clips as $key => $clip) {
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
+        }
+    }
+
+    /**
      * Get the tracks
      */
-    public function get_tracks() {
+    public function load_tracks() {
         $regex = '\[track\].*?\[\/track\]';
         preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
         $in = (isset($this->clipparams)) ? $this->clipparams['in'] : '0';
@@ -186,7 +211,7 @@ abstract class filter_videojs_base {
     /**
      * Get the transcript
      */
-    public function get_transcript() {
+    public function load_transcript() {
         if (array_key_exists(0, $this->tracks)) {
             $this->transcript = $this->tracks[0]->transcript;
         }
@@ -284,18 +309,13 @@ class filter_videojs_video extends filter_videojs_base {
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] , "techOrder" : ["html5","flash"]}'
     );
 
-    /*
-     * An array of raw shortcodes for all the child clips
-     */
-    protected $clips = array();
-
     /**
      * Create an object for each shortcode
      */
     public function __construct($shortcode, $id) {
+        array_push( $this->childloaders, 'load_clips' );
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
-        $this->get_clips();
         $this->build_html();
         $this->pass_to_js();
     }
@@ -306,17 +326,6 @@ class filter_videojs_video extends filter_videojs_base {
     public function build_html() {
         parent::build_html();
         $this->html .= $this->build_noscript();
-    }
-
-    /**
-     * Get the clips
-     */
-    public function get_clips() {
-        $regex = '\[clip\].*?\[\/clip\]';
-        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
-        foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
-        }
     }
 
     /**
@@ -419,6 +428,8 @@ class filter_videojs_track extends filter_videojs_base {
 
     public $in;
     public $out;
+
+    public $childloaders = array();
 
     public function __construct($track, $in='0', $out='') {
         array_push( $this->atttypes, 'transatts' );
