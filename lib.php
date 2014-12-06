@@ -25,6 +25,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
+define("VIDEOJS_WITHOUT_CLIPS", 0);
+define("VIDEOJS_WITH_CLIPS", 1);
 
 /**
  * Video JS base class.
@@ -258,7 +260,7 @@ abstract class filter_videojs_base {
     /**
      * Build HTML
      */
-    public function build_html() {
+    public function build_html($withclips=VIDEOJS_WITHOUT_CLIPS) {
         $sourcetags = '';
         $tracktags = '';
         $params = $this->params;
@@ -278,6 +280,9 @@ abstract class filter_videojs_base {
         }
         foreach ($this->tracks as $track) {
             $tracktags .= html_writer::empty_tag('track', $track->params);
+        }
+        if ( $withclips == VIDEOJS_WITH_CLIPS ) {
+            $params['class'] .= ' videojs-withclips';
         }
         $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
@@ -323,8 +328,11 @@ class filter_videojs_video extends filter_videojs_base {
     /**
      * Build HTML
      */
-    public function build_html() {
-        parent::build_html();
+    public function build_html($withclips=VIDEOJS_WITHOUT_CLIPS) {
+        if ( $this->clips != array() ) {
+            $withclips = VIDEOJS_WITH_CLIPS;
+        }
+        parent::build_html($withclips);
         $this->html .= $this->build_noscript();
     }
 
