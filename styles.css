@@ -16,3 +16,12 @@ div.video-js {
     padding: 3px;
     text-shadow: 2px 2px 2px black, 2px -2px 2px black, -2px 2px 2px black, -2px -2px 2px black;
 }
+
+.videojs_noscript_clip {
+    border-color: #aaa;
+    border-radius: 6px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 2em auto;
+    padding: 1em;
+}
