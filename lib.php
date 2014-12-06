@@ -40,12 +40,12 @@ defined('MOODLE_INTERNAL') || die();
 abstract class filter_videojs_base {
 
     /*
-     * The full shortcode passed from the filter
+     * The full shortcode from which the object is built
      */
     protected $shortcode;
 
     /*
-     * The tag
+     * The tag that brackets the shortcode
      */
     protected $tag;
 
@@ -60,7 +60,7 @@ abstract class filter_videojs_base {
     protected $noclips;
 
     /*
-     * This will be a variable to hold transcript lines
+     * A transcript created from a captions file
      */
     protected $transcript;
 
@@ -68,11 +68,6 @@ abstract class filter_videojs_base {
      * The HTML markup for the shortcode
      */
     protected $html;
-
-    /*
-     * An array of raw shortcodes for all the child clips
-     */
-    protected $clips = array();
 
     /*
      * An array of all the top-level tracks
@@ -89,22 +84,19 @@ abstract class filter_videojs_base {
     );
 
     /*
-     * The params must be defined by the child classes
+     * Params to be defined by the child classes
      */
     public $params = array();
+
+    public $atttypes = array( 'params' , 'mimes' );
 
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
         $this->extract_tag();
         $this->extract_toplevel();
         $this->extract_noclips();
-        $this->get_values($this->params, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
-        if ( $this->tag == 'videojs' ) {
-            $this->get_clips();
-        }
-        if ( $this->tag == 'clip' ) {
-            $this->get_values($this->clipparams, $this->toplevel);
+        foreach ($this->atttypes as $atttype) {
+            $this->load_values($this->$atttype, $this->toplevel);
         }
         $this->get_tracks();
         $this->get_transcript();
@@ -150,7 +142,7 @@ abstract class filter_videojs_base {
      * Get the values for a given parameter
      * Values may be wrapped in single or double quotes or they may be bare
      */
-    public function get_values(&$keys, $paramlist) {
+    public function load_values(&$keys, $paramlist) {
         foreach ($keys as $key => $value) {
             preg_match( "/${key}=(.)/", $paramlist, $quotes);
             if (!array_key_exists(1, $quotes)) {
@@ -174,17 +166,6 @@ abstract class filter_videojs_base {
                 }
                 $keys[$key] = $matches[1];
             }
-        }
-    }
-
-    /**
-     * Get the clips
-     */
-    public function get_clips() {
-        $regex = '\[clip\].*?\[\/clip\]';
-        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
-        foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
         }
     }
 
@@ -303,12 +284,18 @@ class filter_videojs_video extends filter_videojs_base {
         'data-setup' => '{ "playbackRates" : [0.7, 1, 1.5, 2.0] , "techOrder" : ["html5","flash"]}'
     );
 
+    /*
+     * An array of raw shortcodes for all the child clips
+     */
+    protected $clips = array();
+
     /**
      * Create an object for each shortcode
      */
     public function __construct($shortcode, $id) {
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
+        $this->get_clips();
         $this->build_html();
         $this->pass_to_js();
     }
@@ -319,6 +306,17 @@ class filter_videojs_video extends filter_videojs_base {
     public function build_html() {
         parent::build_html();
         $this->html .= $this->build_noscript();
+    }
+
+    /**
+     * Get the clips
+     */
+    public function get_clips() {
+        $regex = '\[clip\].*?\[\/clip\]';
+        preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
+        foreach ($clips as $key => $clip) {
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
+        }
     }
 
     /**
@@ -382,6 +380,7 @@ class filter_videojs_clip extends filter_videojs_base {
     public function __construct($clip, $mimes, $params, $key ) {
         $this->params = $params;
         $this->params['id'] .= "_$key";
+        array_push( $this->atttypes, 'clipparams' );
         parent::__construct($clip);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
@@ -422,10 +421,10 @@ class filter_videojs_track extends filter_videojs_base {
     public $out;
 
     public function __construct($track, $in='0', $out='') {
+        array_push( $this->atttypes, 'transatts' );
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
-        $this->get_values( $this->transatts, $this->toplevel );
         if ($this->transatts['transcript'] != 'true') {
             $this->transatts['transcript'] = 'false';
         }
