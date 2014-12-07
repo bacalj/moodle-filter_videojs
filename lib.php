@@ -192,7 +192,7 @@ abstract class filter_videojs_base {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $this->tracks, $key );
         }
     }
 
@@ -394,10 +394,14 @@ class filter_videojs_clip extends filter_videojs_base {
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes, $params, $key ) {
+    public function __construct($clip, $mimes, $params, $tracks, $key ) {
         $this->params = $params;
         $this->params['id'] .= "_$key";
         array_push( $this->atttypes, 'clipparams' );
+        $this->tracks = $tracks;
+        echo "<pre>";
+        print_r($this->tracks);
+        echo "</pre>";
         parent::__construct($clip);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
