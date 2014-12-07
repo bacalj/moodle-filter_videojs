@@ -243,10 +243,13 @@ VJS.playClip = function (link) {
       vjsp.controlBar.captionsButton.show();
 
       // Get the transcript from the clipparams
-      var transcriptNode = params.tracks[0].transcript.html;
+      var transcriptHTML = params.tracks[0].transcript.html;
+      console.log(params.tracks[0].transatts);
 
       // Attach the transcript after the video
-      vjspNode.insert(transcriptNode, 'after');
+      if (params.tracks[0].transatts.transcript == 'true') {
+        vjspNode.insert(transcriptHTML, 'after');
+      }
 
     }
 
