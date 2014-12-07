@@ -150,7 +150,7 @@ VJS.buildClipMenu = function () {
         // In case of loading trouble, try uncommenting the two lines immediately below.
         // vjsp = videojs(p.getData('playerID'));
         // vjsp.load();
-        if (p.getData('srctypes') != '') {
+        if (p.getData('srctypes') !== '') {
             vjsp.src(p.getData('srctypes'));
         }
     });
@@ -209,9 +209,9 @@ VJS.playClip = function (link) {
     // Remove any old transcripts
     // var vjspNodeParent = vjspNode.ancestor('div');
     var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript');
-    if ( oldTranscript != null ) {
+    if ( oldTranscript !== null ) {
       oldTranscript.remove();
-    } 
+    }
 
     // If there is any track information stored in the YUI link node ...
     if (params.tracks.length > 0) {
@@ -229,7 +229,7 @@ VJS.playClip = function (link) {
       vjsp.textTracks_[0].src_ = src;
 
       // If there's a leftover item in the track menu, remove it
-      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') != undefined) {
+      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') !== undefined) {
         var vjsTrackEl = vjsp.controlBar.captionsButton.menu.getChild('vjsTrack').el();
         vjsTrackEl.remove();
       }
