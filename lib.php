@@ -508,6 +508,7 @@ class filter_videojs_transcript {
         }
         $table = new html_table();
         $table->data = $tablerows;
+        $table->attributes = array( 'class' => 'generaltable videojs-transcript' );
         
         $this->html = html_writer::table($table);
     }
