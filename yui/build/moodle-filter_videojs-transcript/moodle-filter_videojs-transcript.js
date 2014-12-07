@@ -206,6 +206,13 @@ VJS.playClip = function (link) {
     // Then get rid of the text tracks
     vjsp.textTracks_ = [];
 
+    // Remove any old transcripts
+    // var vjspNodeParent = vjspNode.ancestor('div');
+    var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript');
+    if ( oldTranscript != null ) {
+      oldTranscript.remove();
+    } 
+
     // If there is any track information stored in the YUI link node ...
     if (params.tracks.length > 0) {
 
@@ -236,9 +243,7 @@ VJS.playClip = function (link) {
       vjsp.controlBar.captionsButton.show();
 
       // Get the transcript from the clipparams
-      var transcript = params.tracks[0].transcript;
-      console.log(transcript);
-      var transcriptNode = transcript.html;
+      var transcriptNode = params.tracks[0].transcript.html;
 
       // Attach the transcript after the video
       vjspNode.insert(transcriptNode, 'after');
