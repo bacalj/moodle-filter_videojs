@@ -447,7 +447,9 @@ class filter_videojs_track extends filter_videojs_base {
         if ($this->transatts['transcript'] != 'true') {
             $this->transatts['transcript'] = 'false';
         }
-        $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
+        if ( $this->params['src'] != '' ) {
+            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
+        }
     }
 }
 
