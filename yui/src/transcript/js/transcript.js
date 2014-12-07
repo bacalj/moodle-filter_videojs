@@ -234,6 +234,15 @@ VJS.playClip = function (link) {
       // Show the captions button
       // TODO: select the new track automatically if the previous one had been selected
       vjsp.controlBar.captionsButton.show();
+
+      // Get the transcript from the clipparams
+      var transcript = params.tracks[0].transcript;
+      console.log(transcript);
+      var transcriptNode = transcript.html;
+
+      // Attach the transcript after the video
+      vjspNode.insert(transcriptNode, 'after');
+
     }
 
     // Now load that player
