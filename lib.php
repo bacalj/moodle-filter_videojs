@@ -93,7 +93,7 @@ abstract class filter_videojs_base {
     /*
      * Params to be defined by the child classes
      */
-    public $htmlatts = array();
+    public $params = array();
 
     /**
      * The attribute types to parse for this shortcode element
@@ -192,7 +192,7 @@ abstract class filter_videojs_base {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->htmlatts, $this->tracks, $key );
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $this->tracks, $key );
         }
     }
 
@@ -263,10 +263,10 @@ abstract class filter_videojs_base {
     public function build_html($withclips=VIDEOJS_WITHOUT_CLIPS) {
         $sourcetags = '';
         $tracktags = '';
-        $htmlatts = $this->htmlatts;
-        if ($htmlatts['poster'] == '') {
+        $params = $this->params;
+        if ($params['poster'] == '') {
             // We need to leave the poster attribute out if it is null to avoid error in FF.
-            unset($htmlatts['poster']);
+            unset($params['poster']);
         }
         foreach ($this->mimes as $mime => $source) {
             if ($source == '') {
@@ -279,12 +279,12 @@ abstract class filter_videojs_base {
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
         foreach ($this->tracks as $track) {
-            $tracktags .= html_writer::empty_tag('track', $track->htmlatts);
+            $tracktags .= html_writer::empty_tag('track', $track->params);
         }
         if ( $withclips == VIDEOJS_WITH_CLIPS ) {
-            $htmlatts['class'] .= ' videojs-withclips';
+            $params['class'] .= ' videojs-withclips';
         }
-        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $htmlatts);
+        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
@@ -303,7 +303,7 @@ class filter_videojs_video extends filter_videojs_base {
     /*
      * The params that will be part of building the HTML
      */
-    public $htmlatts = array(
+    public $params = array(
         'id'         => '',
         'poster'     => '',
         'height'     => '',
@@ -320,7 +320,7 @@ class filter_videojs_video extends filter_videojs_base {
     public function __construct($shortcode, $id) {
         array_push( $this->childloaders, 'load_clips' );
         parent::__construct($shortcode);
-        $this->htmlatts['id'] = "videojs_$id";
+        $this->params['id'] = "videojs_$id";
         $this->build_html();
         $this->pass_to_js();
     }
@@ -375,7 +375,7 @@ class filter_videojs_video extends filter_videojs_base {
             'swf_source' => $CFG->filter_videojs_swf_source,
         );
         $json = '';
-        $json = json_encode(array('id' => $this->htmlatts['id'], 'clips' => $this->clips, 'sources' => $sources));
+        $json = json_encode(array('id' => $this->params['id'], 'clips' => $this->clips, 'sources' => $sources));
         $PAGE->requires->yui_module('moodle-filter_videojs-transcript', 'M.filter_videojs.transcript.init', array(array('clips' => $json, 'sources' => $sources)));
     }
 
@@ -394,9 +394,9 @@ class filter_videojs_clip extends filter_videojs_base {
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes, $htmlatts, $tracks, $key ) {
-        $this->htmlatts = $htmlatts;
-        $this->htmlatts['id'] .= "_$key";
+    public function __construct($clip, $mimes, $params, $tracks, $key ) {
+        $this->params = $params;
+        $this->params['id'] .= "_$key";
         array_push( $this->atttypes, 'clipparams' );
         if (array_key_exists(0, $tracks)) {
             // TODO: what goes here?
@@ -424,7 +424,7 @@ class filter_videojs_clip extends filter_videojs_base {
 
 class filter_videojs_track extends filter_videojs_base {
 
-    public $htmlatts = array(
+    public $params = array(
         'src'        => '',
         'kind'       => 'captions',
         'label'      => 'captions',
@@ -447,8 +447,8 @@ class filter_videojs_track extends filter_videojs_base {
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
-        if ( $this->htmlatts['src'] != '' ) {
-            $this->transcript = new filter_videojs_transcript( $this->htmlatts['src'], $in, $out );
+        if ( $this->params['src'] != '' ) {
+            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
         }
     }
 }
