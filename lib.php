@@ -404,6 +404,7 @@ class filter_videojs_clip extends filter_videojs_base {
     public function __construct($clip, $mimes, $params, $tracks, $transatts, $key ) {
         $this->params = $params;
         $this->params['id'] .= "_$key";
+        $this->tracks = $tracks;
         $this->transatts = $transatts;
         array_push( $this->atttypes, 'clipparams' );
         parent::__construct($clip);
