@@ -401,9 +401,6 @@ class filter_videojs_clip extends filter_videojs_base {
         if (array_key_exists(0, $tracks)) {
             // TODO: what goes here?
         }
-        echo "<pre>";
-        print_r($this->tracks[0]->transatts);
-        echo "</pre>";
         parent::__construct($clip);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
@@ -450,9 +447,6 @@ class filter_videojs_track extends filter_videojs_base {
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
-        if ($this->transatts['transcript'] != 'true') {
-            // $this->transatts['transcript'] = 'false';
-        }
         if ( $this->params['src'] != '' ) {
             $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
         }
