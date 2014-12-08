@@ -244,10 +244,9 @@ VJS.playClip = function (link) {
 
       // Get the transcript from the clipparams
       var transcriptHTML = params.tracks[0].transcript.html;
-      console.log(params.tracks[0].transatts);
 
       // Attach the transcript after the video
-      if (params.tracks[0].transatts.transcript == 'true') {
+      if (params.tracks[0].transatts.transcript === 'display') {
         vjspNode.insert(transcriptHTML, 'after');
       }
 

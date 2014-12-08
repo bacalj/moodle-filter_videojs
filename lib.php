@@ -213,7 +213,7 @@ abstract class filter_videojs_base {
         $out = (isset($this->clipparams)) ? $this->clipparams['out'] : '';
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
-            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out);
+            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts);
         }
     }
 
@@ -406,18 +406,12 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params['id'] .= "_$key";
         $this->transatts = $transatts;
         array_push( $this->atttypes, 'clipparams' );
-        if (array_key_exists(0, $tracks)) {
-            // TODO: what goes here?
-        }
         parent::__construct($clip);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
         }
-        echo "<pre>";
-        print_r($this->transatts);
-        echo "</pre>";
         $this->build_html();
         $this->clipparams['mimes'] = $this->mimes;
         $sources = $this->clipparams['mimes'];
@@ -449,7 +443,8 @@ class filter_videojs_track extends filter_videojs_base {
 
     public $childloaders = array();
 
-    public function __construct($track, $in='0', $out='') {
+    public function __construct($track, $in='0', $out='', $transatts) {
+        $this->transatts = $transatts;
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
