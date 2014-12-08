@@ -398,9 +398,11 @@ class filter_videojs_clip extends filter_videojs_base {
         $this->params = $params;
         $this->params['id'] .= "_$key";
         array_push( $this->atttypes, 'clipparams' );
-        $this->tracks = $tracks;
+        if (array_key_exists(0, $tracks)) {
+            // TODO: what goes here?
+        }
         echo "<pre>";
-        print_r($this->tracks);
+        print_r($this->tracks[0]->transatts);
         echo "</pre>";
         parent::__construct($clip);
         $this->clipparams['tracks'] = $this->tracks;
@@ -449,7 +451,7 @@ class filter_videojs_track extends filter_videojs_base {
         $this->in = $in;
         $this->out = $out;
         if ($this->transatts['transcript'] != 'true') {
-            $this->transatts['transcript'] = 'false';
+            // $this->transatts['transcript'] = 'false';
         }
         if ( $this->params['src'] != '' ) {
             $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
