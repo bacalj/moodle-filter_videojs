@@ -96,9 +96,16 @@ abstract class filter_videojs_base {
     public $params = array();
 
     /**
+     * Array of transcript-related attributes
+     */
+    public $transatts = array(
+        'transcript' => 'hide',
+    );
+
+    /**
      * The attribute types to parse for this shortcode element
      */
-    public $atttypes = array( 'params' , 'mimes' );
+    public $atttypes = array( 'params' , 'mimes' , 'transatts' );
 
     /**
      * The child elements to load for this shortcode element
@@ -192,7 +199,7 @@ abstract class filter_videojs_base {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $this->tracks, $key );
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $this->tracks, $this->transatts, $key );
         }
     }
 
@@ -394,9 +401,10 @@ class filter_videojs_clip extends filter_videojs_base {
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes, $params, $tracks, $key ) {
+    public function __construct($clip, $mimes, $params, $tracks, $transatts, $key ) {
         $this->params = $params;
         $this->params['id'] .= "_$key";
+        $this->transatts = $transatts;
         array_push( $this->atttypes, 'clipparams' );
         if (array_key_exists(0, $tracks)) {
             // TODO: what goes here?
@@ -407,6 +415,9 @@ class filter_videojs_clip extends filter_videojs_base {
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
             $this->mimes = $mimes;
         }
+        echo "<pre>";
+        print_r($this->transatts);
+        echo "</pre>";
         $this->build_html();
         $this->clipparams['mimes'] = $this->mimes;
         $sources = $this->clipparams['mimes'];
@@ -431,10 +442,6 @@ class filter_videojs_track extends filter_videojs_base {
         'srclang'    => 'en'
     );
 
-    public $transatts = array(
-        'transcript' => false,
-    );
-
     public $transcript;
 
     public $in;
@@ -443,7 +450,6 @@ class filter_videojs_track extends filter_videojs_base {
     public $childloaders = array();
 
     public function __construct($track, $in='0', $out='') {
-        array_push( $this->atttypes, 'transatts' );
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
