@@ -511,6 +511,8 @@ class filter_videojs_transcript {
             $timecell->style = 'text-align: right; font-weight: bold;';
             $captioncell = new html_table_cell($cue->caption);
             $row = new html_table_row(array($timecell, $captioncell));
+            $row->attributes['class'] = "filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";;
+            $row->attributes['data-in'] = 'time';
             array_push($tablerows, $row);
         }
         $table = new html_table();
@@ -539,6 +541,8 @@ class filter_videojs_cue {
         $this->secin = filter_videojs_base::hms2sec($this->hmsin);
         $this->hmsout = $matches[2];
         $this->secout = filter_videojs_base::hms2sec($this->hmsout);
+        $this->cssin = str_replace('.', '_', $this->secin);
+        $this->cssout = str_replace('.', '_', $this->secout);
         $this->caption = trim($matches[3]);
     }
 }
