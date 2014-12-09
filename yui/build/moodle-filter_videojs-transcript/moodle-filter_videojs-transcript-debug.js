@@ -251,7 +251,14 @@ VJS.playClip = function (link) {
 
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
-        vjspNode.insert(transcriptHTML, 'after');
+        var transcriptTable = Y.DOM.create(transcriptHTML);
+        var transcriptTableNode = Y.Node(transcriptTable);
+        var transcriptRows = transcriptTableNode.all('tr');
+        transcriptRows.each(function (r) {
+          var classlist = r.getAttribute('class');
+          console.log(r.getAttribute('class'));
+        });
+        vjspNode.insert(transcriptTable, 'after');
       }
 
     }
