@@ -243,7 +243,9 @@ VJS.playClip = function (link) {
       vjsp.controlBar.captionsButton.show();
 
       // Get the transcript from the clipparams
-      var transcriptHTML = params.tracks[0].transcript.html;
+      var transcript = params.tracks[0].transcript;
+      var transcriptHTML = transcript.html;
+
 
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
