@@ -214,6 +214,9 @@ abstract class filter_videojs_base {
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
             $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts);
+        } elseif ( array_key_exists('0', $this->tracks) ) {
+            // Inherit the main video track.
+            $this->tracks[0] = new filter_videojs_track($this->tracks[0]->shortcode, $in, $out, $this->transatts);
         }
     }
 
