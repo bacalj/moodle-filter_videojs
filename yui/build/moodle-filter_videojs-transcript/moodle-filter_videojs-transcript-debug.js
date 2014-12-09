@@ -255,8 +255,17 @@ VJS.playClip = function (link) {
         var transcriptTableNode = Y.Node(transcriptTable);
         var transcriptRows = transcriptTableNode.all('tr');
         transcriptRows.each(function (r) {
-          var classlist = r.getAttribute('class');
-          console.log(r.getAttribute('class'));
+          var classList = r.getAttribute('class');
+          var timeInMatches = classList.match('.*filter-videojs-in-([0-9_]*) ');
+          var timeIn = timeInMatches[1].replace('_', '.');
+          r.setData('timeIn', timeIn);
+          var timeOutMatches = classList.match('.*filter-videojs-out-([0-9_]*) ');
+          var timeOut = timeOutMatches[1].replace('_', '.');
+          r.setData('timeOut', timeOut);
+          vjsp.on('timeupdate', function() {
+            r.addClass('filter-videojs-active-cue');
+          });
+          console.log(r);
         });
         vjspNode.insert(transcriptTable, 'after');
       }
