@@ -256,14 +256,18 @@ VJS.playClip = function (link) {
           var classList = r.getAttribute('class');
           var timeInMatches = classList.match('.*filter-videojs-in-([0-9_]*) ');
           var timeIn = timeInMatches[1].replace('_', '.');
-          r.setData('timeIn', timeIn);
           var timeOutMatches = classList.match('.*filter-videojs-out-([0-9_]*) ');
           var timeOut = timeOutMatches[1].replace('_', '.');
-          r.setData('timeOut', timeOut);
           vjsp.on('timeupdate', function() {
-            r.addClass('filter-videojs-active-cue');
+            if ((vjsp.currentTime() > timeIn) && (vjsp.currentTime() < timeOut)) {
+              r.addClass('filter-videojs-active-cue');
+            } else {
+              r.removeClass('filter-videojs-active-cue');
+            }
           });
-          console.log(r);
+          r.on('click', function () {
+            vjsp.currentTime(timeIn);
+          });
         });
         vjspNode.insert(transcriptTable, 'after');
       }

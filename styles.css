@@ -33,3 +33,12 @@ div.video-js {
 .jsenabled .video-js.videojs-withclips {
     display: block;
 }
+
+.jsenabled .filter-videojs-cue {
+    cursor: pointer;
+}
+
+.filter-videojs-active-cue {
+    box-shadow: 2px 2px 4px lightgray inset, -2px -2px 4px lightgray inset;;
+    cursor: pointer;
+}

@@ -511,7 +511,7 @@ class filter_videojs_transcript {
             $timecell->style = 'text-align: right; font-weight: bold;';
             $captioncell = new html_table_cell($cue->caption);
             $row = new html_table_row(array($timecell, $captioncell));
-            $row->attributes['class'] = "filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";;
+            $row->attributes['class'] = "filter-videojs-cue filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";;
             $row->attributes['data-in'] = 'time';
             array_push($tablerows, $row);
         }
