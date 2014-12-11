@@ -8,6 +8,11 @@ div.video-js {
     padding-bottom: 1em;
 }
 
+.video-js .vjs-text-track-display {
+    background-color: rgba(0,0,0,0.5);
+    border-radius: 4px;
+}
+
 .video-js .vjs-text-track {
     color: white !important;
     background-color: transparent !important;
