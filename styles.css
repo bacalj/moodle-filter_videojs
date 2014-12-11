@@ -41,6 +41,13 @@ div.video-js {
     display: block;
 }
 
+.videojs-transcript-area {
+    border: 1px solid black;
+    height: 20em;
+    margin-top: 1em;
+    overflow-y: scroll;
+}
+
 .jsenabled .filter-videojs-cue {
     cursor: pointer;
 }
