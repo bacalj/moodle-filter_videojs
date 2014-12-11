@@ -249,8 +249,10 @@ VJS.playClip = function (link) {
 
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
-        var transcriptTable = Y.DOM.create(transcriptHTML);
-        var transcriptTableNode = Y.Node(transcriptTable);
+        var transcriptArea = Y.DOM.create(transcriptHTML);
+        vjspNode.insert(transcriptArea, 'after');
+        var transcriptAreaNode = Y.Node(transcriptArea);
+        var transcriptTableNode = transcriptAreaNode.one('table');
         var transcriptRows = transcriptTableNode.all('tr');
         transcriptRows.each(function (r) {
           var classList = r.getAttribute('class');
@@ -261,6 +263,22 @@ VJS.playClip = function (link) {
           vjsp.on('timeupdate', function() {
             if ((vjsp.currentTime() > timeIn) && (vjsp.currentTime() < timeOut)) {
               r.addClass('filter-videojs-active-cue');
+              var ty = transcriptTableNode.getY();
+              var ry = r.getY();
+              var ydelta = ty-ry;
+              // transcriptTableNode.setStyle('top', ydelta);
+              //r.getDOMNode().scrollTop = ydelta;
+              console.log(r.getDOMNode().scrollTop);
+              r.setY(ty);
+              a = new Y.Anim(
+                {
+                  node: transcriptAreaNode,
+                  to: { scrollTop: 0 },
+                  duration: 0.3,
+                  easing: Y.Easing.easeBoth
+                }
+              );
+              a.run();
             } else {
               r.removeClass('filter-videojs-active-cue');
             }
@@ -269,7 +287,6 @@ VJS.playClip = function (link) {
             vjsp.currentTime(timeIn);
           });
         });
-        vjspNode.insert(transcriptTable, 'after');
       }
 
     }

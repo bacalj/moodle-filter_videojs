@@ -46,6 +46,11 @@ div.video-js {
     height: 20em;
     margin-top: 1em;
     overflow-y: scroll;
+    position: relative;
+}
+
+.videojs-transcript-area table {
+    position: relative;
 }
 
 .jsenabled .filter-videojs-cue {

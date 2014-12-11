@@ -4,7 +4,9 @@
             "base",
             "node",
             "event",
-            "get"
+            "get",
+            "node-screen",
+            "anim"
         ]
     }
 }
