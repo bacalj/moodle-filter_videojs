@@ -3,6 +3,8 @@ div.video-js {
 }
 
 .video-js-cliplist {
+    list-style-type: none;
+    margin-left: 0;
     padding-bottom: 1em;
 }
 
