@@ -265,15 +265,15 @@ VJS.playClip = function (link) {
               r.addClass('filter-videojs-active-cue');
               var ty = transcriptTableNode.getY();
               var ry = r.getY();
-              var ydelta = ty-ry;
+              var ydelta = ry-ty;
               // transcriptTableNode.setStyle('top', ydelta);
               //r.getDOMNode().scrollTop = ydelta;
-              console.log(r.getDOMNode().scrollTop);
+              // console.log(r.getDOMNode().scrollTop);
               r.setY(ty);
               a = new Y.Anim(
                 {
                   node: transcriptAreaNode,
-                  to: { scrollTop: 0 },
+                  to: { scrollTop: ydelta-80 },
                   duration: 0.3,
                   easing: Y.Easing.easeBoth
                 }
