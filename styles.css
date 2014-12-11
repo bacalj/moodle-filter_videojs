@@ -47,5 +47,10 @@ div.video-js {
 
 .filter-videojs-active-cue {
     box-shadow: 2px 2px 4px lightgray inset, -2px -2px 4px lightgray inset;;
-    cursor: pointer;
+}
+
+.filter-videojs-active-cue .cell.c0 {
+    background-image: url([[pix:t/collapsed]]);
+    background-repeat: no-repeat;
+    background-position: 3px 50%;
 }
