@@ -6,7 +6,8 @@
             "event",
             "get",
             "node-screen",
-            "anim"
+            "anim",
+            "event-mouseenter"
         ]
     }
 }

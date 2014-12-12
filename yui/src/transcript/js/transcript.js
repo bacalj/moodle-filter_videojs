@@ -253,6 +253,12 @@ VJS.playClip = function (link) {
         vjspNode.insert(transcriptArea, 'after');
         var transcriptAreaNode = Y.Node(transcriptArea);
         var transcriptTableNode = transcriptAreaNode.one('table');
+        transcriptAreaNode.on('mouseenter', function () {
+          transcriptAreaNode.addClass('hovered');
+        });
+        transcriptAreaNode.on('mouseleave', function () {
+          transcriptAreaNode.removeClass('hovered');
+        });
         var transcriptRows = transcriptTableNode.all('tr');
         transcriptRows.each(function (r) {
           var classList = r.getAttribute('class');
@@ -275,8 +281,9 @@ VJS.playClip = function (link) {
                     easing: Y.Easing.easeBoth
                   }
                 );
-                a.run();
-                console.log(Y.DOM.region(transcriptArea));
+                if (!(transcriptAreaNode.hasClass('hovered'))) {
+                  a.run();
+                }
               }
             } else {
               if (r.hasClass('filter-videojs-active-cue')) {
