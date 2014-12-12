@@ -213,10 +213,10 @@ abstract class filter_videojs_base {
         $out = (isset($this->clipparams)) ? $this->clipparams['out'] : '';
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
-            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts);
+            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts, $this->params);
         } elseif ( array_key_exists('0', $this->tracks) ) {
             // Inherit the main video track.
-            $this->tracks[0] = new filter_videojs_track($this->tracks[0]->shortcode, $in, $out, $this->transatts);
+            $this->tracks[0] = new filter_videojs_track($this->tracks[0]->shortcode, $in, $out, $this->transatts, $this->params);
         }
     }
 
@@ -445,15 +445,21 @@ class filter_videojs_track extends filter_videojs_base {
     public $in;
     public $out;
 
+    public $parentparams;
+
     public $childloaders = array();
 
-    public function __construct($track, $in='0', $out='', $transatts) {
+    public function __construct($track, $in='0', $out='', $transatts, $parentparams) {
+        $this->parentparams = $parentparams;
         $this->transatts = $transatts;
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
+        echo "<pre>";
+        print_r($this);
+        echo "</pre>";
         if ( $this->params['src'] != '' ) {
-            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out );
+            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out, $this->parentparams );
         }
     }
 }
@@ -472,7 +478,10 @@ class filter_videojs_transcript {
 
     public $out;
 
-    public function __construct($src, $in='0', $out='') {
+    public $parentvideoparams;
+
+    public function __construct($src, $in='0', $out='', $parentvideoparams) {
+        $this->parentvideoparams = $parentvideoparams;
         $this->src = $src;
         $this->in = $in;
         $this->out = $out;
@@ -498,7 +507,7 @@ class filter_videojs_transcript {
         }
     }
 
-    public function build_html( $in=0, $out='') {
+    public function build_html( $in=0, $out='' ) {
         $tablerows = array();
         foreach ( $this->cues as $cue ) {
             if ( $cue->secout < $in ) {
@@ -518,7 +527,12 @@ class filter_videojs_transcript {
         $table = new html_table();
         $table->data = $tablerows;
         $table->attributes = array( 'class' => 'generaltable videojs-transcript' );
-        $transcriptdiv = html_writer::tag('div', html_writer::table($table), array('class' => 'videojs-transcript-area'));
+        $videowidth = $this->parentvideoparams['width'];
+        $divatts = array(
+            'class' => 'videojs-transcript-area',
+            'style' => "max-width: ${videowidth}px",
+        );
+        $transcriptdiv = html_writer::tag('div', html_writer::table($table), $divatts );
         
         $this->html = $transcriptdiv;
     }
