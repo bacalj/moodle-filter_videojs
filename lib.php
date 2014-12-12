@@ -455,9 +455,6 @@ class filter_videojs_track extends filter_videojs_base {
         parent::__construct($track);
         $this->in = $in;
         $this->out = $out;
-        echo "<pre>";
-        print_r($this);
-        echo "</pre>";
         if ( $this->params['src'] != '' ) {
             $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out, $this->parentparams );
         }

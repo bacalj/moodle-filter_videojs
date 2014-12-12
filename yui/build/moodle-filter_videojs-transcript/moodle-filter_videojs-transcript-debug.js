@@ -278,6 +278,7 @@ VJS.playClip = function (link) {
                   }
                 );
                 a.run();
+                console.log(Y.DOM.region(transcriptArea));
               }
             } else {
               if (r.hasClass('filter-videojs-active-cue')) {
