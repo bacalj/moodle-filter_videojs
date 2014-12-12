@@ -62,7 +62,9 @@ div.video-js {
 }
 
 .filter-videojs-active-cue {
-    box-shadow: 2px 2px 4px lightgray inset, -2px -2px 4px lightgray inset;;
+    -moz-box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
+    -webkit-box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
+    box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
 }
 
 .filter-videojs-active-cue .cell.c0 {
