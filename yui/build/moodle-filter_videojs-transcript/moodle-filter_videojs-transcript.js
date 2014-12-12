@@ -262,25 +262,25 @@ VJS.playClip = function (link) {
           var timeOut = timeOutMatches[1].replace('_', '.');
           vjsp.on('timeupdate', function() {
             if ((vjsp.currentTime() > timeIn) && (vjsp.currentTime() < timeOut)) {
-              r.addClass('filter-videojs-active-cue');
-              var ty = transcriptTableNode.getY();
-              var ry = r.getY();
-              var ydelta = ry-ty;
-              // transcriptTableNode.setStyle('top', ydelta);
-              //r.getDOMNode().scrollTop = ydelta;
-              // console.log(r.getDOMNode().scrollTop);
-              r.setY(ty);
-              a = new Y.Anim(
-                {
-                  node: transcriptAreaNode,
-                  to: { scrollTop: ydelta-80 },
-                  duration: 0.3,
-                  easing: Y.Easing.easeBoth
-                }
-              );
-              a.run();
+              if (!(r.hasClass('filter-videojs-active-cue'))) {
+                r.addClass('filter-videojs-active-cue');
+                var ty = transcriptTableNode.getY();
+                var ry = r.getY();
+                var ydelta = ry-ty;
+                a = new Y.Anim(
+                  {
+                    node: transcriptAreaNode,
+                    to: { scrollTop: ydelta-80 },
+                    duration: 0.3,
+                    easing: Y.Easing.easeBoth
+                  }
+                );
+                a.run();
+              }
             } else {
-              r.removeClass('filter-videojs-active-cue');
+              if (r.hasClass('filter-videojs-active-cue')) {
+                r.removeClass('filter-videojs-active-cue');
+              }
             }
           });
           r.on('click', function () {
