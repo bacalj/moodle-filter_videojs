@@ -53,6 +53,10 @@ div.video-js {
     position: relative;
 }
 
+.videojs-transcript-area .cell.c0 {
+    padding-left: 2em;
+}
+
 .jsenabled .filter-videojs-cue {
     cursor: pointer;
 }
@@ -64,5 +68,5 @@ div.video-js {
 .filter-videojs-active-cue .cell.c0 {
     background-image: url([[pix:t/collapsed]]);
     background-repeat: no-repeat;
-    background-position: 3px 50%;
+    background-position: 3px 0.75em;;
 }
