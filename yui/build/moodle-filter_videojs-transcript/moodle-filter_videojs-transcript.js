@@ -250,7 +250,9 @@ VJS.playClip = function (link) {
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
         var transcriptArea = Y.DOM.create(transcriptHTML);
-        vjspNode.insert(transcriptArea, 'after');
+        vjsp.ready( function () {
+          vjspNode.insert(transcriptArea, 'after');
+        });
         var transcriptAreaNode = Y.Node(transcriptArea);
         var transcriptTableNode = transcriptAreaNode.one('table');
         transcriptAreaNode.on('mouseenter', function () {
