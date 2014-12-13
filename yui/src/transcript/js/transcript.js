@@ -208,7 +208,7 @@ VJS.playClip = function (link) {
 
     // Remove any old transcripts
     // var vjspNodeParent = vjspNode.ancestor('div');
-    var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript');
+    var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript-area');
     if ( oldTranscript !== null ) {
       oldTranscript.remove();
     }
@@ -250,7 +250,7 @@ VJS.playClip = function (link) {
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
         var transcriptArea = Y.DOM.create(transcriptHTML);
-        vjsp.ready( function () {
+        Y.on('domready', function () {
           vjspNode.insert(transcriptArea, 'after');
         });
         var transcriptAreaNode = Y.Node(transcriptArea);
