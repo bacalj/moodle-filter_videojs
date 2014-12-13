@@ -8,7 +8,7 @@ div.video-js {
     padding-bottom: 1em;
 }
 
-.video-js .vjs-text-track-display {
+.video-js .vjs-text-track-display .vjs-tt-cue {
     background-color: rgba(0,0,0,0.7);
     border-radius: 4px;
 }
