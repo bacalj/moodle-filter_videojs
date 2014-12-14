@@ -62,13 +62,16 @@ div.video-js {
 }
 
 .filter-videojs-active-cue {
-    -moz-box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
-    -webkit-box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
-    box-shadow: 2px 2px 4px gray inset, -2px -2px 4px gray inset;;
+    // box-shadow: inset 2px 2px 2px -3px rgba(0, 0, 0, 0.5), inset 0 -2px 2px -3px rgba(0, 0, 0, 0.5);
 }
 
 .filter-videojs-active-cue .cell.c0 {
     background-image: url([[pix:t/collapsed]]);
     background-repeat: no-repeat;
     background-position: 3px 0.75em;;
+    box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+}
+
+.filter-videojs-active-cue .cell.c1 {
+    box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
 }
