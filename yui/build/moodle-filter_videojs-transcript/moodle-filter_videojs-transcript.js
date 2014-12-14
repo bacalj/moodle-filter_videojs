@@ -66,16 +66,18 @@ VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
 
     // Then, for each of the YUI player nodes (p):
-    VJS.players.each(function (p) {
+    VJS.players.each(function (player) {
+
+        // Create a variable for the current VideoJS player object.
+        var vjsp = videojs(player.get('id'));
+
+        var p = Y.one(vjsp.contentEl());
 
         p.setData('out', '');
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         p.setData('srctypes', '');
         p.setData('tracks', []);
-
-        // Create a variable for the current VideoJS player object.
-        var vjsp = videojs(p.get('id'));
 
         // If we need to use Flash, then warn users that functionality will be limited.
         if (vjsp.techName === 'Flash') {
@@ -193,10 +195,13 @@ VJS.playClip = function (link) {
 
     // Get the YUI node for the div that contains the HTML <video> tag,
     // and store the in and out times there.
-    // var vjspNode = Y.one('#'+playerID);
+    //vjspVideoNode = Y.one('#'+playerID);
     vjspNode = Y.one(vjsp.contentEl());
-    console.log(vjsp.contentEl());
+    console.log(vjspNode);
+    // console.log(vjspNodeAlt);
     //var vjspNode = Y.Node(vjsp.contentEl());
+    //vjspVideoNode.setData('in', params.in);
+    //vjspVideoNode.setData('out', params.out);
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
 
@@ -256,7 +261,6 @@ VJS.playClip = function (link) {
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
         var transcriptArea = Y.DOM.create(transcriptHTML);
-        console.log(vjspNode);
         vjspNode.insert(transcriptArea, 'after');
         var transcriptAreaNode = Y.Node(transcriptArea);
         var transcriptTableNode = transcriptAreaNode.one('table');
