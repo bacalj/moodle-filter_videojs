@@ -115,7 +115,10 @@ VJS.buildClipMenu = function () {
             clipOL.addClass('video-js-cliplist');
 
             // Append the list ordered list before the video
-            Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
+            //Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
+            var vjspNode = Y.one(vjsp.contentEl());
+            vjspNode.insert(clipOL, 'before');
+            Y.one(vjsp.contentEl()).insert(clipOL, 'before');
 
             // Then, for each clip in the array ...
             for (var i=0; i < clips.length; i++) {
@@ -187,14 +190,17 @@ VJS.playClip = function (link) {
     clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
     clipMenu.one(activeClipClass).blur();
 
-    // Get the YUI node for the div that contains the HTML <video> tag,
-    // and store the in and out times there.
-    var vjspNode = Y.one('#'+playerID);
-    vjspNode.setData('in', params.in);
-    vjspNode.setData('out', params.out);
-
     // Now we need the VideoJS player object
     var vjsp = videojs(playerID);
+
+    // Get the YUI node for the div that contains the HTML <video> tag,
+    // and store the in and out times there.
+    // var vjspNode = Y.one('#'+playerID);
+    vjspNode = Y.one(vjsp.contentEl());
+    console.log(vjsp.contentEl());
+    //var vjspNode = Y.Node(vjsp.contentEl());
+    vjspNode.setData('in', params.in);
+    vjspNode.setData('out', params.out);
 
     // By default we'll hide the captions button
     vjsp.controlBar.captionsButton.hide();
@@ -252,9 +258,8 @@ VJS.playClip = function (link) {
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {
         var transcriptArea = Y.DOM.create(transcriptHTML);
-        Y.on('domready', function () {
-          vjspNode.insert(transcriptArea, 'after');
-        });
+        console.log(vjspNode);
+        vjspNode.insert(transcriptArea, 'after');
         var transcriptAreaNode = Y.Node(transcriptArea);
         var transcriptTableNode = transcriptAreaNode.one('table');
         transcriptAreaNode.on('mouseenter', function () {
