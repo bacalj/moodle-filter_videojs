@@ -1,5 +1,6 @@
 div.video-js {
     max-width: 100%;
+    border: 1px solid lightgray;
 }
 
 .video-js-cliplist {
@@ -42,7 +43,7 @@ div.video-js {
 }
 
 .videojs-transcript-area {
-    border: 1px solid black;
+    border: 1px solid lightgray;
     height: 20em;
     margin-top: 1em;
     overflow-y: scroll;
@@ -61,17 +62,17 @@ div.video-js {
     cursor: pointer;
 }
 
-.filter-videojs-active-cue {
-    // box-shadow: inset 2px 2px 2px -3px rgba(0, 0, 0, 0.5), inset 0 -2px 2px -3px rgba(0, 0, 0, 0.5);
-}
-
 .filter-videojs-active-cue .cell.c0 {
     background-image: url([[pix:t/collapsed]]);
     background-repeat: no-repeat;
     background-position: 3px 0.75em;;
+    -moz-box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
     box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
 }
 
 .filter-videojs-active-cue .cell.c1 {
+    -moz-box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
     box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
 }
