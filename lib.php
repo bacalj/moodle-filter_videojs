@@ -51,7 +51,7 @@ abstract class filter_videojs_base {
      */
     protected $tag;
 
-    /* 
+    /*
      * The shortcode with all internal tags removed
      */
     protected $toplevel;
@@ -214,7 +214,7 @@ abstract class filter_videojs_base {
         // TODO: support multiple tracks.
         if (isset($tracks[0][0])) {
             $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts, $this->params);
-        } elseif ( array_key_exists('0', $this->tracks) ) {
+        } else if ( array_key_exists('0', $this->tracks) ) {
             // Inherit the main video track.
             $this->tracks[0] = new filter_videojs_track($this->tracks[0]->shortcode, $in, $out, $this->transatts, $this->params);
         }
@@ -241,8 +241,8 @@ abstract class filter_videojs_base {
             if ($multiplier > 3600) {
                 return $sec;
             }
-            $sec += $unit*$multiplier;
-            $multiplier = $multiplier*60;
+            $sec += $unit * $multiplier;
+            $multiplier = $multiplier * 60;
         }
         return $sec;
     }
@@ -251,9 +251,9 @@ abstract class filter_videojs_base {
      * Convert seconds to hh:mm:ss
      */
     public static function sec2hms($sec) {
-        $h = intval($sec/3600);
+        $h = intval($sec / 3600);
         $sec = $sec % 3600;
-        $m = str_pad(intval($sec/60), 2, "0", STR_PAD_LEFT);
+        $m = str_pad(intval($sec / 60), 2, "0", STR_PAD_LEFT);
         $s = str_pad($sec % 60, 2, "0", STR_PAD_LEFT);
         $hms = "$h:$m:$s";
         $hms = preg_replace( '/^0:?0?/', '', $hms );
@@ -354,7 +354,7 @@ class filter_videojs_video extends filter_videojs_base {
         $beginning = get_string('beginning', 'filter_videojs');
         $end = get_string('end', 'filter_videojs');
         $clipstr = get_string('clipupper', 'filter_videojs');
-        foreach ( $this->clips as $key => $clip ) {
+        foreach ($this->clips as $key => $clip) {
             $clipnum = $key + 1;
             $in = ( $clip->clipparams['in'] != '' ) ? self::sec2hms( $clip->clipparams['in'] ) : $beginning;
             $out = ( $clip->clipparams['out'] != '') ? self::sec2hms( $clip->clipparams['out'] ) : $end;
@@ -470,7 +470,7 @@ class filter_videojs_transcript {
     public $cues = array();
 
     public $html;
-    
+
     public $in;
 
     public $out;
@@ -499,14 +499,14 @@ class filter_videojs_transcript {
     public function parse_cues() {
         $cues = preg_split('/^$/m', $this->fulltext);
         unset($cues[0]);
-        foreach ( $cues as $key => $cue ) {
+        foreach ($cues as $key => $cue) {
             $this->cues[$key] = new filter_videojs_cue($cue);
         }
     }
 
     public function build_html( $in=0, $out='' ) {
         $tablerows = array();
-        foreach ( $this->cues as $cue ) {
+        foreach ($this->cues as $cue) {
             if ( $cue->secout < $in ) {
                 continue;
             }
@@ -530,7 +530,7 @@ class filter_videojs_transcript {
             'style' => "max-width: ${videowidth}px",
         );
         $transcriptdiv = html_writer::tag('div', html_writer::table($table), $divatts );
-        
+
         $this->html = $transcriptdiv;
     }
 }
