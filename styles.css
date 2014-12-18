@@ -56,6 +56,7 @@ div.video-js {
 
 .videojs-transcript-area .cell.c0 {
     padding-left: 2em;
+    padding-top: 10px;
 }
 
 .jsenabled .filter-videojs-cue {

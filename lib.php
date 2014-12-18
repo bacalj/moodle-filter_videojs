@@ -513,7 +513,7 @@ class filter_videojs_transcript {
             if (($out != '') && ($cue->secin > $out)) {
                 break;
             }
-            $timecell = new html_table_cell($cue->hmsin);
+            $timecell = new html_table_cell($cue->humanin);
             $timecell->style = 'text-align: right; font-weight: bold;';
             $captioncell = new html_table_cell($cue->caption);
             $row = new html_table_row(array($timecell, $captioncell));
@@ -545,14 +545,20 @@ class filter_videojs_cue {
 
     public $secout;
 
+    public $humanin;
+
+    public $humanout;
+
     public $caption;
 
     public function __construct($str) {
         preg_match('|^([0-9:.]+) --> ([0-9:.]+).*?\n(.*)|sm', $str, $matches);
         $this->hmsin = $matches[1];
         $this->secin = filter_videojs_base::hms2sec($this->hmsin);
+        $this->humanin = filter_videojs_base::sec2hms($this->secin);
         $this->hmsout = $matches[2];
         $this->secout = filter_videojs_base::hms2sec($this->hmsout);
+        $this->humanout = filter_videojs_base::hms2sec($this->secout);
         $this->cssin = str_replace('.', '_', $this->secin);
         $this->cssout = str_replace('.', '_', $this->secout);
         $this->caption = trim($matches[3]);
