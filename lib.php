@@ -25,9 +25,8 @@
  */
 
 defined('MOODLE_INTERNAL') || die();
-
-define('VIDEOJS_GET_CLIPS', true);
-define('VIDEOJS_NO_CLIPS', false);
+define("VIDEOJS_WITHOUT_CLIPS", 0);
+define("VIDEOJS_WITH_CLIPS", 1);
 
 /**
  * Video JS base class.
@@ -43,16 +42,16 @@ define('VIDEOJS_NO_CLIPS', false);
 abstract class filter_videojs_base {
 
     /*
-     * The full shortcode passed from the filter
+     * The full shortcode from which the object is built
      */
     protected $shortcode;
 
     /*
-     * The tag
+     * The tag that brackets the shortcode
      */
     protected $tag;
 
-    /* 
+    /*
      * The shortcode with all internal tags removed
      */
     protected $toplevel;
@@ -63,7 +62,7 @@ abstract class filter_videojs_base {
     protected $noclips;
 
     /*
-     * This will be a variable to hold transcript lines
+     * A transcript created from a captions file
      */
     protected $transcript;
 
@@ -92,32 +91,44 @@ abstract class filter_videojs_base {
     );
 
     /*
-     * The params must be defined by the child classes
+     * Params to be defined by the child classes
      */
     public $params = array();
 
-    public $options = array(
-        'get_clips' => VIDEOJS_NO_CLIPS,
+    /**
+     * Array of transcript-related attributes
+     */
+    public $transatts = array(
+        'transcript' => 'hide',
     );
+
+    /**
+     * The attribute types to parse for this shortcode element
+     */
+    public $atttypes = array( 'params' , 'mimes' , 'transatts' );
+
+    /**
+     * The child elements to load for this shortcode element
+     */
+    public $childloaders = array( 'load_tracks' , 'load_transcript' );
 
     public function __construct($shortcode) {
         $this->shortcode = $shortcode;
-        $this->extract_the_tag();
-        $this->get_toplevel();
-        $this->get_noclips();
-        $this->get_values($this->params, $this->toplevel);
-        $this->get_values($this->mimes, $this->toplevel);
-        if ( $this->options['get_clips'] ) {
-            $this->get_clips();
+        $this->extract_tag();
+        $this->extract_toplevel();
+        $this->extract_noclips();
+        foreach ($this->atttypes as $atttype) {
+            $this->load_values($this->$atttype, $this->toplevel);
         }
-        $this->get_tracks();
-        $this->get_transcript();
+        foreach ($this->childloaders as $childloader) {
+            $this->$childloader();
+        }
     }
 
     /**
      * Extract the tag from the shortcode
      */
-    public function extract_the_tag() {
+    public function extract_tag() {
         preg_match( '/^\[([a-z]*)\]/' , $this->shortcode , $matches );
         $this->tag = $matches[1];
     }
@@ -126,7 +137,7 @@ abstract class filter_videojs_base {
      * Get toplevel code
      * Gets the relevant shortcode with no sub-tags
      */
-    public function get_toplevel() {
+    public function extract_toplevel() {
         // Remove the top-level tag.
         $tag = $this->tag;
         $paramlist = str_replace("[$tag]", '', $this->shortcode);
@@ -140,7 +151,7 @@ abstract class filter_videojs_base {
      * Get noclips
      * Gets the shortcode with no clip sub-tags, but leaves any toplevel tracks intact
      */
-    public function get_noclips() {
+    public function extract_noclips() {
         // Remove the top-level tag.
         $tag = $this->tag;
         $paramlist = str_replace("[$tag]", '', $this->shortcode);
@@ -154,7 +165,7 @@ abstract class filter_videojs_base {
      * Get the values for a given parameter
      * Values may be wrapped in single or double quotes or they may be bare
      */
-    public function get_values(&$keys, $paramlist) {
+    public function load_values(&$keys, $paramlist) {
         foreach ($keys as $key => $value) {
             preg_match( "/${key}=(.)/", $paramlist, $quotes);
             if (!array_key_exists(1, $quotes)) {
@@ -174,7 +185,7 @@ abstract class filter_videojs_base {
             preg_match("/$needle/", $paramlist, $matches);
             if (array_key_exists(1, $matches)) {
                 if (($key == 'in') || ($key == 'out')) {
-                    $matches[1] = $this->hms2sec($matches[1]);
+                    $matches[1] = self::hms2sec($matches[1]);
                 }
                 $keys[$key] = $matches[1];
             }
@@ -184,38 +195,44 @@ abstract class filter_videojs_base {
     /**
      * Get the clips
      */
-    public function get_clips() {
+    public function load_clips() {
         $regex = '\[clip\].*?\[\/clip\]';
         preg_match_all("/$regex/sm", $this->shortcode, $clips, PREG_SET_ORDER);
         foreach ($clips as $key => $clip) {
-            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $key );
+            $this->clips[$key] = new filter_videojs_clip($clip[0], $this->mimes, $this->params, $this->tracks, $this->transatts, $key );
         }
     }
 
     /**
      * Get the tracks
      */
-    public function get_tracks() {
+    public function load_tracks() {
         $regex = '\[track\].*?\[\/track\]';
         preg_match_all("/$regex/sm", $this->noclips, $tracks, PREG_SET_ORDER);
-        foreach ($tracks as $key => $track) {
-            $this->tracks[$key] = new filter_videojs_track($track[0]);
+        $in = (isset($this->clipparams)) ? $this->clipparams['in'] : '0';
+        $out = (isset($this->clipparams)) ? $this->clipparams['out'] : '';
+        // TODO: support multiple tracks.
+        if (isset($tracks[0][0])) {
+            $this->tracks[0] = new filter_videojs_track($tracks[0][0], $in, $out, $this->transatts, $this->params);
+        } else if ( array_key_exists('0', $this->tracks) ) {
+            // Inherit the main video track.
+            $this->tracks[0] = new filter_videojs_track($this->tracks[0]->shortcode, $in, $out, $this->transatts, $this->params);
         }
     }
 
     /**
      * Get the transcript
      */
-    public function get_transcript() {
+    public function load_transcript() {
         if (array_key_exists(0, $this->tracks)) {
-            $this->transcript = new filter_videojs_transcript($this->tracks[0]);
+            $this->transcript = $this->tracks[0]->transcript;
         }
     }
 
     /**
      * Convert hh:mm:ss to seconds
      */
-    public function hms2sec($hms) {
+    public static function hms2sec($hms) {
         $sec = 0;
         $multiplier = 1;
         $units = explode(':', $hms);
@@ -224,8 +241,8 @@ abstract class filter_videojs_base {
             if ($multiplier > 3600) {
                 return $sec;
             }
-            $sec += $unit*$multiplier;
-            $multiplier = $multiplier*60;
+            $sec += $unit * $multiplier;
+            $multiplier = $multiplier * 60;
         }
         return $sec;
     }
@@ -233,10 +250,10 @@ abstract class filter_videojs_base {
     /**
      * Convert seconds to hh:mm:ss
      */
-    public function sec2hms($sec) {
-        $h = intval($sec/3600);
+    public static function sec2hms($sec) {
+        $h = intval($sec / 3600);
         $sec = $sec % 3600;
-        $m = str_pad(intval($sec/60), 2, "0", STR_PAD_LEFT);
+        $m = str_pad(intval($sec / 60), 2, "0", STR_PAD_LEFT);
         $s = str_pad($sec % 60, 2, "0", STR_PAD_LEFT);
         $hms = "$h:$m:$s";
         $hms = preg_replace( '/^0:?0?/', '', $hms );
@@ -253,7 +270,7 @@ abstract class filter_videojs_base {
     /**
      * Build HTML
      */
-    public function build_html() {
+    public function build_html($withclips=VIDEOJS_WITHOUT_CLIPS) {
         $sourcetags = '';
         $tracktags = '';
         $params = $this->params;
@@ -273,6 +290,9 @@ abstract class filter_videojs_base {
         }
         foreach ($this->tracks as $track) {
             $tracktags .= html_writer::empty_tag('track', $track->params);
+        }
+        if ( $withclips == VIDEOJS_WITH_CLIPS ) {
+            $params['class'] .= ' videojs-withclips';
         }
         $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
@@ -308,7 +328,7 @@ class filter_videojs_video extends filter_videojs_base {
      * Create an object for each shortcode
      */
     public function __construct($shortcode, $id) {
-        $this->options['get_clips'] = VIDEOJS_GET_CLIPS;
+        array_push( $this->childloaders, 'load_clips' );
         parent::__construct($shortcode);
         $this->params['id'] = "videojs_$id";
         $this->build_html();
@@ -318,8 +338,11 @@ class filter_videojs_video extends filter_videojs_base {
     /**
      * Build HTML
      */
-    public function build_html() {
-        parent::build_html();
+    public function build_html($withclips=VIDEOJS_WITHOUT_CLIPS) {
+        if ( $this->clips != array() ) {
+            $withclips = VIDEOJS_WITH_CLIPS;
+        }
+        parent::build_html($withclips);
         $this->html .= $this->build_noscript();
     }
 
@@ -331,14 +354,20 @@ class filter_videojs_video extends filter_videojs_base {
         $beginning = get_string('beginning', 'filter_videojs');
         $end = get_string('end', 'filter_videojs');
         $clipstr = get_string('clipupper', 'filter_videojs');
-        foreach ( $this->clips as $key => $clip ) {
+        foreach ($this->clips as $key => $clip) {
             $clipnum = $key + 1;
-            $in = ( $clip->clipparams['in'] != '' ) ? $this->sec2hms( $clip->clipparams['in'] ) : $beginning;
-            $out = ( $clip->clipparams['out'] != '') ? $this->sec2hms( $clip->clipparams['out'] ) : $end;
+            $in = ( $clip->clipparams['in'] != '' ) ? self::sec2hms( $clip->clipparams['in'] ) : $beginning;
+            $out = ( $clip->clipparams['out'] != '') ? self::sec2hms( $clip->clipparams['out'] ) : $end;
             $from = get_string('fromtime', 'filter_videojs', $in);
             $to = get_string('totime', 'filter_videojs', $out);
-            $clipshtml .= "<p>$clipstr $clipnum: $from $to</p>";
-            $clipshtml .= $clip->get_html();
+            $cliptitle = html_writer::tag('p', "$clipstr $clipnum: $from $to", array('class' => 'videojs_cliptitle'));
+            $clipvideo = $clip->get_html();
+            $cliptranscript = '';
+            if (isset($clip->transcript)) {
+                $cliptranscript = $clip->tracks[0]->transcript->html;
+            }
+            $clipdiv = html_writer::tag('div', $cliptitle.$clipvideo.$cliptranscript, array('class' => 'videojs_noscript_clip'));
+            $clipshtml .= $clipdiv;
         }
         $noscript = html_writer::tag('noscript', $clipshtml, null);
         return $noscript;
@@ -375,11 +404,13 @@ class filter_videojs_clip extends filter_videojs_base {
         'label'      => '',
     );
 
-    public function __construct($clip, $mimes, $params, $key ) {
+    public function __construct($clip, $mimes, $params, $tracks, $transatts, $key ) {
         $this->params = $params;
         $this->params['id'] .= "_$key";
+        $this->tracks = $tracks;
+        $this->transatts = $transatts;
+        array_push( $this->atttypes, 'clipparams' );
         parent::__construct($clip);
-        $this->get_values($this->clipparams, $this->toplevel);
         $this->clipparams['tracks'] = $this->tracks;
         $mimescount = array_count_values($this->mimes);
         if ((in_array('', $this->mimes)) && ($mimescount[''] == count($this->mimes))) {
@@ -405,21 +436,131 @@ class filter_videojs_track extends filter_videojs_base {
     public $params = array(
         'src'        => '',
         'kind'       => 'captions',
-        'label'      => 'English',
+        'label'      => 'captions',
         'srclang'    => 'en'
     );
 
-    public function __construct($track) {
+    public $transcript;
+
+    public $in;
+    public $out;
+
+    public $parentparams;
+
+    public $childloaders = array();
+
+    public function __construct($track, $in='0', $out='', $transatts, $parentparams) {
+        $this->parentparams = $parentparams;
+        $this->transatts = $transatts;
         parent::__construct($track);
+        $this->in = $in;
+        $this->out = $out;
+        if ( $this->params['src'] != '' ) {
+            $this->transcript = new filter_videojs_transcript( $this->params['src'], $in, $out, $this->parentparams );
+        }
     }
 }
 
 class filter_videojs_transcript {
 
-    private $src;
+    public $src;
 
-    public function __construct($track) {
-        $this->src = $track->params['src'];;
-        return $this->src;
+    public $fulltext;
+
+    public $cues = array();
+
+    public $html;
+
+    public $in;
+
+    public $out;
+
+    public $parentvideoparams;
+
+    public function __construct($src, $in='0', $out='', $parentvideoparams) {
+        $this->parentvideoparams = $parentvideoparams;
+        $this->src = $src;
+        $this->in = $in;
+        $this->out = $out;
+        $this->fulltext = $this->fetch_transcript();
+        $this->parse_cues();
+        $this->build_html( $in, $out );
+    }
+
+    public function fetch_transcript() {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $this->src);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $result = curl_exec($ch);
+        curl_close($ch);
+        return $result;
+    }
+
+    public function parse_cues() {
+        $cues = preg_split('/^$/m', $this->fulltext);
+        unset($cues[0]);
+        foreach ($cues as $key => $cue) {
+            $this->cues[$key] = new filter_videojs_cue($cue);
+        }
+    }
+
+    public function build_html( $in=0, $out='' ) {
+        $tablerows = array();
+        foreach ($this->cues as $cue) {
+            if ( $cue->secout < $in ) {
+                continue;
+            }
+            if (($out != '') && ($cue->secin > $out)) {
+                break;
+            }
+            $timecell = new html_table_cell($cue->humanin);
+            $timecell->style = 'text-align: right; font-weight: bold;';
+            $captioncell = new html_table_cell($cue->caption);
+            $row = new html_table_row(array($timecell, $captioncell));
+            $row->attributes['class'] = "filter-videojs-cue filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";;
+            $row->attributes['data-in'] = 'time';
+            array_push($tablerows, $row);
+        }
+        $table = new html_table();
+        $table->data = $tablerows;
+        $table->attributes = array( 'class' => 'generaltable videojs-transcript' );
+        $videowidth = $this->parentvideoparams['width'];
+        $divatts = array(
+            'class' => 'videojs-transcript-area',
+            'style' => "max-width: ${videowidth}px",
+        );
+        $transcriptdiv = html_writer::tag('div', html_writer::table($table), $divatts );
+
+        $this->html = $transcriptdiv;
+    }
+}
+
+class filter_videojs_cue {
+
+    public $hmsin;
+
+    public $hmsout;
+
+    public $secin;
+
+    public $secout;
+
+    public $humanin;
+
+    public $humanout;
+
+    public $caption;
+
+    public function __construct($str) {
+        preg_match('|^([0-9:.]+) --> ([0-9:.]+).*?\n(.*)|sm', $str, $matches);
+        $this->hmsin = $matches[1];
+        $this->secin = filter_videojs_base::hms2sec($this->hmsin);
+        $this->humanin = filter_videojs_base::sec2hms($this->secin);
+        $this->hmsout = $matches[2];
+        $this->secout = filter_videojs_base::hms2sec($this->hmsout);
+        $this->humanout = filter_videojs_base::hms2sec($this->secout);
+        $this->cssin = str_replace('.', '_', $this->secin);
+        $this->cssout = str_replace('.', '_', $this->secout);
+        $this->caption = trim($matches[3]);
     }
 }

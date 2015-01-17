@@ -66,16 +66,18 @@ VJS.buildClipMenu = function () {
     VJS.players = Y.all('.video-js');
 
     // Then, for each of the YUI player nodes (p):
-    VJS.players.each(function (p) {
+    VJS.players.each(function (player) {
+
+        // Create a variable for the current VideoJS player object.
+        var vjsp = videojs(player.get('id'));
+
+        var p = Y.one(vjsp.contentEl());
 
         p.setData('out', '');
         p.setData('in', 0);
         p.setData('playerID', p._node.id);
         p.setData('srctypes', '');
         p.setData('tracks', []);
-
-        // Create a variable for the current VideoJS player object.
-        var vjsp = videojs(p.get('id'));
 
         // If we need to use Flash, then warn users that functionality will be limited.
         if (vjsp.techName === 'Flash') {
@@ -113,7 +115,10 @@ VJS.buildClipMenu = function () {
             clipOL.addClass('video-js-cliplist');
 
             // Append the list ordered list before the video
-            Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
+            //Y.one('#' + p.getData('playerID')).insert(clipOL, 'before');
+            var vjspNode = Y.one(vjsp.contentEl());
+            vjspNode.insert(clipOL, 'before');
+            Y.one(vjsp.contentEl()).insert(clipOL, 'before');
 
             // Then, for each clip in the array ...
             for (var i=0; i < clips.length; i++) {
@@ -150,7 +155,7 @@ VJS.buildClipMenu = function () {
         // In case of loading trouble, try uncommenting the two lines immediately below.
         // vjsp = videojs(p.getData('playerID'));
         // vjsp.load();
-        if (p.getData('srctypes') != '') {
+        if (p.getData('srctypes') !== '') {
             vjsp.src(p.getData('srctypes'));
         }
     });
@@ -185,14 +190,20 @@ VJS.playClip = function (link) {
     clipMenu.one(activeClipClass).setStyle('fontWeight', 'bold');
     clipMenu.one(activeClipClass).blur();
 
-    // Get the YUI node for the div that contains the HTML <video> tag,
-    // and store the in and out times there.
-    var vjspNode = Y.one('#'+playerID);
-    vjspNode.setData('in', params.in);
-    vjspNode.setData('out', params.out);
-
     // Now we need the VideoJS player object
     var vjsp = videojs(playerID);
+
+    // Get the YUI node for the div that contains the HTML <video> tag,
+    // and store the in and out times there.
+    //vjspVideoNode = Y.one('#'+playerID);
+    vjspNode = Y.one(vjsp.contentEl());
+    console.log(vjspNode);
+    // console.log(vjspNodeAlt);
+    //var vjspNode = Y.Node(vjsp.contentEl());
+    //vjspVideoNode.setData('in', params.in);
+    //vjspVideoNode.setData('out', params.out);
+    vjspNode.setData('in', params.in);
+    vjspNode.setData('out', params.out);
 
     // By default we'll hide the captions button
     vjsp.controlBar.captionsButton.hide();
@@ -205,6 +216,13 @@ VJS.playClip = function (link) {
 
     // Then get rid of the text tracks
     vjsp.textTracks_ = [];
+
+    // Remove any old transcripts
+    // var vjspNodeParent = vjspNode.ancestor('div');
+    var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript-area');
+    if ( oldTranscript !== null ) {
+      oldTranscript.remove();
+    }
 
     // If there is any track information stored in the YUI link node ...
     if (params.tracks.length > 0) {
@@ -222,7 +240,7 @@ VJS.playClip = function (link) {
       vjsp.textTracks_[0].src_ = src;
 
       // If there's a leftover item in the track menu, remove it
-      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') != undefined) {
+      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') !== undefined) {
         var vjsTrackEl = vjsp.controlBar.captionsButton.menu.getChild('vjsTrack').el();
         vjsTrackEl.remove();
       }
@@ -234,6 +252,62 @@ VJS.playClip = function (link) {
       // Show the captions button
       // TODO: select the new track automatically if the previous one had been selected
       vjsp.controlBar.captionsButton.show();
+
+      // Get the transcript from the clipparams
+      var transcript = params.tracks[0].transcript;
+      var transcriptHTML = transcript.html;
+
+
+      // Attach the transcript after the video
+      if (params.tracks[0].transatts.transcript === 'display') {
+        var transcriptArea = Y.DOM.create(transcriptHTML);
+        vjspNode.insert(transcriptArea, 'after');
+        var transcriptAreaNode = Y.Node(transcriptArea);
+        var transcriptTableNode = transcriptAreaNode.one('table');
+        transcriptAreaNode.on('mouseenter', function () {
+          transcriptAreaNode.addClass('hovered');
+        });
+        transcriptAreaNode.on('mouseleave', function () {
+          transcriptAreaNode.removeClass('hovered');
+        });
+        var transcriptRows = transcriptTableNode.all('tr');
+        transcriptRows.each(function (r) {
+          var classList = r.getAttribute('class');
+          var timeInMatches = classList.match('.*filter-videojs-in-([0-9_]*) ');
+          var timeIn = timeInMatches[1].replace('_', '.');
+          var timeOutMatches = classList.match('.*filter-videojs-out-([0-9_]*) ');
+          var timeOut = timeOutMatches[1].replace('_', '.');
+          vjsp.on('timeupdate', function() {
+            if ((vjsp.currentTime() > timeIn) && (vjsp.currentTime() < timeOut)) {
+              if (!(r.hasClass('filter-videojs-active-cue'))) {
+                r.addClass('filter-videojs-active-cue');
+                var ty = transcriptTableNode.getY();
+                var ry = r.getY();
+                var ydelta = ry-ty;
+                a = new Y.Anim(
+                  {
+                    node: transcriptAreaNode,
+                    to: { scrollTop: ydelta-80 },
+                    duration: 0.3,
+                    easing: Y.Easing.easeBoth
+                  }
+                );
+                if (!(transcriptAreaNode.hasClass('hovered'))) {
+                  a.run();
+                }
+              }
+            } else {
+              if (r.hasClass('filter-videojs-active-cue')) {
+                r.removeClass('filter-videojs-active-cue');
+              }
+            }
+          });
+          r.on('click', function () {
+            vjsp.currentTime(timeIn);
+          });
+        });
+      }
+
     }
 
     // Now load that player
@@ -249,4 +323,4 @@ VJS.playClip = function (link) {
 };
 
 
-}, '@VERSION@', {"requires": ["base", "node", "event", "get"]});
+}, '@VERSION@', {"requires": ["base", "node", "event", "get", "node-screen", "anim", "event-mouseenter"]});

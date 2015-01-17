@@ -1,11 +1,17 @@
 div.video-js {
     max-width: 100%;
+    border: 1px solid lightgray;
 }
 
 .video-js-cliplist {
     list-style-type: none;
     margin-left: 0;
     padding-bottom: 1em;
+}
+
+.video-js .vjs-text-track-display .vjs-tt-cue {
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 4px;
 }
 
 .video-js .vjs-text-track {
@@ -17,4 +23,57 @@ div.video-js {
     line-height: 1.7em;
     padding: 3px;
     text-shadow: 2px 2px 2px black, 2px -2px 2px black, -2px 2px 2px black, -2px -2px 2px black;
+}
+
+.videojs_noscript_clip {
+    border-color: #aaa;
+    border-radius: 6px;
+    border-style: solid;
+    border-width: 1px;
+    margin: 2em auto;
+    padding: 1em;
+}
+
+.video-js.videojs-withclips {
+    display: none;
+}
+
+.jsenabled .video-js.videojs-withclips {
+    display: block;
+}
+
+.videojs-transcript-area {
+    border: 1px solid lightgray;
+    height: 20em;
+    margin-top: 1em;
+    overflow-y: scroll;
+    position: relative;
+}
+
+.videojs-transcript-area table {
+    position: relative;
+}
+
+.videojs-transcript-area .cell.c0 {
+    padding-left: 2em;
+    padding-top: 10px;
+}
+
+.jsenabled .filter-videojs-cue {
+    cursor: pointer;
+}
+
+.filter-videojs-active-cue .cell.c0 {
+    background-image: url([[pix:t/collapsed]]);
+    background-repeat: no-repeat;
+    background-position: 3px 0.75em;;
+    -moz-box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    box-shadow: 4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+}
+
+.filter-videojs-active-cue .cell.c1 {
+    -moz-box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    -webkit-box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
+    box-shadow: -4px 4px 2px -3px rgba(0, 0, 0, 0.5) inset, 0 -4px 2px -3px rgba(0, 0, 0, 0.5) inset;
 }

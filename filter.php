@@ -45,7 +45,7 @@ class filter_videojs extends moodle_text_filter {
 
         global $COURSE;
 
-        // We'll use the context id to guarantee unique id's for the videos. 
+        // We'll use the context id to guarantee unique id's for the videos.
         // This is necessary because...
         // Filtering happens at the mod level, and there may be several per page.
         // It is not sufficient to expect an array index to be unique.
@@ -75,7 +75,7 @@ class filter_videojs extends moodle_text_filter {
         // Do the swap.
         // We have to worry about duplicate shortcode patterns, unfortunately.
         // The replacements must have unique id's even if the shortcodes are identical.
-        foreach ( $patterns as $key => $pattern ) {
+        foreach ($patterns as $key => $pattern) {
             $pos = strpos( $text, $pattern );
             $len = strlen( $pattern );
             $text = substr_replace( $text, $replacements[$key], $pos, $len );
