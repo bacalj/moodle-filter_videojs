@@ -316,8 +316,8 @@ class filter_videojs_video extends filter_videojs_base {
     public $params = array(
         'id'         => '',
         'poster'     => '',
-        'height'     => '',
-        'width'      => '',
+        'height'     => '360',
+        'width'      => '640',
         'class'      => 'video-js vjs-default-skin',
         'controls'   => 'controls',
         'preload'    => 'auto',

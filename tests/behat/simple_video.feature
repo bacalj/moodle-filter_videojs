@@ -31,8 +31,6 @@ Feature: Simple HTML5 video embed
             """
             Hello! 
             [videojs] 
-                width=640 
-                height=480 
                 mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
                 webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
             [/videojs]
@@ -42,7 +40,7 @@ Feature: Simple HTML5 video embed
         Then ".video-js" "css_element" should exist
         And the "class" attribute of ".video-js" "css_element" should not contain "vjs-playing"
         And the "style" attribute of ".video-js" "css_element" should contain "width: 640px"
-        And the "style" attribute of ".video-js" "css_element" should contain "height: 480px"
+        And the "style" attribute of ".video-js" "css_element" should contain "height: 360px"
         And ".vjs-tech" "css_element" should exist
         And the "data-setup" attribute of ".vjs-tech" "css_element" should contain "playbackRates"
         And ".vjs-big-play-button" "css_element" should exist
