@@ -4,8 +4,7 @@ Feature: Simple HTML5 video embed
     As a user
     I need to use a videojs shortcode with an mp4 and webm (or ogv) file
 
-    @javascript
-    Scenario: Embed a single HTML5 video on a Page resource
+    Background:
         Given the following "courses" exist:
             | fullname | shortname |
             | VideoJS  | videojs   |
@@ -25,7 +24,10 @@ Feature: Simple HTML5 video embed
         And I log out
         And I log in as "tester"
         And I follow "VideoJS"
-        And I click on "VideoJS Page" "link" in the "VideoJS Page" activity
+
+    @javascript
+    Scenario: Embed a single HTML5 video on a Page resource
+        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
         And I navigate to "Edit settings" node in "Page module administration"
         And I set the field "Page content" to:
             """
@@ -61,3 +63,22 @@ Feature: Simple HTML5 video embed
         When I click on ".vjs-playback-rate-value" "css_element"
         Then I should see "1.5x" in the ".vjs-playback-rate-value" "css_element"
         And I should see "Hello!"
+
+    @javascript
+    Scenario: Set a custom width and height for the video
+        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
+        And I navigate to "Edit settings" node in "Page module administration"
+        And I set the field "Page content" to:
+            """
+            [videojs] 
+                width=320
+                height=180
+                mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
+                webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
+            [/videojs]
+            """
+        When I click on "Save and display" "button"
+        And I wait until the page is ready
+        Then ".video-js" "css_element" should exist
+        And the "style" attribute of ".video-js" "css_element" should contain "width: 320px"
+        And the "style" attribute of ".video-js" "css_element" should contain "height: 180px"
