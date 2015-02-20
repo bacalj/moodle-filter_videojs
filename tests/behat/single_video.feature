@@ -5,7 +5,7 @@ Feature: Simple HTML5 video embed
     I need to use a videojs shortcode with an mp4 and webm (or ogv) file
 
     @javascript
-    Scenario: Embed a simple HTML5 video on a Page resource
+    Scenario: Embed a single HTML5 video on a Page resource
         Given the following "courses" exist:
             | fullname | shortname |
             | VideoJS  | videojs   |
