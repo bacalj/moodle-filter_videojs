@@ -27,4 +27,4 @@ defined('MOODLE_INTERNAL') || die();
 $plugin->version   = 2014051400;
 $plugin->requires  = 2013111800;
 $plugin->component = 'filter_videojs';
-$plugin->maturity  = MATURITY_ALPHA;
+$plugin->maturity  = MATURITY_BETA;
