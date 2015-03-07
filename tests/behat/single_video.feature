@@ -56,10 +56,8 @@ Feature: Simple HTML5 video embed
         And ".vjs-mute-control" "css_element" should exist
         And ".vjs-volume-bar" "css_element" should exist
         And ".vjs-fullscreen-control" "css_element" should exist
-        When I wait "3" seconds
-        And I click on ".vjs-tech" "css_element"
+        When I click on ".vjs-tech" "css_element"
         Then the "class" attribute of ".video-js" "css_element" should contain "vjs-paused"
-        And I should see "1x" in the ".vjs-playback-rate-value" "css_element"
         When I click on ".vjs-playback-rate-value" "css_element"
         Then I should see "1.5x" in the ".vjs-playback-rate-value" "css_element"
         And I should see "Hello!"
