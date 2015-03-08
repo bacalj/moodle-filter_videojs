@@ -134,4 +134,4 @@ Feature: Simple HTML5 video embed
         Then I should see "captions"
         When I click on "//*[contains(.,'captions')][2]" "xpath_element"
         Then ".vjs-text-track" "css_element" should exist
-        Then I should see "Let's take a minute"
+        And I should see "Let's take a minute"
