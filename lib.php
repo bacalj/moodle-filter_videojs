@@ -500,7 +500,9 @@ class filter_videojs_transcript {
         $cues = preg_split('/^$/m', $this->fulltext);
         unset($cues[0]);
         foreach ($cues as $key => $cue) {
-            $this->cues[$key] = new filter_videojs_cue($cue);
+            if (!empty($cue)) {
+                $this->cues[$key] = new filter_videojs_cue($cue);
+            }
         }
     }
 
