@@ -110,3 +110,28 @@ Feature: Simple HTML5 video embed
         Then the "class" attribute of ".video-js" "css_element" should not contain "vjs-playing"
         But the "class" attribute of ".video-js" "css_element" should contain "vjs-paused"
         And I should see "0:23" in the ".vjs-current-time-display" "css_element" 
+
+    @javascript
+    Scenario: Add a track element in order to display captions
+        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
+        And I navigate to "Edit settings" node in "Page module administration"
+        And I set the field "Page content" to:
+            """
+            [videojs]
+                mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4"
+                webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm"
+                [track]src="../../filter/videojs/tests/fixtures/activity-and-resource-controls.vtt"[/track]
+                [clip]
+                    out=2 label="Short clip"
+                [/clip]
+            [/videojs]
+            """
+        When I click on "Save and display" "button"
+        And I wait until the page is ready
+        And I click on "Short clip" "link"
+        Then ".vjs-captions-button" "css_element" should exist
+        When I click on ".vjs-captions-button" "css_element"
+        Then I should see "captions"
+        When I click on "//*[contains(.,'captions')][2]" "xpath_element"
+        Then ".vjs-text-track" "css_element" should exist
+        Then I should see "Let's take a minute"
