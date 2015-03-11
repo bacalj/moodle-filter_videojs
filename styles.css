@@ -9,19 +9,32 @@ div.video-js {
     padding-bottom: 1em;
 }
 
-.video-js .vjs-text-track-display .vjs-tt-cue {
-    background-color: rgba(0,0,0,0.7);
+.video-js .filter-videojs-caption-cue {
+    background-color: rgba(0,0,0,0.6);
     border-radius: 4px;
+    position: relative;
+    padding: 0.2em 1em;
+    max-width: 90%;
+    margin: 0 auto;
+    text-align: center;
+    display: none;
 }
 
-.video-js .vjs-text-track {
-    color: white !important;
-    background-color: transparent !important;
-    border-radius: 2px;
+.video-js .filter-videojs-active-caption {
+    display: block;
+}
+
+.video-js .filter-videojs-captions-div {
+    color: white;
+    background-color: transparent;
     font-family: monospace;
-    font-size: 1.7em !important;
+    font-size: 1.7em;
     line-height: 1.7em;
-    padding: 3px;
+    padding: 0;
+    position: absolute;
+    bottom: 40px;
+    width: 100%;
+    max-width: 100%;
     text-shadow: 2px 2px 2px black, 2px -2px 2px black, -2px 2px 2px black, -2px -2px 2px black;
 }
 

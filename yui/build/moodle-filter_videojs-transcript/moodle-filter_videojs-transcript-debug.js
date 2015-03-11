@@ -180,12 +180,12 @@ VJS.buildClipMenu = function () {
 
 VJS.playClip = function (link) {
 
-    // Get the data stored in the link's YUI node
+    // Get the data stored in the link's YUI node.
     var params = link.getData('params');
     var playerID = link.getData('playerID');
     var clipNumber = link.getData('clipNumber');
 
-    // We also need to manage some styling to distinguish the active link from others
+    // Distinguish the active link from others.
     var activeClipClass = '.clip' + clipNumber;
     var clipMenu = link.ancestor('ol');
     clipMenu.all('.filter-vjs-cliplink').setStyle('fontWeight', 'normal');
@@ -197,33 +197,25 @@ VJS.playClip = function (link) {
 
     // Get the YUI node for the div that contains the HTML <video> tag,
     // and store the in and out times there.
-    //vjspVideoNode = Y.one('#'+playerID);
     vjspNode = Y.one(vjsp.contentEl());
-    console.log(vjspNode);
-    // console.log(vjspNodeAlt);
-    //var vjspNode = Y.Node(vjsp.contentEl());
-    //vjspVideoNode.setData('in', params.in);
-    //vjspVideoNode.setData('out', params.out);
     vjspNode.setData('in', params.in);
     vjspNode.setData('out', params.out);
 
     // By default we'll hide the captions button
     vjsp.controlBar.captionsButton.hide();
-
-    // Disable any text track from a previously played clip.
-    if (vjsp.textTracks_[0]) {
-      vjsp.textTracks_[0].disable();
-      vjsp.controlBar.captionsButton.menu.children_[1].el().remove();
+    var menuLength = vjsp.controlBar.captionsButton.menu.children().length;
+    for (var i=0; i<menuLength; i++) {
+      vjsp.controlBar.captionsButton.menu.children()[i].el().remove();
     }
 
-    // Then get rid of the text tracks
-    vjsp.textTracks_ = [];
-
-    // Remove any old transcripts
-    // var vjspNodeParent = vjspNode.ancestor('div');
+    // Remove any old transcripts and captions.
     var oldTranscript = vjspNode.ancestor('div').one('.videojs-transcript-area');
     if ( oldTranscript !== null ) {
       oldTranscript.remove();
+    }
+    var oldCaptions = vjspNode.one('.filter-videojs-captions-div');
+    if ( oldCaptions !== null ) {
+      oldCaptions.remove();
     }
 
     // If there is any track information stored in the YUI link node ...
@@ -231,34 +223,59 @@ VJS.playClip = function (link) {
 
       //Get the data (for the first track) out of the node
       // TODO: allow multiple tracks
-      var kind = params.tracks[0].params.kind;
+      // var kind = params.tracks[0].params.kind;
       var label = params.tracks[0].params.label;
-      var srclang = params.tracks[0].params.srclang;
-      var src = params.tracks[0].params.src;
-
-      // Add a track to the VideoJS player object,
-      vjsp.addTextTrack(kind, label, srclang);
-      // and set the source for the text track
-      vjsp.textTracks_[0].src_ = src;
-
-      // If there's a leftover item in the track menu, remove it
-      if (vjsp.controlBar.captionsButton.menu.getChild('vjsTrack') !== undefined) {
-        var vjsTrackEl = vjsp.controlBar.captionsButton.menu.getChild('vjsTrack').el();
-        vjsTrackEl.remove();
-      }
-
-      // Create the menu item for the newly added track, naming it so it can be removed later
-      newTrack = new vjs.TextTrackMenuItem(vjsp, {'track': vjsp.textTracks_[0], 'name': 'vjsTrack'});
-      vjsp.controlBar.captionsButton.menu.addItem(newTrack);
+      // var srclang = params.tracks[0].params.srclang;
+      // var src = params.tracks[0].params.src;
 
       // Show the captions button
       // TODO: select the new track automatically if the previous one had been selected
+      var captionsOnButton = new videojs.MenuItem(vjsp, {
+        'label': label
+      });
+      captionsOnButton.addClass('captionsOnButton');
+      var captionsOffButton = new videojs.MenuItem(vjsp, {
+        'label': label + ' off'
+      });
+      captionsOnButton.on(captionsOffButton, 'click', function() {
+        this.removeClass('vjs-selected');
+      });
+      vjsp.controlBar.captionsButton.menu.addChild(captionsOffButton, {});
+      vjsp.controlBar.captionsButton.menu.addChild(captionsOnButton, {});
       vjsp.controlBar.captionsButton.show();
 
-      // Get the transcript from the clipparams
+      // Get the captions div from the clipparams
       var transcript = params.tracks[0].transcript;
-      var transcriptHTML = transcript.html;
+      var captionsHTML = transcript.captions;
 
+      // Attach the captions div inside the video.
+      var captionsArea = Y.DOM.create(captionsHTML);
+      var controlBarNode = vjspNode.one('.vjs-control-bar');
+      // vjspNode.append(captionsArea);
+      controlBarNode.insert(captionsArea, 'before');
+      var captionsAreaNode = Y.Node(captionsArea);
+      var captionsCues = captionsAreaNode.all('div');
+      captionsCues.each(function (c) {
+        var classList = c.getAttribute('class');
+        var timeInMatches = classList.match('.*filter-videojs-caption-in-([0-9_]*) ');
+        var timeIn = timeInMatches[1].replace('_', '.');
+        var timeOutMatches = classList.match('.*filter-videojs-caption-out-([0-9_]*)');
+        var timeOut = timeOutMatches[1].replace('_', '.');
+        vjsp.on('timeupdate', function() {
+          if ((vjsp.currentTime() > timeIn) && (vjsp.currentTime() < timeOut) && (captionsOnButton.hasClass('vjs-selected'))) {
+            if (!(c.hasClass('filter-videojs-active-caption'))) {
+              c.addClass('filter-videojs-active-caption');
+            }
+          } else {
+            if (c.hasClass('filter-videojs-active-caption')) {
+              c.removeClass('filter-videojs-active-caption');
+            }
+          }
+        });
+      });
+
+      // Get the transcript from the clipparams
+      var transcriptHTML = transcript.html;
 
       // Attach the transcript after the video
       if (params.tracks[0].transatts.transcript === 'display') {

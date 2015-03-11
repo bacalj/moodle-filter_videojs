@@ -120,9 +120,10 @@ Feature: Simple HTML5 video embed
             [videojs]
                 mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4"
                 webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm"
-                [track]src="../../filter/videojs/tests/fixtures/activity-and-resource-controls.vtt"[/track]
+                [track]src="/filter/videojs/tests/fixtures/activity-and-resource-controls.vtt"[/track]
                 [clip]
-                    out=2 label="Short clip"
+                    label="Short clip"
+                    out=2
                 [/clip]
             [/videojs]
             """
@@ -133,7 +134,7 @@ Feature: Simple HTML5 video embed
         When I click on ".vjs-captions-button" "css_element"
         Then I should see "captions"
         When I click on "//*[contains(.,'captions')][2]" "xpath_element"
-        Then ".vjs-text-track" "css_element" should exist
+        Then ".filter-videojs-active-caption" "css_element" should exist
         And I should see "Let's take a minute"
 
     @javascript

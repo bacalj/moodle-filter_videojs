@@ -288,13 +288,10 @@ abstract class filter_videojs_base {
             );
             $sourcetags .= html_writer::empty_tag('source', $sourceatts);
         }
-        foreach ($this->tracks as $track) {
-            $tracktags .= html_writer::empty_tag('track', $track->params);
-        }
         if ( $withclips == VIDEOJS_WITH_CLIPS ) {
             $params['class'] .= ' videojs-withclips';
         }
-        $videotag = html_writer::tag('video', $sourcetags.$tracktags, $params);
+        $videotag = html_writer::tag('video', $sourcetags, $params);
         $videodiv = html_writer::tag('div', $videotag, null);
         $this->html = "$videodiv";
     }
@@ -443,6 +440,7 @@ class filter_videojs_track extends filter_videojs_base {
     public $transcript;
 
     public $in;
+
     public $out;
 
     public $parentparams;
@@ -467,6 +465,8 @@ class filter_videojs_transcript {
 
     public $fulltext;
 
+    public $captions;
+
     public $cues = array();
 
     public $html;
@@ -485,11 +485,21 @@ class filter_videojs_transcript {
         $this->fulltext = $this->fetch_transcript();
         $this->parse_cues();
         $this->build_html( $in, $out );
+        $this->build_captions( $in, $out );
     }
 
     public function fetch_transcript() {
+
+        global $CFG;
+
+        $transcripturl = $this->src;
+        $host = parse_url($transcripturl, PHP_URL_HOST);
+        // To enable behat testing.
+        if (!($host)) {
+            $transcripturl = $CFG->wwwroot . $transcripturl;
+        }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $this->src);
+        curl_setopt($ch, CURLOPT_URL, $transcripturl);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         $result = curl_exec($ch);
         curl_close($ch);
@@ -519,7 +529,7 @@ class filter_videojs_transcript {
             $timecell->style = 'text-align: right; font-weight: bold;';
             $captioncell = new html_table_cell($cue->caption);
             $row = new html_table_row(array($timecell, $captioncell));
-            $row->attributes['class'] = "filter-videojs-cue filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";;
+            $row->attributes['class'] = "filter-videojs-cue filter-videojs-in-$cue->cssin filter-videojs-out-$cue->cssout";
             $row->attributes['data-in'] = 'time';
             array_push($tablerows, $row);
         }
@@ -534,6 +544,26 @@ class filter_videojs_transcript {
         $transcriptdiv = html_writer::tag('div', html_writer::table($table), $divatts );
 
         $this->html = $transcriptdiv;
+    }
+
+    public function build_captions( $in=0, $out='' ) {
+        $cuelist = '';
+        foreach ($this->cues as $cue) {
+            if ( $cue->secout < $in ) {
+                continue;
+            }
+            if (($out != '') && ($cue->secin > $out)) {
+                break;
+            }
+            $cuedivatts = array(
+                'class' => "filter-videojs-caption-cue filter-videojs-caption-in-$cue->cssin filter-videojs-caption-out-$cue->cssout",
+            );
+            $cuediv = html_writer::tag('div', $cue->caption, $cuedivatts);
+            $cuelist .= $cuediv;
+        }
+        $captiondivatts = array( 'class' => 'filter-videojs-captions-div' );
+        $captiondiv = html_writer::tag('div', $cuelist, $captiondivatts);
+        $this->captions = $captiondiv;
     }
 }
 
