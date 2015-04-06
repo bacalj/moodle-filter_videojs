@@ -20,7 +20,7 @@ Feature: Simple HTML5 video embed
         And I log in as "admin"
         And I expand "Site administration" node
         And I navigate to "Manage filters" node in "Site administration>Plugins>Filters"
-        And I click on "On" "option" in the "Video.js" table row 
+        And I click on "On" "option" in the "Video.js" "table_row"
         And I log out
         And I log in as "tester"
         And I follow "VideoJS"
