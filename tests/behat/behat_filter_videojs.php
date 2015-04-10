@@ -8,6 +8,7 @@ class behat_filter_videojs extends behat_base {
      */
     public function i_set_the_field_to_pystring($fieldlocator, Behat\Gherkin\Node\PyStringNode $value) {
         $field = behat_field_manager::get_form_field_from_label($fieldlocator, $this);
-        $field->set_value($value->getRaw());
+        $string = str_replace("\n", '\\n', $value->__toString());
+        $field->set_value($string);
     }
 }
