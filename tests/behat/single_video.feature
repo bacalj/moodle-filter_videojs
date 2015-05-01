@@ -1,15 +1,13 @@
-@filter @filter_videojs
+@filter @filter_videojs @filter_videojs_single_video
 Feature: Simple HTML5 video embed
     In order to embed an HTML5 video
     As a user
     I need to use a videojs shortcode with an mp4 and webm (or ogv) file
 
-    Background:
-        Given I set up a filter_videojs test course
-
     @javascript
     Scenario: Embed a single HTML5 video on a Page resource
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
+        Given I set up a filter_videojs test course
+        And I click on "VideoJS Page" "link" in the "VideoJS Page" activity
         And I navigate to "Edit settings" node in "Page module administration"
         And I set the field "Page content" to:
             """
@@ -44,133 +42,3 @@ Feature: Simple HTML5 video embed
         Then I should see "1.5x" in the ".vjs-playback-rate-value" "css_element"
         And I should see "Hello!"
 
-    @javascript
-    Scenario: Set a custom width and height for the video
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
-        And I navigate to "Edit settings" node in "Page module administration"
-        And I set the field "Page content" to:
-            """
-            [videojs] 
-                width="320"
-                height="180"
-                mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
-                webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
-            [/videojs]
-            """
-        When I click on "Save and display" "button"
-        And I wait until the page is ready
-        Then ".video-js" "css_element" should exist
-        And the "style" attribute of ".video-js" "css_element" should contain "width: 320px"
-        And the "style" attribute of ".video-js" "css_element" should contain "height: 180px"
-
-    @javascript
-    Scenario: Use a clip to set an in and out time on the video
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
-        And I navigate to "Edit settings" node in "Page module administration"
-        And I set the field "Page content" to:
-            """
-            [videojs] 
-                mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
-                webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
-                [clip]
-                    in=20 out=23 label="From 20 to 23 seconds"
-                [/clip]
-            [/videojs]
-            """
-        When I click on "Save and display" "button"
-        And I wait until the page is ready
-        Then ".video-js" "css_element" should exist
-        And I should see "From 20 to 23 seconds"
-        When I click on "From 20 to 23 seconds" "link"
-        Then the "class" attribute of ".video-js" "css_element" should contain "vjs-playing"
-        When I wait "5" seconds
-        Then the "class" attribute of ".video-js" "css_element" should not contain "vjs-playing"
-        But the "class" attribute of ".video-js" "css_element" should contain "vjs-paused"
-        And I should see "0:23" in the ".vjs-current-time-display" "css_element" 
-        When I click on ".vjs-play-control" "css_element"
-        And I wait "2" seconds
-        Then the "class" attribute of ".video-js" "css_element" should not contain "vjs-playing"
-        But the "class" attribute of ".video-js" "css_element" should contain "vjs-paused"
-        And I should see "0:23" in the ".vjs-current-time-display" "css_element" 
-
-    @javascript
-    Scenario: Add a track element in order to display captions
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
-        And I navigate to "Edit settings" node in "Page module administration"
-        And I set the field "Page content" to:
-            """
-            [videojs]
-                mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4"
-                webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm"
-                [track]src="/filter/videojs/tests/fixtures/activity-and-resource-controls.vtt"[/track]
-                [clip]
-                    label="Short clip"
-                    out=2
-                [/clip]
-            [/videojs]
-            """
-        When I click on "Save and display" "button"
-        And I wait until the page is ready
-        And I click on "Short clip" "link"
-        Then ".vjs-captions-button" "css_element" should exist
-        When I click on ".vjs-captions-button" "css_element"
-        Then I should see "captions"
-        When I click on "//*[contains(.,'captions')][2]" "xpath_element"
-        Then ".filter-videojs-active-caption" "css_element" should exist
-        And I should see "Let's take a minute"
-
-    @javascript
-    Scenario: Individual clips can load different source videos
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
-        And I navigate to "Edit settings" node in "Page module administration"
-        And I set the field "Page content" to:
-            """
-            [videojs] 
-                [clip]
-                    mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
-                    webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
-                    in=20 out=22 label="Activity and Resource Controls"
-                [/clip]
-                [clip]
-                    mp4="../../filter/videojs/tests/fixtures/mobile-layout.mp4"
-                    webm="../../filter/videojs/tests/fixtures/mobile-layout.webm"
-                    in=5 out=7 label="Mobile Layout"
-                [/clip]
-            [/videojs]
-            """
-        And I click on "Save and display" "button"
-        And I wait until the page is ready
-        When I follow "Mobile Layout"
-        And I click on ".vjs-tech" "css_element"
-        Then the "src" attribute of ".vjs-tech" "css_element" should contain "mobile-layout"
-        When I follow "Activity and Resource Controls"
-        And I click on ".vjs-tech" "css_element"
-        Then the "src" attribute of ".vjs-tech" "css_element" should contain "activity-and-resource-controls"
-
-    @javascript
-    Scenario: A clip can inherit its sources from the parent videojs element
-        Given I click on "VideoJS Page" "link" in the "VideoJS Page" activity
-        And I navigate to "Edit settings" node in "Page module administration"
-        And I set the field "Page content" to:
-            """
-            [videojs] 
-                mp4="../../filter/videojs/tests/fixtures/mobile-layout.mp4"
-                webm="../../filter/videojs/tests/fixtures/mobile-layout.webm"
-                [clip]
-                    mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
-                    webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
-                    in=20 out=22 label="Activity and Resource Controls"
-                [/clip]
-                [clip]
-                    in=5 out=7 label="Mobile Layout"
-                [/clip]
-            [/videojs]
-            """
-        And I click on "Save and display" "button"
-        And I wait until the page is ready
-        When I follow "Activity and Resource Controls"
-        And I click on ".vjs-tech" "css_element"
-        Then the "src" attribute of ".vjs-tech" "css_element" should contain "activity-and-resource-controls"
-        When I follow "Mobile Layout"
-        And I click on ".vjs-tech" "css_element"
-        Then the "src" attribute of ".vjs-tech" "css_element" should contain "mobile-layout"
