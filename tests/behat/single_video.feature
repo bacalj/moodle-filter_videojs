@@ -51,8 +51,8 @@ Feature: Simple HTML5 video embed
         And I set the field "Page content" to:
             """
             [videojs] 
-                width=320
-                height=180
+                width="320"
+                height="180"
                 mp4="../../filter/videojs/tests/fixtures/activity-and-resource-controls.mp4" 
                 webm="../../filter/videojs/tests/fixtures/activity-and-resource-controls.webm" 
             [/videojs]
