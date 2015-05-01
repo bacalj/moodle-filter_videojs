@@ -5,25 +5,7 @@ Feature: Simple HTML5 video embed
     I need to use a videojs shortcode with an mp4 and webm (or ogv) file
 
     Background:
-        Given the following "courses" exist:
-            | fullname | shortname |
-            | VideoJS  | videojs   |
-        And the following "users" exist:
-            | username |
-            | tester   |
-        And the following "course enrolments" exist:
-            | user   | course  | role           |
-            | tester | videojs | editingteacher |
-        And the following "activities" exist:
-            | activity | course  | idnumber    | name         | intro       |
-            | page     | videojs | videojspage | VideoJS Page | for testing |
-        And I log in as "admin"
-        And I expand "Site administration" node
-        And I navigate to "Manage filters" node in "Site administration>Plugins>Filters"
-        And I click on "On" "option" in the "Video.js" "table_row"
-        And I log out
-        And I log in as "tester"
-        And I follow "VideoJS"
+        Given I set up a filter_videojs test course
 
     @javascript
     Scenario: Embed a single HTML5 video on a Page resource
