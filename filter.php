@@ -67,7 +67,7 @@ class filter_videojs extends moodle_text_filter {
         // Build two arrays, one with patterns, the other with replacements.
         foreach ($shortcodes as $key => $sc) {
             // Build the HTML5 markup using the $contextid and the $shortcodes array index for uniqueness.
-            $vo = new filter_videojs_video($sc[0], $contextid . "_" . $key);
+            $vo = new filter_videojs_video(strip_tags($sc[0]), $contextid . "_" . $key);
             $patterns[$key] = $sc[0];
             $replacements[$key] = "\n" . $vo->get_html() . "\n";
         }
