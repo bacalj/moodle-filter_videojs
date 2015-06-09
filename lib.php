@@ -179,7 +179,7 @@ abstract class filter_videojs_base {
                     $needle = "${key}='([^']*)";
                     break;
                 default;
-                    $needle = "${key}=([^ <]*)";
+                    $needle = "${key}=([^ <\r\n]*)";
                     break;
             }
             preg_match("/$needle/", $paramlist, $matches);
